@@ -7,6 +7,7 @@ module.exports = {
     description: "Tên bài hát",
     type: 3,
     required: true,
+    autocomplete: true,
   }],
   voiceC: true,
   NODMPer: true,
