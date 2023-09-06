@@ -1,0 +1,2 @@
+# Zibot
+ Ziji discord bot
