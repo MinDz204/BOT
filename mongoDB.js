@@ -4,9 +4,11 @@ const ZiUser = Schema({
   userN: String,
   userID: String,
   link: String,
+  image: String,
   color: String,
   lang: String,
   Xp: Number,
+  vol:Number,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
 })

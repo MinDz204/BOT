@@ -2,7 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("
 const db = require("./../../mongoDB");
 const { useMainPlayer, QueryType } = require("discord-player");
 const client = require("./../../index");
-const { set } = require("mongoose");
+
 const player = useMainPlayer();
 
 function validURL(str) {
@@ -20,14 +20,16 @@ function validURL(str) {
     if(!nameS) return;
     if(validURL(nameS)){
     try{
+      let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch( e=>{ } )
         await player.play(interaction?.member.voice.channelId, nameS, {
             nodeOptions: {
                 metadata:{
                     channel: interaction.channel,
                     requestby: interaction.user,
+                    embedCOLOR: userddd?.color || client.color,
                 },
                 requestedBy: interaction.user,
-                volume:20,
+                volume: userddd?.vol || 50,
                 maxSize: 200,
                 maxHistorySize: 20,
                 leaveOnEmpty: true,
@@ -37,7 +39,9 @@ function validURL(str) {
             }
         });
         return interaction?.deleteReply();
-    }catch(e){ return interaction?.editReply('không tìm thấy bài hát'); }
+    }catch(e){ 
+      console.log(e)
+      return interaction?.editReply('không tìm thấy bài hát'); }
     }
     
         let res =  await player.search(nameS,{

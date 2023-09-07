@@ -10,12 +10,13 @@ function validURL(str) {
 module.exports = async (client, interaction) => {
 try{
     if (validURL(interaction.customId)){
-        await require("./../ziplayer/ziSearch")(interaction, interaction.customId);
-        return interaction?.message.delete();
+      await require("./../ziplayer/ziSearch")(interaction, interaction.customId);
+      return interaction?.message.delete();
     }
     if (interaction?.customId.includes("Ziplayer")) return require("./../ziplayer/ZiplayerFuns")( interaction )
     switch ( interaction.customId ){
-    case "a":
+    case "cancel":
+      return interaction?.message.delete();
     default:
         console.log(interaction.customId)
 }

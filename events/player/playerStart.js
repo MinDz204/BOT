@@ -4,8 +4,8 @@ const { zistart } = require("./../ziplayer/ziStartTrack")
 async function Ziset(queue){
     return queue?.metadata.channel.send( await zistart(queue) ).then(async Message =>{
         const [ getMetadata, setMetadata ] = useMetadata(queue?.guild.id);
-        const { channel, requestby } = getMetadata();
-        setMetadata({ channel, requestby, Zimess: Message })
+        const { channel, requestby, embedCOLOR } = getMetadata();
+        setMetadata({ channel, requestby, embedCOLOR, Zimess: Message })
     })
 }
 module.exports = async ( client , queue ) =>{

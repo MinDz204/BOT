@@ -122,7 +122,7 @@ const zistartEmber = async ( queue ) =>{
     const trackDuration = timestamps?.progress == "Infinity" ? "∞": timestamps?.progress
     const embed = new EmbedBuilder()
         .setAuthor({ name: track?.title , url:track?.url, iconURL: avtlink})
-        .setColor(client?.color)
+        .setColor( queue?.metadata.embedCOLOR || client?.color )
         .setImage(track?.thumbnail)
         .setTimestamp()
         .setFooter({ text: `Được yêu cầu bởi: ${requestby?.tag}`, iconURL: requestby?.displayAvatarURL({ dynamic: true}) })
@@ -156,5 +156,6 @@ return code = { content:``, embeds: [ embess ], components:[ zisearch ] }
 
 
 module.exports = {
-    zistart
+    zistart,
+    ZiPlayerlinkAvt
 }
