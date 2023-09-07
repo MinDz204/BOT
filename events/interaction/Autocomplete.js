@@ -5,6 +5,7 @@ try{
     switch ( interaction.commandName ){
     case "p":
     case "play":
+    try {
     const nameS = interaction.options.getString("name",true)
     const results = await player.search(nameS,{
         fallbackSearchEngine: QueryType.YOUTUBE
@@ -18,6 +19,9 @@ try{
             value: t.url
         }))
     );
+    }catch(e){ 
+        return interaction.respond().catch( e => { } )
+    }
 
 }
 } catch (e) {

@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials } = require("discord.js");
+const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
@@ -32,12 +32,13 @@ const client = new Client({
   ],
 });
 client.color = config.color;
+client.cooldowns = new Collection();
 module.exports = client;
 //-------------------------------------------------------------//
 //        discord player          //
 //-------------------------------------------------------------//
 const player = new Player(client, {
-  usrLegacyFFmpeg: true,
+  useLegacyFFmpeg: true,
   ytdlOptions: {
     filter: "audioonly",
     opusEncoder: true,
@@ -87,6 +88,8 @@ fs.readdir("./commands", (err, files) => {
     }
   });
 });
+
+process.on('unhandledRejection', error => {     console.error('Unhandled promise rejection:', error); });
 
 client.login(config.token || process.env.TOKEN).catch(e => {
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
