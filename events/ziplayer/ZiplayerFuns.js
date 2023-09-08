@@ -2,8 +2,9 @@ const { useQueue, QueueRepeatMode, useHistory } = require("discord-player");
 const { zistart } = require("./ziStartTrack");
 const { ModalBuilder, TextInputStyle } = require("discord.js");
 const { ActionRowBuilder, TextInputBuilder } = require("@discordjs/builders");
-const { lyricFind } = require("./Zilyric")
-module.exports = async ( interaction) => {
+const { lyricFind } = require("./Zilyric");
+
+module.exports = async ( interaction, lang ) => {
 try{
     const queue = useQueue(interaction?.guildId);
     switch (interaction.customId){
@@ -12,13 +13,13 @@ try{
         case "ZiplayerSeach":
             const modal = new ModalBuilder()
             .setCustomId("ZiCompSearch")
-            .setTitle("Tìm kiếm nhạc")
+            .setTitle(`${lang?.SearchTrack}:`)
             .addComponents(
                 new ActionRowBuilder().addComponents(
                     new TextInputBuilder()
                         .setMaxLength(100)
                         .setCustomId("resu")
-                        .setLabel("nhập tên hoặc liên kết đến bài hát:")
+                        .setLabel(`${lang?.SearchTrackDEs}:`)
                         .setStyle(TextInputStyle.Short)
                 )
             )
@@ -29,30 +30,30 @@ try{
                 await history.previous();
                 interaction.deferUpdate();
             }catch(e){
-                interaction.reply(`có lỗi đã xảy ra${e}`)
+                interaction.reply(`${lang?.Err} ${e}`)
             }
         break;
         case "ZiplayerPause":
             queue?.node.setPaused(!queue?.node.isPaused());
             interaction.deferUpdate();
-        return interaction?.message.edit(await zistart(queue)).catch(e => { });
+        return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
     }
     let ZiisPlaying = !!queue.node.isPlaying() || !queue?.isEmpty();
-    if( ZiisPlaying )
+    if( ! ZiisPlaying ) return interaction?.reply({content:`${lang?.NoPlaying}`, ephemeral: true })
     switch ( interaction.customId ){
     case "Ziplayerf5":
         await interaction?.deferUpdate().catch(e => { });
-    return interaction?.message.edit(await zistart(queue)).catch(e => { });
+    return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
     case "ZiplayerNext":
         if(queue.repeatMode == 1) queue.setRepeatMode(QueueRepeatMode.QUEUE)
         queue.node.skip()
     return interaction?.deferUpdate().catch(e => { });
     case "ZiplayerLyric":
-    return interaction.reply(await lyricFind( queue?.currentTrack ,interaction?.user ))
+    return interaction.reply(await lyricFind( queue?.currentTrack ,interaction?.user, lang ))
     case "ZiplayerVol":
         const modal = new ModalBuilder()
             .setCustomId("ZiModalVol")
-            .setTitle("Âm lượng")
+            .setTitle(`${lang?.volume}`)
             .addComponents(
                 new ActionRowBuilder()
                     .addComponents(
@@ -60,7 +61,7 @@ try{
                         .setMinLength(1)
                         .setMaxLength(2)
                         .setCustomId("resu")
-                        .setLabel("nhập âm lượng từ 0 -> 99")
+                        .setLabel(`${lang?.volumedes}`)
                         .setValue(`${queue?.node.volume}`)
                         .setStyle(TextInputStyle.Short)
                         .setRequired(true)
@@ -70,21 +71,21 @@ try{
     case "ZiplayerAutoPlay":
         queue.repeatMode === 3 ? queue.setRepeatMode(QueueRepeatMode.OFF): queue.setRepeatMode(QueueRepeatMode.AUTOPLAY);
         await interaction?.deferUpdate().catch(e => { });
-    return interaction?.message.edit(await zistart(queue)).catch(e => { });  
+    return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });  
     case "ZiplayerLoopA":
         queue.repeatMode == 0 ? queue.setRepeatMode(QueueRepeatMode.TRACK) :
         queue.repeatMode == 1 ? queue.setRepeatMode(QueueRepeatMode.QUEUE) :
         queue.setRepeatMode(QueueRepeatMode.OFF)
         await interaction?.deferUpdate().catch(e => { });
-    return interaction?.message.edit(await zistart(queue)).catch(e => { });  
+    return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });  
     case "ZiplayerShuffl":
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });
-    return interaction?.message.edit(await zistart(queue)).catch(e => { }); 
+    return interaction?.message.edit(await zistart(queue, lang)).catch(e => { }); 
 
 
 }
-return interaction?.reply({content:"ko co bai dang pghat"})
+
 } catch (e) {
     console.log(e)}
 }

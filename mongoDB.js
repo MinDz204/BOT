@@ -8,7 +8,8 @@ const ZiUser = Schema({
   color: String,
   lang: String,
   Xp: Number,
-  vol:Number,
+  vol: Number,
+  cooldowns: Number,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
 })

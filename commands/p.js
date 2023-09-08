@@ -12,7 +12,7 @@ module.exports = {
   voiceC: true,
   NODMPer: true,
   cooldown: 3,
-  run: async (client, interaction) => {
+  run: async ( lang, interaction ) => {
     const name = interaction.options.getString("name");
     return require("../events/ziplayer/ziSearch")( interaction, name );
 

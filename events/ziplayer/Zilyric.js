@@ -10,8 +10,8 @@ async function searchForLyrics(songName) {
     return lyrics;
   }
 
-const lyricFind = async (trackk, user ) => {
-    let lang,code;
+const lyricFind = async (trackk, user, lang ) => {
+    let code;
 
 let usedd = await db?.ZiUser?.findOne({ userID: user?.id }).catch(e => { })
 const row = new ActionRowBuilder().addComponents(
@@ -24,7 +24,7 @@ const info = new EmbedBuilder()
     .setColor( usedd?.color || client.color)
     .setImage(`https://i3.ytimg.com/vi/${trackk?.raw?.id}/maxresdefault.jpg`)
     .setTimestamp()
-    .setFooter({ text: `${lang?.requestby} ${user?.tag}`, iconURL: user?.displayAvatarURL({ dynamic: true })})
+    .setFooter({ text: `${lang?.RequestBY} ${user?.tag}`, iconURL: user?.displayAvatarURL({ dynamic: true })})
     .addFields([
         { name: "**🗓️ Date:**", value: `${trackk?.raw?.uploadedAt? trackk?.raw?.uploadedAt:"Unknown"}`, inline: true },
         { name: "**⭐ views:**", value: `${trackk?.raw?.views? trackk?.raw?.views : "??"}`, inline: true },

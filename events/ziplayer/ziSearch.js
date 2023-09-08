@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("
 const db = require("./../../mongoDB");
 const { useMainPlayer, QueryType } = require("discord-player");
 const client = require("./../../index");
+const { rank } = require("../Zibot/ZilvlSys");
 
 const player = useMainPlayer();
 
@@ -40,10 +41,10 @@ function validURL(str) {
         });
         return interaction?.deleteReply();
     }catch(e){ 
-      console.log(e)
-      return interaction?.editReply('không tìm thấy bài hát'); }
+      let lang = await rank({ user: interaction.user });
+      return interaction?.editReply(`${lang?.PlayerSearchErr}`); }
     }
-    
+    let lang = await rank({ user: interaction.user });
         let res =  await player.search(nameS,{
             fallbackSearchEngine: QueryType.YOUTUBE,
             requestedBy:interaction.user,
@@ -68,10 +69,10 @@ function validURL(str) {
     
           const embed = new EmbedBuilder()
           .setColor(client.color)
-          .setTitle(`Kết quả tìm kiếm cho: ${nameS}`)
+          .setTitle(`${lang?.PlayerSearch} ${nameS}`)
           .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${track?.title.substr(0, 35) + "..."} | \`${track.author.substr(0, 18) + "..."}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
           .setTimestamp()
-          .setFooter({ text: `được yêu cầu bởi: ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+          .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
         
           switch (track_button_creator.length) {
             case 1:

@@ -1,5 +1,6 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const client = require("./../../index")
+const client = require("./../../index");
+const { rank } = require("../Zibot/ZilvlSys");
 const zistartButton = async ( queue ) =>{
     let ziQueue = false;
     let volicon = (queue.node.volume > 60) ? "🔊" : (queue.node.volume > 30) ? "🔉" : "🔈";
@@ -109,11 +110,11 @@ const ZiPlayerlinkAvt = async ( query ) => {
         return `https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif`;
     }
   }
-const zistartEmber = async ( queue ) =>{
+const zistartEmber = async ( queue , lang ) =>{
     const track = queue?.currentTrack;
     let requestby = track?.requestby || queue?.metadata.requestby;
     const avtlink = await ZiPlayerlinkAvt(track?.queryType);
-    const methods = [`OFF`, 'bai hat', `hang doi`,'AUTOPLAY',` `];
+    const methods = [`${lang?.loopOFF}`, `${lang?.loopTrack}`, `${lang?.loopqueue}`,`${lang?.loopauto}`,` `];
     const proress = queue?.node.createProgressBar({
         indicator: "O",timecodes: true
     })
@@ -125,19 +126,18 @@ const zistartEmber = async ( queue ) =>{
         .setColor( queue?.metadata.embedCOLOR || client?.color )
         .setImage(track?.thumbnail)
         .setTimestamp()
-        .setFooter({ text: `Được yêu cầu bởi: ${requestby?.tag}`, iconURL: requestby?.displayAvatarURL({ dynamic: true}) })
-        .setDescription(`Volume: **${queue?.node.volume}**% - Playing: **${trackDuration}**${trackDurationsymbal}
-        LoopMode: ${methods[queue.repeatMode]} - Fillter:${queue.filters.ffmpeg.getFiltersEnabled()}\n
+        .setFooter({ text: `${lang?.RequestBY} ${requestby?.tag}`, iconURL: requestby?.displayAvatarURL({ dynamic: true}) })
+        .setDescription(`${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationsymbal}
+        ${lang?.LoopMode}: ${methods[queue.repeatMode]} - Fillter:${queue.filters.ffmpeg.getFiltersEnabled()}\n
         ${proress}`)
 return embed;
 }
 
-
-
-const zistart = async( queue ) => {
+const zistart = async( queue , lang ) => {
 let code;
+
 if(queue?.currentTrack){
-    const [ _embed, _button] = await Promise.all([ zistartEmber(queue), zistartButton(queue) ])
+    const [ _embed, _button] = await Promise.all([ zistartEmber(queue, lang), zistartButton(queue) ])
     return code = { content:``, embeds: [ _embed ], components:[ _button.row, _button.row25, _button.row3 ] }
 }
 
@@ -148,8 +148,8 @@ const zisearch = new ActionRowBuilder().addComponents(
         .setStyle(ButtonStyle.Success)
 );
 const revEmbed = queue?.metadata?.Zimess.embeds[0];
-const embess = new EmbedBuilder.from(revEmbed)
-        .setDescription(`hàng đợi trống\n bạn có thể thêm 1 số bài hát`)
+const embess = EmbedBuilder.from(revEmbed)
+        .setDescription(`${lang?.queueEMty}`)
 return code = { content:``, embeds: [ embess ], components:[ zisearch ] }
 
 }

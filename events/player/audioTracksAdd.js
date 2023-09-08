@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 module.exports = async ( client, queue, track ) =>{
+    console.log(track)
     let embed = new EmbedBuilder()
     .setDescription(`Đã thêm danh sách phát: [${track?.title}](${track?.url}) \`[${track?.duration}]\``)
     .setThumbnail(track?.thumbnail)

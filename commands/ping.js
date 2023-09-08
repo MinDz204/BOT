@@ -3,7 +3,7 @@ module.exports = {
     description: "View bot ping.",
     options: [],
     cooldown: 3,
-    run: async (client, interaction) => {
+    run: async ( lang, interaction ) => {
   
       interaction.reply("pong")
   
