@@ -12,8 +12,6 @@ async function searchForLyrics(songName) {
 
 const lyricFind = async (trackk, user, lang ) => {
     let code;
-
-let usedd = await db?.ZiUser?.findOne({ userID: user?.id }).catch(e => { })
 const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
         .setLabel('❌')
@@ -21,7 +19,7 @@ const row = new ActionRowBuilder().addComponents(
         .setStyle(ButtonStyle.Danger));
 //embed
 const info = new EmbedBuilder()
-    .setColor( usedd?.color || client.color)
+    .setColor( lang?.color || client.color)
     .setImage(`https://i3.ytimg.com/vi/${trackk?.raw?.id}/maxresdefault.jpg`)
     .setTimestamp()
     .setFooter({ text: `${lang?.RequestBY} ${user?.tag}`, iconURL: user?.displayAvatarURL({ dynamic: true })})

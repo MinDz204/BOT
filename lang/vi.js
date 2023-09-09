@@ -1,4 +1,5 @@
 const language ={
+    COLOR:`#1a8cff`,
     Err:`Đã có lỗi không mong muốn đã xảy ra [liên hệ bé zi](https://discord.com/invite/zaskhD7PTW) để được nhận hỗ trợ sớm nhất:`,
     RequestBY: `Được yêu cầu bởi:`,
     PlayerSearch: `Kết quả tìm kiếm cho:`,
@@ -28,6 +29,7 @@ const language ={
     NOvoice: `Bạn chưa kết nối kênh thoại ❌`,
     NOvoiceChannel:`Bạn đã kết nối khác kênh thoại bot đang kết nối ❌`,
     cooldownsMESS: `Vui lòng đợi <t:{expiredTimestamp}:R> để tiếp tục thực hiện lệnh \`{interaction.commandName}\`. `,
-
+    Queue: `Hàng đợi`,
+    queueclear:`Đã dọn sạch hàng đợi`,
 }
 module.exports = language;

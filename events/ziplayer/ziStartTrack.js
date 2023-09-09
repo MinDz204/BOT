@@ -1,8 +1,9 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const client = require("./../../index");
-const { rank } = require("../Zibot/ZilvlSys");
+// const { rank } = require("../Zibot/ZilvlSys");
+const db = require ("./../../mongoDB")
 const zistartButton = async ( queue ) =>{
-    let ziQueue = false;
+    let ziQueue = await db.Ziqueue.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e=>{ });
     let volicon = (queue.node.volume > 60) ? "🔊" : (queue.node.volume > 30) ? "🔉" : "🔈";
     const refsh = new ButtonBuilder()
       .setLabel('F5')
@@ -43,7 +44,7 @@ const zistartButton = async ( queue ) =>{
       .setCustomId('ZiplayerLoopA')
       .setStyle(ButtonStyle.Success);
     const shuffl = new ButtonBuilder()
-      .setLabel('⇆')
+      .setLabel('⤮')
       .setCustomId('ZiplayerShuffl')
       .setStyle(ButtonStyle.Success);
     const commingfunc = new ButtonBuilder()

@@ -20,6 +20,12 @@ module.exports = async (client) => {
         body: await client.commands,
       });
       console.log("Successfully loadded application [/] commands.");
+//del db
+      setTimeout(async()=>{
+        const db = require("./../mongoDB");
+        await db.Ziqueue.deleteOne();
+      },5000)
+
     } catch (e) {
       console.log("Failed to load application [/] commands. " + e);
     }

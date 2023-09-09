@@ -32,7 +32,10 @@ try{
 
     case "cancel":
     return interaction?.message.delete();
-
+    case "QueueCancel":
+      await db.Ziqueue.deleteOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(e => { });
+    return interaction?.message.delete();
+    
     case "editProfile": {
       let rankkk = await db?.ZiUser?.findOne({ userID: interaction?.user.id }).catch(e => { })
       if (rankkk.lvl < 2) return interaction.reply({ content: `${lang?.canlvl2}`, ephemeral: true }).catch(e => { })

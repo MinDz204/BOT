@@ -42,7 +42,10 @@ function validURL(str) {
         return interaction?.deleteReply();
     }catch(e){ 
       let lang = await rank({ user: interaction.user });
-      return interaction?.editReply(`${lang?.PlayerSearchErr}`); }
+      return interaction?.editReply(`${lang?.PlayerSearchErr}`).then(async Message => {
+        setTimeout(function(){
+          Message.delete();
+        },10000)}).catch(e => { console.log(e) }); }
     }
     let lang = await rank({ user: interaction.user });
         let res =  await player.search(nameS,{
@@ -68,7 +71,7 @@ function validURL(str) {
               .setCustomId('cancel'));
     
           const embed = new EmbedBuilder()
-          .setColor(client.color)
+          .setColor(lang?.COLOR || client.color)
           .setTitle(`${lang?.PlayerSearch} ${nameS}`)
           .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${track?.title.substr(0, 35) + "..."} | \`${track.author.substr(0, 18) + "..."}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
           .setTimestamp()

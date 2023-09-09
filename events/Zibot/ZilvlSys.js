@@ -7,7 +7,7 @@ const rank = async({ user , lvlAdd }) =>{
     let lvll = Userrrr?.lvl || 0
     let coin = Userrrr?.coin || 0
     lang.cooldowns = Userrrr?.cooldowns;
-
+    lang.COLOR = Userrrr?.color;
     if ( xpALL > ( lvll * 50 ) ){
         await db.ZiUser.updateOne({ userID: user?.id },{
             $set:{

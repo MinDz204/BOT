@@ -3,13 +3,15 @@ const { zistart } = require("./ziStartTrack");
 const { ModalBuilder, TextInputStyle } = require("discord.js");
 const { ActionRowBuilder, TextInputBuilder } = require("@discordjs/builders");
 const { lyricFind } = require("./Zilyric");
+const db = require("./../../mongoDB");
 
 module.exports = async ( interaction, lang ) => {
 try{
     const queue = useQueue(interaction?.guildId);
     switch (interaction.customId){
         case "ZiplayerStop":
-        return    queue.delete()
+            interaction.message.edit({ components:[ ] })
+        return    queue?.delete()
         case "ZiplayerSeach":
             const modal = new ModalBuilder()
             .setCustomId("ZiCompSearch")
@@ -37,8 +39,17 @@ try{
             queue?.node.setPaused(!queue?.node.isPaused());
             interaction.deferUpdate();
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
+        case "ZiplayerQueueClear":
+            await db.Ziqueue.deleteOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(e => { });
+            queue?.tracks?.clear();
+            await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+        return interaction?.message.edit({content:`${lang?.queueclear} `, embeds: [ ], components: [ ] }).then(setTimeout(
+            function(){
+                interaction?.message.delete().catch(e =>{ });
+            }, 10000 )).catch(e =>{ });
     }
-    let ZiisPlaying = !!queue.node.isPlaying() || !queue?.isEmpty();
+    //--------------------------------------------------------------------------------------------------//
+    let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();
     if( ! ZiisPlaying ) return interaction?.reply({content:`${lang?.NoPlaying}`, ephemeral: true })
     switch ( interaction.customId ){
     case "Ziplayerf5":
@@ -50,6 +61,11 @@ try{
     return interaction?.deferUpdate().catch(e => { });
     case "ZiplayerLyric":
     return interaction.reply(await lyricFind( queue?.currentTrack ,interaction?.user, lang ))
+    case "ZiplayerQueuE":
+    await require("./Ziqueue")( interaction, queue, lang);
+    return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
+
+
     case "ZiplayerVol":
         const modal = new ModalBuilder()
             .setCustomId("ZiModalVol")

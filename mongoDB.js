@@ -14,7 +14,17 @@ const ZiUser = Schema({
   coin: { type: Number, default: 0 },
 })
 
+const Ziqueue = Schema({
+  guildID: String,
+  channelID: String,
+  messageID: String,
+  page: Number,
+  toplam: Number,
+})
+
 //-------------------------------------------//
 module.exports = {
+  Ziqueue: model("Ziqueue",Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
+
 }
