@@ -31,5 +31,6 @@ const language ={
     cooldownsMESS: `Vui lòng đợi <t:{expiredTimestamp}:R> để tiếp tục thực hiện lệnh \`{interaction.commandName}\`. `,
     Queue: `Hàng đợi`,
     queueclear:`Đã dọn sạch hàng đợi`,
+    ChangeLanguage:`Đã thay đổi ngôn ngữ bot thành tiếng việt ✅`
 }
 module.exports = language;

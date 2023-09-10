@@ -1,8 +1,8 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const { useMainPlayer, QueryType } = require("discord-player");
-const client = require("./../../index");
 const { rank } = require("../Zibot/ZilvlSys");
+const client = require("../..");
 
 const player = useMainPlayer();
 
@@ -30,6 +30,7 @@ function validURL(str) {
                     embedCOLOR: userddd?.color || client.color,
                 },
                 requestedBy: interaction.user,
+                selfDeaf: true,
                 volume: userddd?.vol || 50,
                 maxSize: 200,
                 maxHistorySize: 20,

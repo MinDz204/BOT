@@ -1,10 +1,10 @@
 const { ApplicationCommandOptionType } = require('discord.js')
 module.exports = {
   name: "p",
-  description: "Play music.",
+  description: "Play/add music.",
   options: [{
     name: "name",
-    description: "Tên bài hát",
+    description: "Name Song",
     type: 3,
     required: true,
     autocomplete: true,

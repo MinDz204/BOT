@@ -21,6 +21,7 @@ module.exports = async (client) => {
       });
       console.log("Successfully loadded application [/] commands.");
 //del db
+      client.Zicomand = await rest.get(Routes.applicationCommands(client.user.id))
       setTimeout(async()=>{
         const db = require("./../mongoDB");
         await db.Ziqueue.deleteOne();

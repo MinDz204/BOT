@@ -1,6 +1,7 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const client = require("./../../index");
-// const { rank } = require("../Zibot/ZilvlSys");
+const client = require("../..");
+
+// const { rank } = require("../Zibot/ZilvlSys"); 
 const db = require ("./../../mongoDB")
 const zistartButton = async ( queue ) =>{
     let ziQueue = await db.Ziqueue.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e=>{ });

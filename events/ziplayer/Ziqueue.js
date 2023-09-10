@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require("discord.js");
 const db = require("./../../mongoDB");
-const client = require("./../../index");
+const client = require("../..");
+
 
 module.exports = async ( interaction, queue, lang ) => {
     await interaction?.deferReply();
@@ -41,6 +42,7 @@ module.exports = async ( interaction, queue, lang ) => {
                  `\n${ nowww++ } | [${data.title.substr(0,25)+"..."}](${data.url}) | ${data.author.substr(0,15)+"..."}`)}
             `)
             .setFooter({ text: `${page}/${toplam}`})
+            .setTimestamp()
     }
     //send messenger::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     if(!ziQueue){

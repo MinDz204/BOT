@@ -19,6 +19,7 @@
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^5.2.0",
     "fs": "^0.0.1-security",
+    "kitsu": "^10.1.2",
     "mongodb": "^6.0.0",
     "mongoose": "^7.5.0",
     "play-dl": "^1.9.6"

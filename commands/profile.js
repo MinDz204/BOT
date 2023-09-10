@@ -1,7 +1,7 @@
 const { ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const canvacord = require("canvacord");
 const db = require("./../mongoDB");
-const client = require("./../index");
+const client = require('..');
 module.exports = {
     name: "profile",
     description: "View profile.",
@@ -32,7 +32,7 @@ module.exports = {
                     )
         const rank = new canvacord.Rank()
             .setAvatar(userr.displayAvatarURL({ dynamic: false, format: 'png' }) )
-            .setDiscriminator(`${userDB?.coin} xu`)
+            .setDiscriminator(`${userDB?.coin || 0} xu`)
             .setCurrentXP(userDB?.Xp || 0)  
             .setLevel(userDB?.lvl || 1)
             .setRequiredXP( (userDB?.lvl || 1) * 50 + 1)
