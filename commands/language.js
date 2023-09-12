@@ -20,7 +20,7 @@ module.exports = {
   cooldown: 10,
   run: async ( langOld, interaction ) => {
     interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
-      Message.delete();
+      Message?.delete().catch( e => { } );
   },10000)}).catch(e => { console.log(e) })
 
     const name = interaction.options.getString("name");

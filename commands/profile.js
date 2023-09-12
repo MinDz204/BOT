@@ -13,7 +13,7 @@ module.exports = {
     cooldown: 3,
     run: async ( lang, interaction, Zi ) => {
         interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
-            Message.delete();
+            Message?.delete().catch( e => { } );
         },10000)}).catch(e => { console.log(e) })
 
         let userr = interaction?.options?.getUser("user") || interaction.user;

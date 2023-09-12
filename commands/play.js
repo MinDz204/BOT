@@ -18,7 +18,7 @@ module.exports = {
   run: async ( lang, interaction ) => {
 
     interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
-      Message.delete();
+      Message?.delete().catch( e => { } );
   },10000)}).catch(e => { console.log(e) })
 
     const nameS = interaction.options.getString("name");
@@ -52,7 +52,7 @@ module.exports = {
     }catch(e){
        return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
             setTimeout(function(){
-              Message.delete();
+              Message?.delete().catch( e => { } );
             },10000)}).catch(e => { console.log(e) });
     }
     const entry = queue.tasksQueue.acquire();
