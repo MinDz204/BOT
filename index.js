@@ -15,7 +15,6 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds, // for guild related things
     GatewayIntentBits.GuildMembers, // for guild members related things
-    GatewayIntentBits.GuildBans, // for manage guild bans
     GatewayIntentBits.GuildEmojisAndStickers, // for manage emojis and stickers
     GatewayIntentBits.GuildIntegrations, // for discord Integrations
     GatewayIntentBits.GuildWebhooks, // for discord webhooks
@@ -41,8 +40,8 @@ const player = new Player(client, {
   useLegacyFFmpeg: true,
   ytdlOptions: {
     filter: "audioonly",
-    opusEncoder: true,
-    quality: "highestaudio"
+    opusEncoded: true,
+    quality: 'highestaudio',
   }
 });
 player.setMaxListeners(200);
@@ -91,7 +90,9 @@ fs.readdir("./commands", (err, files) => {
   });
 });
 
-process.on('unhandledRejection', error => {     console.error('Unhandled promise rejection:', error); });
+process.on('unhandledRejection', error => {
+  client.errorLog.send(`<t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
+  console.error('Unhandled promise rejection:', error); });
 
 client.login(config.token || process.env.TOKEN).catch(e => {
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")

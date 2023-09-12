@@ -4,6 +4,7 @@ const { ModalBuilder, TextInputStyle } = require("discord.js");
 const { ActionRowBuilder, TextInputBuilder } = require("@discordjs/builders");
 const { lyricFind } = require("./Zilyric");
 const db = require("./../../mongoDB");
+const { ZiPlayerFillter, ZiPlayerFillterRow } = require("./Zifillter");
 
 module.exports = async ( interaction, lang ) => {
 try{
@@ -47,6 +48,34 @@ try{
             function(){
                 interaction?.message.delete().catch(e =>{ });
             }, 10000 )).catch(e =>{ });
+    //:::::::::::::::::::::::::::: Fillter ::::::::::::::::::::::::::::::::::::::::::::::::::::://
+        case "ZiplayerFillter":
+            await interaction?.reply( await ZiPlayerFillter(interaction?.user, queue , lang ))
+        return interaction?.message.edit(await zistart(queue, lang)).catch(e => { }); 
+        case "Ziplayerfillteroff": 
+            await queue?.filters?.ffmpeg?.setFilters(false);
+            await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+        return interaction?.message?.delete().catch(e => { })
+        case "Ziplayerbassboost":
+            await interaction?.deferUpdate().catch(e => { })
+            await queue.filters.ffmpeg.toggle('bassboost');
+            await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+        return interaction?.message.edit({ components:[ await ZiPlayerFillterRow(queue) ]}).catch(e => { });
+        case "Ziplayerlofi":
+            await interaction?.deferUpdate().catch(e => { })
+            await queue.filters.ffmpeg.toggle('lofi');
+            await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+        return interaction?.message.edit({ components:[ await ZiPlayerFillterRow(queue) ]}).catch(e => { });
+        case "Ziplayernightcore":
+            await interaction?.deferUpdate().catch(e => { })
+            await queue.filters.ffmpeg.toggle('nightcore');
+            await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+        return interaction?.message.edit({ components:[ await ZiPlayerFillterRow(queue) ]}).catch(e => { });
+        case "Ziplayerkaraoke":
+            await interaction?.deferUpdate().catch(e => { })
+            await queue.filters.ffmpeg.toggle('karaoke');
+            await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+        return interaction?.message.edit({ components:[ await ZiPlayerFillterRow(queue) ]}).catch(e => { });
     }
     //--------------------------------------------------------------------------------------------------//
     let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();

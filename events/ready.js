@@ -1,4 +1,5 @@
 const config = require("../config.js");
+const { ActivityType, EmbedBuilder } = require("discord.js")
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 const mongoose = require("mongoose");
@@ -20,6 +21,7 @@ module.exports = async (client) => {
         body: await client.commands,
       });
       console.log("Successfully loadded application [/] commands.");
+      client.errorLog = client.channels.cache.get(config.errorLog) ? client.channels.cache.get(config.errorLog) : undefined
 //del db
       client.Zicomand = await rest.get(Routes.applicationCommands(client.user.id))
       setTimeout(async()=>{

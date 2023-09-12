@@ -10,6 +10,7 @@ const ZiUser = Schema({
   Xp: Number,
   vol: Number,
   cooldowns: Number,
+  claimcheck: Number,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
 })

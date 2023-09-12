@@ -7,11 +7,11 @@ const language ={
     Volume: `Âm lượng`,
     Playing: `Đã phát`,
     LoopMode: `Lặp lại`,
-    loopOFF: `không`,
-    loopTrack: `bài hát đang phát`,
-    loopqueue: `hàng đợi`,
-    loopauto:`tự động phát`,
-    queueEMty:`hàng đợi trống\n bạn có thể thêm 1 số bài hát`,
+    loopOFF: `Không`,
+    loopTrack: `Bài hát đang phát`,
+    loopqueue: `Hàng đợi`,
+    loopauto:`Tự động phát`,
+    queueEMty:`Hàng đợi trống\n bạn có thể thêm 1 số bài hát✅`,
     SearchTrack:`Tìm kiếm nhạc`,
     SearchTrackDEs:"Nhập tên hoặc liên kết đến bài hát",
     volume:`Âm lượng`,
@@ -31,6 +31,10 @@ const language ={
     cooldownsMESS: `Vui lòng đợi <t:{expiredTimestamp}:R> để tiếp tục thực hiện lệnh \`{interaction.commandName}\`. `,
     Queue: `Hàng đợi`,
     queueclear:`Đã dọn sạch hàng đợi`,
-    ChangeLanguage:`Đã thay đổi ngôn ngữ bot thành tiếng việt ✅`
+    ChangeLanguage:`Đã thay đổi ngôn ngữ bot thành tiếng việt ✅`,
+    claimfail: `Bạn đã nhận kinh nghiệm của hôm nay rồi!\nHãy quay lại sau ** houurss ** để nhận tiếp ❌`,
+    claimsuss: `Chúc mừng bạn đã nhận thành công 50xp ✅\n Kinh nghiệm hiện tại: `,
+    fillter: `Lưu ý: nếu thời lượng nhạc dài, thời gian áp dụng bộ lọc có thể dài hơn tương ứng.`,
+    
 }
 module.exports = language;

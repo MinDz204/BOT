@@ -1,20 +1,11 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
+const client = require("../..");
 const { useMainPlayer, QueryType } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const client = require("../..");
+const { validURL } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
-
-function validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return !!pattern.test(str);
-  }
 
   module.exports = async ( interaction, nameS ) => {
     await interaction?.deferReply();

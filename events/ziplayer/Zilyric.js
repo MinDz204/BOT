@@ -11,7 +11,6 @@ async function searchForLyrics(songName) {
   }
 
 const lyricFind = async (trackk, user, lang ) => {
-    let code;
 const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
         .setLabel('❌')
@@ -19,7 +18,7 @@ const row = new ActionRowBuilder().addComponents(
         .setStyle(ButtonStyle.Danger));
 //embed
 const info = new EmbedBuilder()
-    .setColor( lang?.color || client.color)
+    .setColor( lang?.COLOR || client.color)
     .setImage(`https://i3.ytimg.com/vi/${trackk?.raw?.id}/maxresdefault.jpg`)
     .setTimestamp()
     .setFooter({ text: `${lang?.RequestBY} ${user?.tag}`, iconURL: user?.displayAvatarURL({ dynamic: true })})
@@ -30,6 +29,7 @@ const info = new EmbedBuilder()
       ]);
 //sercher lyr
     const lyrics = await searchForLyrics(trackk?.title);
+    console.log(lyrics)
     if (!lyrics){
         let Ziic = await ZiPlayerlinkAvt(trackk?.queryType)
         info.setAuthor({ name: `${trackk?.title}`, iconURL: `${Ziic}`, url: trackk?.url });
@@ -45,7 +45,7 @@ const info = new EmbedBuilder()
         info.setDescription(`[**${trackk?.title}**](${trackk?.url})\n**Lyric:**\n${trimmedLyrics.length === 1980 ? `${trimmedLyrics}...` : trimmedLyrics}\n`);
     }
 
-    return code = { embeds: [info],components: [row] }
+    return { embeds: [info],components: [row] }
 
 };
 module.exports = { lyricFind }
