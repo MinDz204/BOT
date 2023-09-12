@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require("../..");
 const { useMainPlayer, QueryType } = require("discord-player");
@@ -8,7 +8,9 @@ const { validURL } = require("../Zibot/ZiFunc");
 const player = useMainPlayer();
 
   module.exports = async ( interaction, nameS ) => {
-    await interaction?.deferReply();
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+      Message.delete();
+  },10000)}).catch(e => { console.log(e) })
     if(!nameS) return;
     if(validURL(nameS)){
     try{
@@ -31,10 +33,10 @@ const player = useMainPlayer();
                 skipOnNoStream: true,
             }
         });
-        return interaction?.deleteReply();
+        return;
     }catch(e){ 
       let lang = await rank({ user: interaction.user });
-      return interaction?.editReply(`${lang?.PlayerSearchErr}`).then(async Message => {
+      return interaction?.channel?.send(`${lang?.PlayerSearchErr}`).then(async Message => {
         setTimeout(function(){
           Message.delete();
         },10000)}).catch(e => { console.log(e) }); }
@@ -148,5 +150,5 @@ const player = useMainPlayer();
               code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
               break;
           }
-          return interaction.editReply(code)
+          return interaction?.channel?.send(code)
   }

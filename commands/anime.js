@@ -17,7 +17,9 @@ module.exports = {
   cooldown: 3,
   run: async ( lang, interaction ) => { 
     const name = interaction.options.getString("name");
-    await interaction.deferReply();
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+      Message.delete();
+  },10000)}).catch(e => { console.log(e) })
     let search = encodeURI(removeVietnameseTones(name))
     const { data } = await kitsu.get('anime?filter[text]=' + search + '&page[limit]=' + 2)
     const anime = data[0];
@@ -41,6 +43,6 @@ module.exports = {
           { name: "**🏆 Rank:**", value: `${anime?.ratingRank ? anime.ratingRank : "Unknwon"}`, inline: true },
         ])
 
-    return interaction.editReply({ embeds: [ info ] })
+    return interaction.channel.send({ embeds: [ info ] })
   },
 };

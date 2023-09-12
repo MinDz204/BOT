@@ -6,7 +6,9 @@ module.exports = {
   options: [ ],
   cooldown: 3,
   run: async ( lang, interaction ) => {
-    await interaction.deferReply().catch(e=>{ });
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+      Message.delete();
+  },10000)}).catch(e => { console.log(e) })
 //
 const commands = client.Zicomand;
 const embed = new EmbedBuilder()
@@ -34,6 +36,6 @@ const embed = new EmbedBuilder()
   .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
   .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
 //
-return interaction.editReply({ embeds: [embed] })
+return interaction.channel.send({ embeds: [embed] })
   },
 };

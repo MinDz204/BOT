@@ -10,7 +10,11 @@ module.exports = {
     options: [ ],
     cooldown: 3,
     run: async ( lang, interaction ) => {
-        await interaction?.deferReply();
+
+      interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+        Message.delete();
+    },10000)}).catch(e => { console.log(e) })
+    
         let userDB = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
 
       const embed = new EmbedBuilder()
@@ -32,7 +36,7 @@ module.exports = {
         embed.setDescription(`${lang?.claimsuss} lvl: ${userDB2?.lvl} xp: ${userDB2?.Xp}/${userDB2?.lvl * 50 + 1}`);
       }
 
-      return interaction.editReply({ embeds: [embed] }).catch(e => { })
+      return interaction.channel.send({ embeds: [embed] }).catch(e => { })
     },
   };
   

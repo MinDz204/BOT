@@ -15,6 +15,5 @@ module.exports = {
   run: async ( lang, interaction ) => {
     const name = interaction.options.getString("name");
     return require("../events/ziplayer/ziSearch")( interaction, name );
-
   },
 };

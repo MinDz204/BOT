@@ -16,7 +16,11 @@ module.exports = {
   NODMPer: true,
   cooldown: 3,
   run: async ( lang, interaction ) => {
-    await interaction?.deferReply().catch(e=>{ });
+
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+      Message.delete();
+  },10000)}).catch(e => { console.log(e) })
+
     const nameS = interaction.options.getString("name");
     let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch( e=>{ } )
     let res;
@@ -46,7 +50,7 @@ module.exports = {
                 interaction?.member.voice.channelId,
                 { deaf: true })
     }catch(e){
-       return interaction?.editReply(`${lang?.PlayerSearchErr}`).then(async Message => {
+       return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
             setTimeout(function(){
               Message.delete();
             },10000)}).catch(e => { console.log(e) });
@@ -59,6 +63,6 @@ module.exports = {
     } finally {
         queue.tasksQueue.release();
     }
-    return interaction?.deleteReply().catch(e=>{ });
+    return;
   },
 };

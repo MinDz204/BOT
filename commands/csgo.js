@@ -47,7 +47,11 @@ module.exports = {
       }],
     cooldown: 3,
     run: async ( lang, interaction ) => {
-        await interaction.deferReply();
+      //defer
+      interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+        Message.delete();
+    },10000)}).catch(e => { console.log(e) })
+
         const username = interaction.options.getString("id");
         let linkkkk = await getSteamID64( getSteamIDName(username) )
 
@@ -93,7 +97,7 @@ module.exports = {
             .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true}) })
             .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
             
-        await interaction.editReply({embeds:[ embed ]});
+        await interaction.channel.send({embeds:[ embed ]});
 
     },
   };

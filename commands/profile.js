@@ -12,7 +12,10 @@ module.exports = {
       }],
     cooldown: 3,
     run: async ( lang, interaction, Zi ) => {
-        await interaction?.deferReply();
+        interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+            Message.delete();
+        },10000)}).catch(e => { console.log(e) })
+
         let userr = interaction?.options?.getUser("user") || interaction.user;
         let userDB = await db.ZiUser.findOne({ userID: userr.id })
         let strimg = `https://cdn.discordapp.com/attachments/1064851388221358153/1149319190918991934/iu.png`
@@ -45,7 +48,7 @@ module.exports = {
         rank.build()
             .then(data => { 
                 const attachment = new AttachmentBuilder(data, { name:"RankCard.png"});
-                if (!Zi) return interaction.editReply({ files: [ attachment ], components: [editProf] }).catch( e => { } );
+                if (!Zi) return interaction.channel.send({ files: [ attachment ], components: [editProf] }).catch( e => { } );
                 interaction.message.edit({ files: [ attachment ], components: [editProf] }).catch( e => { } );
                 interaction.deleteReply();
                 

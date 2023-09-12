@@ -19,7 +19,10 @@ module.exports = {
   }],
   cooldown: 10,
   run: async ( langOld, interaction ) => {
-    await interaction.deferReply().catch(e=>{ });
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+      Message.delete();
+  },10000)}).catch(e => { console.log(e) })
+
     const name = interaction.options.getString("name");
     await db.ZiUser.updateOne({ userID: interaction?.user?.id },{
         $set:{
@@ -42,7 +45,7 @@ const embed = new EmbedBuilder()
   .setTimestamp()
   .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
 //
-return interaction.editReply({ embeds: [embed], components:[row] }).then(async Message => setTimeout(function(){
+return interaction.channel.send({ embeds: [embed], components:[row] }).then(async Message => setTimeout(function(){
     Message?.edit({components:[ ]}).catch(e=>{ });;
   },1000)).catch(e=>{ });
 
