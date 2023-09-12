@@ -28,7 +28,7 @@ module.exports = {
       } else {
         embed.setColor(lang?.COLOR || client.color);
         await rank({ user: interaction.user, lvlAdd: 49})
-        await db.usercustom.updateOne({ userID: interaction.user.id }, {
+        await db.ZiUser.updateOne({ userID: interaction.user.id }, {
           $set: { claimcheck: Date.now() }
         }, { upsert: true });
 
