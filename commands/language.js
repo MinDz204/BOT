@@ -15,6 +15,7 @@ module.exports = {
         { "name": 'Tiếng Việt', "value": 'vi' },
         { "name": 'English', "value": 'en' },
         { "name": 'Japanese', "value": 'jp' },
+        { "name": 'Korean', "value": 'ko' },
         { "name": 'China (Simplified)', "value": 'zh' },
     ]
   }],
