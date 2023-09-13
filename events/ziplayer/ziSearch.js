@@ -3,7 +3,7 @@ const db = require("./../../mongoDB");
 const client = require("../..");
 const { useMainPlayer, QueryType } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL } = require("../Zibot/ZiFunc");
+const { validURL, processQuery } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
 
@@ -15,7 +15,8 @@ const player = useMainPlayer();
     if(validURL(nameS)){
     try{
       let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch( e=>{ } )
-        await player.play(interaction?.member.voice.channelId, nameS, {
+      const nameSearch = await processQuery(nameS);
+        await player.play(interaction?.member.voice.channelId, nameSearch, {
             nodeOptions: {
                 metadata:{
                     channel: interaction.channel,
@@ -35,6 +36,7 @@ const player = useMainPlayer();
         });
         return;
     }catch(e){ 
+      console.log(e)
       let lang = await rank({ user: interaction.user });
       return interaction?.channel?.send(`${lang?.PlayerSearchErr}`).then(async Message => {
         setTimeout(function(){

@@ -11,7 +11,7 @@ const zistartButton = async ( queue ) =>{
       .setCustomId('Ziplayerf5')
       .setStyle(ButtonStyle.Success);
     const Stop = new ButtonBuilder()
-      .setLabel('Stop')
+      .setEmoji('⬜')
       .setCustomId('ZiplayerStop')
       .setStyle(ButtonStyle.Danger);
     const Next = new ButtonBuilder()
@@ -29,6 +29,7 @@ const zistartButton = async ( queue ) =>{
     const lyric = new ButtonBuilder()
       .setEmoji('<:lyric:1150770291941851187>')
       .setCustomId('ZiplayerLyric')
+      .setDisabled(true)
       .setStyle(ButtonStyle.Success);
   
     const vol = new ButtonBuilder()

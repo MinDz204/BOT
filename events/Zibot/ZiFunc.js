@@ -41,4 +41,19 @@ var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
 return !!pattern.test(str);
 }
-module.exports = { removeVietnameseTones, msToTime, validURL }
+function processQuery(query) {
+    // Regular expression to match YouTube and YouTube Music URLs
+    const youtubeRegex = new RegExp(/^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtube\.com\/playlist\?list=(.*)$/);
+  
+    // If the query matches the YouTube regex, remove the &si= part of the URL
+    if (query.match(youtubeRegex)) {
+      const queryParts = query.split('&si=');
+      queryParts.pop();
+      return queryParts.join('');
+    } else {
+      // Otherwise, return the query as-is
+      return query;
+    }
+  }
+  
+module.exports = { removeVietnameseTones, msToTime, validURL, processQuery }

@@ -1,6 +1,6 @@
 const client = require("..");
-const { useMainPlayer } = require('discord-player');
-
+const { useMainPlayer, QueryType } = require('discord-player');
+const { YouTubeExtractor, Internal, YoutubeExtractor } = require("@discord-player/extractor")
 const player = useMainPlayer();
 module.exports = {
     name: "ping",
@@ -8,7 +8,15 @@ module.exports = {
     options: [],
     cooldown: 3,
     run: async ( lang, interaction ) => {
-      interaction.reply( player.scanDeps())
+let youtube = new YoutubeExtractor()
+      let res =  await player.search(`Là em tự đa tình 是我在做多情种`,{
+        fallbackSearchEngine: QueryType.YOUTUBE,
+        requestedBy:interaction.user,
+      });
+      console.log(res.tracks)
+
+        let resss = youtube.getRelatedTracks(res.tracks[0], res.tracks)
+      interaction.reply( resss )
     },
   };
   

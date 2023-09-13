@@ -3,8 +3,11 @@ const db = require("./../../mongoDB");
 const client = require("../..");
 
 
-module.exports = async ( interaction, queue, lang ) => {
-    await interaction?.deferReply();
+module.exports = async ( interaction, queue, lang, NOnextpage ) => {
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+        Message?.delete().catch( e => { } );
+    },10000)}).catch(e => { console.log(e) })
+    
     const tracl = [];
     queue?.tracks?.map(async ( track , i) =>{
         tracl.push({
@@ -19,7 +22,7 @@ module.exports = async ( interaction, queue, lang ) => {
     let a = tracl.length / 20
     let b = `${ a + 1 }`
     let toplam = b.charAt(0)
-    page = ( page + 1 ) > toplam ? 1 : ( page + 1 );
+    page = !!NOnextpage ? page :  ( page + 1 ) > toplam ? 1 : ( page + 1 );
     let currentIndex = ( page - 1 ) * 20;
     const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -29,15 +32,19 @@ module.exports = async ( interaction, queue, lang ) => {
         new ButtonBuilder()
         .setLabel("Clear")
         .setStyle(ButtonStyle.Secondary)
-        .setCustomId("ZiplayerQueueClear")
+        .setCustomId("ZiplayerQueueClear"),
+        new ButtonBuilder()
+        .setEmoji("<:trash:1151572367961764000>")
+        .setCustomId("DelTrack")
+        .setStyle(ButtonStyle.Secondary)
     )
     const embed = async(start) =>{
         let nowww = page === 1 ? 1 : page * 20 - 20;
         const current = tracl.slice( start , start + 20 )
-        if(!current || ! current?.length > 0 ) return interaction?.editReply({ content: ` `, ephemeral: true }).catch(e=>{ });
+        if(!current || ! current?.length > 0 ) return interaction?.channel.send({ content: ` `, ephemeral: true }).catch(e=>{ });
         return new EmbedBuilder()
-            .setTitle(`${lang?.Queue}: ${interaction?.guild?.name}`)
-            // .setThumbnail(interaction?.user?.displayAvatarURL({ dynamic:true, size:1024 }))
+            .setColor(lang?.COLOR || client.color)
+            .setTitle(`<:queue:1150639849901133894> ${lang?.Queue}: ${interaction?.guild?.name}`)
             .setDescription(`${current.map(data =>
                  `\n${ nowww++ } | [${data.title.substr(0,25)+"..."}](${data.url}) | ${data.author.substr(0,15)+"..."}`)}
             `)
@@ -46,7 +53,7 @@ module.exports = async ( interaction, queue, lang ) => {
     }
     //send messenger::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     if(!ziQueue){
-        await interaction.editReply({ embeds:[ await embed( currentIndex )], components:[row] }).then(async Message =>{
+        await interaction.channel.send({ embeds:[ await embed( currentIndex )], components:[row] }).then(async Message =>{
             await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id },{
                 $set:{
                     messageID: Message.id,

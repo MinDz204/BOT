@@ -2,18 +2,10 @@ const { useQueue } = require("discord-player");
 const db = require("./../../mongoDB");
 const { zistart } = require("./../ziplayer/ziStartTrack");
 const { rank } = require("../Zibot/ZilvlSys");
+const { validURL } = require("../Zibot/ZiFunc");
 
 //test func
 var hextest = /^#[0-9A-F]{6}$/i;
-function validURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-  return !!pattern.test(str);
-}
 function isNumber(str) {
   return /^[0-9]+$/.test(str);
 }
@@ -29,7 +21,7 @@ module.exports = async (client, interaction) => {
             await interaction.deferReply({ ephemeral: true }).catch(e => { });
             const queue = useQueue(interaction?.guildId);
             const vol = interaction.fields.getTextInputValue("resu");
-            if(!isNumber(vol))  return interaction.editReply(`${lang?.volumeErr}`)
+            if(!isNumber(vol))  return interaction.editReply({content:`${lang?.volumeErr}`, ephemeral:true }).catch(e => { });
             queue.node.setVolume(Math.abs(vol))
             await db.ZiUser.updateOne({ userID: interaction.user.id },{
                 $set:{
@@ -38,6 +30,12 @@ module.exports = async (client, interaction) => {
             },{ upsert: true })
             interaction.deleteReply().catch(e => { });
         return queue?.metadata?.Zimess.edit( await zistart(queue, lang) ).catch(e => { });    }
+        case "DelTrackmodal":{
+          const num = interaction.fields.getTextInputValue("number");
+          if(!isNumber(num))  return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
+          const queue = useQueue(interaction?.guildId);
+          queue.removeTrack(  Math.abs(num) -1  )
+        return require("./../ziplayer/Ziqueue")( interaction, queue, lang, true );            }
         case "editProfilemodal":{
             let hexcolo = interaction.fields.getTextInputValue("Probcolor");
             let imga = interaction.fields.getTextInputValue("Probimage");

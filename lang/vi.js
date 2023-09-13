@@ -35,6 +35,7 @@ const language ={
     claimfail: `Bạn đã nhận kinh nghiệm của hôm nay rồi!\nHãy quay lại sau ** houurss ** để nhận tiếp ❌`,
     claimsuss: `Chúc mừng bạn đã nhận thành công 50xp ✅\n Kinh nghiệm hiện tại: `,
     fillter: `Lưu ý: nếu thời lượng nhạc dài, thời gian áp dụng bộ lọc có thể dài hơn tương ứng.`,
-    
+    Deltrack: `Nhập số thứ tự nhạc cần xóa!`,
+    DeltrackErr: `Số thứ tự bài hát không hợp lệ ❌`,
 }
 module.exports = language;

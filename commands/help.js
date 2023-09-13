@@ -29,8 +29,8 @@ const embed = new EmbedBuilder()
     { name: "Fx", value: `Fillter`, inline: true },
     { name: "<:search:1150766173332443189>", value: `Search`, inline: true },
     { name: "A", value: `Auto Play mode`, inline: true },
-    { name: "<:queue:1150639849901133894>", value: `Show Queue`, inline: false },
-    // { name: "", value: ``, inline: false },
+    { name: "<:queue:1150639849901133894>", value: `Show Queue`, inline: true },
+    { name: ":white_large_square:", value: `Stop Music`, inline: true },
   ])
   .setTimestamp()
   .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })

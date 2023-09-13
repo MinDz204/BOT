@@ -1,7 +1,9 @@
 const { useMainPlayer } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const db = require("./../mongoDB");
+const { processQuery } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
+
 module.exports = {
   name: "play",
   description: "Play or Add music and play next.",
@@ -43,7 +45,7 @@ module.exports = {
     });
 
     try {
-        res =  await player.search(nameS,{
+        res =  await player.search(await processQuery(nameS),{
             requestedBy:interaction.user,
           });
         if( !queue.connection ) await queue.connect(
