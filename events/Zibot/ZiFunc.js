@@ -44,9 +44,8 @@ return !!pattern.test(str);
 function processQuery(query) {
     // Regular expression to match YouTube and YouTube Music URLs
     const youtubeRegex = new RegExp(/^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtube\.com\/playlist\?list=(.*)$/);
-  
     // If the query matches the YouTube regex, remove the &si= part of the URL
-    if (query.match(youtubeRegex)) {
+    if (query.match(youtubeRegex) && query.includes('&si=')) {
       const queryParts = query.split('&si=');
       queryParts.pop();
       return queryParts.join('');

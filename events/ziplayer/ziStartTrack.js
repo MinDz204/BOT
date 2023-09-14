@@ -121,6 +121,17 @@ const ZiPlayerlinkAvt = async ( query ) => {
         return `https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif`;
     }
   }
+  function ZiImg(track){
+    switch (track?.queryType){
+      case `youtube`:
+      case `youtubePlaylist`:
+      case `youtubeSearch`:
+      case `youtubeVideo`:
+        return `https://i3.ytimg.com/vi/${track?.raw?.id}/maxresdefault.jpg`;
+      default:
+        return track?.thumbnail
+    }
+  }
 const zistartEmber = async ( queue , lang ) =>{
     const track = queue?.currentTrack;
     let requestby = track?.requestby || queue?.metadata.requestby;
@@ -139,12 +150,13 @@ const zistartEmber = async ( queue , lang ) =>{
     const embed = new EmbedBuilder()
         .setAuthor({ name: track?.title , url:track?.url, iconURL: avtlink})
         .setColor( queue?.metadata.embedCOLOR || client?.color )
-        .setImage(track?.queryType == "youtube"? `https://i3.ytimg.com/vi/${track?.raw?.id}/maxresdefault.jpg`: track?.thumbnail)
+        .setImage(`${await ZiImg(track)}`)
         .setTimestamp()
         .setFooter({ text: `${lang?.RequestBY} ${requestby?.tag}`, iconURL: requestby?.displayAvatarURL({ dynamic: true}) })
         .setDescription(`${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationsymbal}
-        ${lang?.LoopMode}: ${methods[queue.repeatMode]} - Fillter:${queue.filters.ffmpeg.getFiltersEnabled()}\n
-        ${proress}`)
+        ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Fillter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()} \n
+        `)
+        .addFields({name:`${proress}`,value:` `})
 return embed;
 }
 
@@ -160,7 +172,11 @@ const zisearch = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
         .setLabel('Search')
         .setCustomId('ZiplayerSeach')
-        .setStyle(ButtonStyle.Success)
+        .setStyle(ButtonStyle.Success),
+    new ButtonBuilder()
+        .setEmoji('⬜')
+        .setCustomId('ZiplayerStop')
+        .setStyle(ButtonStyle.Danger)
 );
 const revEmbed = queue?.metadata?.Zimess.embeds[0];
 const embess = EmbedBuilder.from(revEmbed)

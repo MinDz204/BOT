@@ -37,6 +37,7 @@ const language = {
     fillter: "참고: 노래 길이가 길면 필터 적용 시간이 그에 따라 더 오래 걸릴 수 있습니다.",
     Deltrack: "삭제할 트랙 번호를 입력하세요!",
     DeltrackErr: "잘못된 트랙 번호❌",
+    StopFail: `음악을 켠 사람이 아니므로 {uerrr}에게 연락하여 끄십시오.`,
   };
   
   module.exports = language;

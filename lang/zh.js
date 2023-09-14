@@ -37,6 +37,7 @@ const language = {
     fillter: "注意：如果歌曲很长，过滤器应用时间可能会相应延长。",
     Deltrack: "输入要删除的曲目号！",
     DeltrackErr: "无效的曲目号 ❌",
+    StopFail: `你不是开启音乐的人，请联系 {uerrr} 来关闭它。`,
   };
   module.exports = language;
   

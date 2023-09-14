@@ -49,7 +49,7 @@ const embed = new EmbedBuilder()
 //
 return interaction.channel.send({ embeds: [embed], components:[row] }).then(async Message => setTimeout(function(){
     Message?.edit({components:[ ]}).catch(e=>{ });;
-  },1000)).catch(e=>{ });
+  },10000)).catch(e=>{ });
 
   },
 };

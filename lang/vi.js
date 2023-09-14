@@ -37,5 +37,6 @@ const language ={
     fillter: `Lưu ý: nếu thời lượng nhạc dài, thời gian áp dụng bộ lọc có thể dài hơn tương ứng.`,
     Deltrack: `Nhập số thứ tự nhạc cần xóa!`,
     DeltrackErr: `Số thứ tự bài hát không hợp lệ ❌`,
+    StopFail: `Bạn không phải người bật nhạc hãy liên hệ {uerrr} để tắt`
 }
 module.exports = language;

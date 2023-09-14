@@ -37,5 +37,6 @@ const language = {
     fillter: "注意: 曲の長い場合、フィルター適用時間はそれに応じて長くなる場合があります。",
     Deltrack: "削除するトラック番号を入力してください！",
     DeltrackErr: "無効なトラック番号 ❌",
+    StopFail: `音楽をつけた人ではないので、{uerrr} に連絡して消してください。`,
   };
   module.exports = language;
