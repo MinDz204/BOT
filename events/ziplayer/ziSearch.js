@@ -8,7 +8,8 @@ const { validURL, processQuery } = require("../Zibot/ZiFunc");
 const player = useMainPlayer();
 
   module.exports = async ( interaction, nameS ) => {
-    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
+    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, fetchReply: true, ephemeral: true })
+      .then(async Message => { setTimeout(function(){
       Message?.delete().catch( e => { } );
   },10000)}).catch(e => { console.log(e) })
     if(!nameS) return;

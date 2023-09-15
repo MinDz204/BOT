@@ -38,7 +38,8 @@ const language = {
     Deltrack: "삭제할 트랙 번호를 입력하세요!",
     DeltrackErr: "잘못된 트랙 번호❌",
     StopFail: `음악을 켠 사람이 아니므로 {uerrr}에게 연락하여 끄십시오.`,
+    SeverMute: `음악 재생 중에 나를 음소거했습니다... 음악이 일시 중지됩니다!`,
+    SeverUnMute: `음악이 돌아왔습니다!`,
   };
-  
   module.exports = language;
   

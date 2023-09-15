@@ -1,4 +1,4 @@
-const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder } = require("discord.js");
+const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL } = require("../Zibot/ZiFunc");
@@ -43,7 +43,23 @@ try{
           )
           return interaction?.showModal(modal);
         }
-
+    case "Guills":{
+      const rowC = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+        .setCustomId("cancel")
+        .setLabel("❌")
+        .setStyle(ButtonStyle.Secondary)
+      )
+      let Index = 1;
+      const embed = new EmbedBuilder()
+      .setColor( lang.COLOR|| client.color )
+      .setTitle("Zi bot Guild:")
+      .setTimestamp()
+      .setDescription(`${client.guilds.cache.map(( guild  ) =>`${Index++} |\`${guild.name}\``).join('\n')}`)
+      .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+      .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
+      return interaction.reply({ embeds:[embed], components:[rowC] }).catch(e=>{ })
+    }
     case "editProfile": {
       let rankkk = await db?.ZiUser?.findOne({ userID: interaction?.user.id }).catch(e => { })
       if (rankkk.lvl < 2) return interaction.reply({ content: `${lang?.canlvl2}`, ephemeral: true }).catch(e => { })

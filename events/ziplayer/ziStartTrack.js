@@ -122,18 +122,20 @@ const ZiPlayerlinkAvt = async ( query ) => {
     }
   }
   function ZiImg(track){
+    let id = track?.raw?.id|| track?.thumbnail?.id || track?.raw?.thumbnail?.id || track?.__metadata?.id || track?.__metadata?.thumbnail?.id || track?.metadata?.id;
     switch (track?.queryType){
       case `youtube`:
       case `youtubePlaylist`:
       case `youtubeSearch`:
       case `youtubeVideo`:
-        return `https://i3.ytimg.com/vi/${track?.raw?.id}/maxresdefault.jpg`;
+        return `https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`;
       default:
         return track?.thumbnail
     }
   }
 const zistartEmber = async ( queue , lang ) =>{
     const track = queue?.currentTrack;
+
     let requestby = track?.requestby || queue?.metadata.requestby;
     const avtlink = await ZiPlayerlinkAvt(track?.queryType);
     const methods = [`${lang?.loopOFF}`, `${lang?.loopTrack}`, `${lang?.loopqueue}`,`${lang?.loopauto}`,` `];

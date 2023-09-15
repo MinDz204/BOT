@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message, AttachmentBuilder } = require('discord.js');
 const client = require('..');
 module.exports = {
   name: "help",
@@ -10,6 +10,23 @@ module.exports = {
       Message?.delete().catch( e => { } );
   },10000)}).catch(e => { console.log(e) })
 //
+
+const row = new ActionRowBuilder().addComponents(
+  new ButtonBuilder()
+  .setCustomId("Guills")
+  .setEmoji(`<a:ddev:850081111241785425>`)
+  .setLabel("Guild")
+  .setStyle(ButtonStyle.Secondary),
+  new ButtonBuilder()
+  .setLabel("DEV Discord")
+  .setEmoji(`<:verified:710970919736311942>`)
+  .setURL(`https://discord.gg/zaskhD7PTW`)
+  .setStyle(ButtonStyle.Link),
+  new ButtonBuilder()
+  .setCustomId("cancel")
+  .setLabel("❌")
+  .setStyle(ButtonStyle.Secondary)
+)
 const commands = client.Zicomand;
 const embed = new EmbedBuilder()
   .setColor( lang.COLOR|| client.color )
@@ -36,6 +53,6 @@ const embed = new EmbedBuilder()
   .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
   .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
 //
-return interaction.channel.send({ embeds: [embed] })
+return interaction.channel.send({ embeds: [embed], components: [row] })
   },
 };

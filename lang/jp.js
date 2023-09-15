@@ -38,5 +38,7 @@ const language = {
     Deltrack: "削除するトラック番号を入力してください！",
     DeltrackErr: "無効なトラック番号 ❌",
     StopFail: `音楽をつけた人ではないので、{uerrr} に連絡して消してください。`,
+    SeverMute: `音楽を再生中に私をミュートしました... 音楽が一時停止されます！`,
+    SeverUnMute: `音楽が戻ってきました！`,
   };
   module.exports = language;

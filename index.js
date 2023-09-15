@@ -1,4 +1,4 @@
-const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
+const { Client, GatewayIntentBits, Partials } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
@@ -31,7 +31,6 @@ const client = new Client({
   ],
 });
 client.color = config.color;
-client.cooldowns = new Collection();
 module.exports = client;
 //-------------------------------------------------------------//
 //        discord player          //

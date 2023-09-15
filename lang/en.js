@@ -38,5 +38,7 @@ const language = {
     Deltrack: "Enter the track number to delete!",
     DeltrackErr: "Invalid track number ❌",
     StopFail: `You are not the one who turned on the music, please contact {uerrr} to turn it off.`,
+    SeverMute: `You muted me while the music was playing... The music will be paused!`,
+    SeverUnMute: `The music is back!`,
   };
   module.exports = language;

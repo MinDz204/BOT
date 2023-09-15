@@ -10,6 +10,9 @@ module.exports = async ( interaction, lang ) => {
 try{
     const queue = useQueue(interaction?.guildId);
     switch (interaction.customId){
+        case "Ziplayerf5":
+            await interaction?.deferUpdate().catch(e => { });
+        return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
         case "ZiplayerStop":
             let requestby =  queue?.currentTrack?.requestby || queue?.metadata.requestby;
             if ( requestby?.id !== interaction.user?.id) return interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${queue?.metadata.requestby.id}>`)}`, ephemeral:true }).catch(e=>{ })
@@ -83,9 +86,6 @@ try{
     let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();
     if( ! ZiisPlaying ) return interaction?.reply({content:`${lang?.NoPlaying}`, ephemeral: true })
     switch ( interaction.customId ){
-    case "Ziplayerf5":
-        await interaction?.deferUpdate().catch(e => { });
-    return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
     case "ZiplayerNext":
         if(queue.repeatMode == 1) queue.setRepeatMode(QueueRepeatMode.QUEUE)
         queue.node.skip()

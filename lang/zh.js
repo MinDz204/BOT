@@ -38,6 +38,8 @@ const language = {
     Deltrack: "输入要删除的曲目号！",
     DeltrackErr: "无效的曲目号 ❌",
     StopFail: `你不是开启音乐的人，请联系 {uerrr} 来关闭它。`,
+    SeverMute: `您在音乐播放时将我静音了... 音乐将被暂停！`,
+    SeverUnMute: `音乐回来了！`,
   };
   module.exports = language;
   

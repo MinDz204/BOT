@@ -48,7 +48,7 @@ const embed = new EmbedBuilder()
   .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
 //
 return interaction.channel.send({ embeds: [embed], components:[row] }).then(async Message => setTimeout(function(){
-    Message?.edit({components:[ ]}).catch(e=>{ });;
+    Message?.edit({components:[ ]}).catch(e=>{ });
   },10000)).catch(e=>{ });
 
   },
