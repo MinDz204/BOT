@@ -63,7 +63,6 @@ module.exports = async ( interaction, queue, lang, NOnextpage ) => {
             },{ upsert: true }).catch(e => { })
         }).catch(e => { })
     }else{
-        await interaction.deleteReply();
         await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id },{
             $set:{
                 page: page,
@@ -71,7 +70,17 @@ module.exports = async ( interaction, queue, lang, NOnextpage ) => {
             }
         },{ upsert: true }).catch(e => { })
         await interaction.channel?.messages.fetch({ message: ziQueue?.messageID, cache: false, force: true })
-            .then(async msg => msg.edit({ embeds:[ await embed( currentIndex )] })).catch(e => { })
+            .then(async msg => msg.edit({ embeds:[ await embed( currentIndex )] })).catch(async e => {
+                await interaction.channel.send({ embeds:[ await embed( currentIndex )], components:[row] }).then(async Message =>{
+                    await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id },{
+                        $set:{
+                            messageID: Message.id,
+                            page: page,
+                            toplam: toplam
+                        }
+                    },{ upsert: true }).catch(e => { })
+                }).catch(e => { })
+             })
     }
     return;
 }
