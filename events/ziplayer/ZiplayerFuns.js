@@ -93,7 +93,7 @@ try{
     case "ZiplayerLyric":
     return interaction.reply(await lyricFind( queue?.currentTrack ,interaction?.user, lang ))
     case "ZiplayerQueuE":
-    await require("./Ziqueue")( interaction, queue, lang);
+    await require("./Ziqueue")( interaction, queue, lang, false);
     return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
 
 
