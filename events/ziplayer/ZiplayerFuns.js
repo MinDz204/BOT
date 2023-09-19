@@ -15,7 +15,7 @@ try{
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
         case "ZiplayerStop":
             let requestby =  queue?.currentTrack?.requestby || queue?.metadata.requestby;
-            if ( requestby?.id !== interaction.user?.id) return interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${queue?.metadata.requestby.id}>`)}`, ephemeral:true }).catch(e=>{ })
+            if (!!requestby && requestby?.id !== interaction.user?.id) return interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${queue?.metadata.requestby.id}>`)}`, ephemeral:true }).catch(e=>{ })
             interaction.message.edit({ components:[ ] })
         return    queue?.delete()
         case "ZiplayerSeach":
