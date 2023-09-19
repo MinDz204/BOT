@@ -76,12 +76,12 @@ module.exports = async (client, msg) => {
         // return s
       }catch(e){ console.log(e) }
     }
-    if (content?.includes("bỏ qua bài hát")){isn
+    if (content?.includes("bỏ qua bài hát")){
         const queue = useQueue(msg.channel.guild.id)
         if(queue.repeatMode == 1) queue?.setRepeatMode(QueueRepeatMode.QUEUE)
         return queue?.node?.skip()
     }
-    if (content?.includes("volume").includes("âm lượng")){
+    if (content?.includes("volume") || content.includes("âm lượng")){
         const queue = useQueue(msg.channel.guild.id)
         const vol = content?.match(/\d+/);
         if(!isNumber(vol[0]))  return;
