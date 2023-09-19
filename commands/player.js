@@ -24,7 +24,8 @@ module.exports = {
     const queue = useQueue(interaction.guild.id);
     let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();
     if(! ZiisPlaying) return interaction.channel.send(lang?.NoPlaying).catch(e => { })
-    await queue?.metadata?.Zimess.edit({ components:[ ] }).catch(e => { })
+    try{ await queue?.metadata?.Zimess?.edit({ components:[ ] }).catch(e => { })
+      }catch(e){ }
     return Ziset(queue, lang, interaction)
   },
 };

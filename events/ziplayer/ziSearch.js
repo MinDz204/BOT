@@ -25,7 +25,7 @@ const player = useMainPlayer();
                     embedCOLOR: userddd?.color || client.color,
                 },
                 requestedBy: interaction.user,
-                selfDeaf: true,
+                selfDeaf: false,
                 volume: userddd?.vol || 50,
                 maxSize: 200,
                 maxHistorySize: 20,

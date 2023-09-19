@@ -17,6 +17,7 @@
     "@distube/ytdl-core": "^4.13.0",
     "canvacord": "^5.4.10",
     "discord-player": "^6.6.3",
+    "discord-speech-recognition": "^3.4.1",
     "discord.js": "^14.13.0",
     "fs": "^0.0.1-security",
     "kitsu": "^10.1.2",
@@ -28,4 +29,3 @@
     "youtube-ext": "^1.1.14"
   }
 }
-  

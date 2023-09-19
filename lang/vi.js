@@ -40,5 +40,6 @@ const language ={
     StopFail: `Bạn không phải người bật nhạc hãy liên hệ {uerrr} để tắt`,
     SeverMute: `Bạn đã tắt âm tôi trong khi nhạc đang phát... Âm nhạc sẽ được tạm dừng!`,
     SeverUnMute: `Âm nhạc đã trở lại!`,
+    Assictance: `Đã bật tìm kiếm bài hát bằng giọng nói...\nNói **Play**/**Phát bài hát** + tên bài hát để phát nhạc\nNói **bỏ qua bài hát** để skip`,
 }
 module.exports = language;

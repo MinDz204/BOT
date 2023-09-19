@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, Partials } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
+const { addSpeechEvent, SpeechEvents } = require("discord-speech-recognition");
 const client = new Client({
   partials: [
     Partials.Message, // for message
@@ -30,6 +31,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent, // enable if you need message content things
   ],
 });
+addSpeechEvent(client,{lang:"vi"});
 client.color = config.color;
 module.exports = client;
 //-------------------------------------------------------------//
@@ -47,7 +49,8 @@ player.setMaxListeners(200);
 player.extractors.loadDefault()
 
 // player.events.on("debug",(_,m) => console.log(m));
-// console.log(player.scanDeps())
+player.on("debug",console.log)
+console.log(player.scanDeps())
 
 fs.readdir("./events/player", (_err, files) => {
   files.forEach((file) => {
@@ -88,6 +91,13 @@ fs.readdir("./commands", (err, files) => {
     }
   });
 });
+
+// client.on(SpeechEvents.speech, (msg) => {
+//   // If bot didn't recognize speech, content will be empty
+//   if (!msg.content) return;
+
+//   console.log(msg.content);
+// });
 
 process.on('unhandledRejection', error => {
   client.errorLog.send(`<t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)

@@ -40,6 +40,7 @@ const language = {
     StopFail: `음악을 켠 사람이 아니므로 {uerrr}에게 연락하여 끄십시오.`,
     SeverMute: `음악 재생 중에 나를 음소거했습니다... 음악이 일시 중지됩니다!`,
     SeverUnMute: `음악이 돌아왔습니다!`,
+    Assictance: `음성 검색이 켜졌습니다...\n노래 이름을 포함하여 **Play**/**Phát bài hát**이라고 말하면 음악이 재생됩니다\n**bỏ qua bài hát**라고 말하면 건너뜁니다`,
   };
   module.exports = language;
   
