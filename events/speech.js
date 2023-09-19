@@ -1,5 +1,8 @@
 const { useMainPlayer, useQueue, QueryType, useMetadata } = require('discord-player');
 const db = require("./../mongoDB")
+function isNumber(str) {
+  return /^[0-9]+$/.test(str);
+}
 module.exports = async (client, msg) => {
     if (!msg.content) return;
     console.log(`${ msg.content }`)
@@ -70,12 +73,25 @@ module.exports = async (client, msg) => {
         //         },
         //     }
         // });
-        return 
+        // return s
       }catch(e){ console.log(e) }
     }
-    if (content?.includes("bỏ qua bài hát")){
+    if (content?.includes("bỏ qua bài hát")){isn
         const queue = useQueue(msg.channel.guild.id)
         if(queue.repeatMode == 1) queue?.setRepeatMode(QueueRepeatMode.QUEUE)
-        queue?.node?.skip()
+        return queue?.node?.skip()
+    }
+    if (content?.includes("volume").includes("âm lượng")){
+        const queue = useQueue(msg.channel.guild.id)
+        const vol = content?.match(/\d+/);
+        if(!isNumber(vol[0]))  return;
+        let volume = vol[0] > 100 ? 100 : vol[0];
+        queue.node.setVolume(Math.abs(volume))
+        await db.ZiUser.updateOne({ userID: msg?.author?.id },{
+            $set:{
+                vol: Math.abs(volume),
+            }
+        },{ upsert: true })
+        return require("./player/playerStart")( client, queue );;
     }
 }
