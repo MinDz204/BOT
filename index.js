@@ -49,8 +49,8 @@ player.setMaxListeners(200);
 player.extractors.loadDefault()
 
 // player.events.on("debug",(_,m) => console.log(m));
-player.on("debug",console.log)
-console.log(player.scanDeps())
+// player.on("debug",console.log)
+// console.log(player.scanDeps())
 
 fs.readdir("./events/player", (_err, files) => {
   files.forEach((file) => {

@@ -40,6 +40,7 @@ const language ={
     StopFail: `Bạn không phải người bật nhạc hãy liên hệ {uerrr} để tắt`,
     SeverMute: `Bạn đã tắt âm tôi trong khi nhạc đang phát... Âm nhạc sẽ được tạm dừng!`,
     SeverUnMute: `Âm nhạc đã trở lại!`,
-    Assictance: `Đã bật tìm kiếm bài hát bằng giọng nói...\nNói **Play**/**Phát bài hát** + tên bài hát để phát nhạc\nNói **bỏ qua bài hát** để skip\nNói **volume**/**âm lượng** + âm lượng % để chỉnh âm lượng @@`,
+    Assictance: `Đã bật tìm kiếm bài hát bằng giọng nói...\nNói **Play**/**Phát bài hát** + tên bài hát để phát nhạc\nNói **bỏ qua bài hát** để skip\nNói **volume**/**âm lượng** + âm lượng % để chỉnh âm lượng @@
+    do bot hơi ngu nên hết bài hát hãy nói có gì đó có chữ **tiếp** để bot phát bài hát kế tếp hoặc ấn nút ✨ <a:dizzy:1154103980947939510>`,
 }
 module.exports = language;

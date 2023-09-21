@@ -51,9 +51,9 @@ const zistartButton = async ( queue ) =>{
       .setStyle(ButtonStyle.Success);
     const commingfunc = new ButtonBuilder()
     .setLabel('✨')
-    .setCustomId('commingfunc')
+    .setCustomId('Ziplayercommingfunc')
     .setStyle(ButtonStyle.Success)
-    .setDisabled(true);
+    // .setDisabled(true);
   
     const queuE = new ButtonBuilder()
       .setCustomId('ZiplayerQueuE')
@@ -180,7 +180,7 @@ const zisearch = new ActionRowBuilder().addComponents(
         .setCustomId('ZiplayerStop')
         .setStyle(ButtonStyle.Danger)
 );
-const revEmbed = queue?.metadata?.Zimess.embeds[0];
+const revEmbed = queue?.metadata?.Zimess?.embeds[0];
 const embess = EmbedBuilder.from(revEmbed)
         .setDescription(`${lang?.queueEMty}`)
 return code = { content:``, embeds: [ embess ], components:[ zisearch ] }

@@ -10,6 +10,9 @@ module.exports = async ( interaction, lang ) => {
 try{
     const queue = useQueue(interaction?.guildId);
     switch (interaction.customId){
+        case "Ziplayercommingfunc":{
+            try {await queue?.node?.play()}catch(e){ console.log()}
+        }
         case "Ziplayerf5":
             await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });

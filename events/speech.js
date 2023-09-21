@@ -1,4 +1,5 @@
 const { useMainPlayer, useQueue, QueryType, useMetadata } = require('discord-player');
+// const { getVoiceConnection  } = require("@discordjs/voice")
 const db = require("./../mongoDB")
 function isNumber(str) {
   return /^[0-9]+$/.test(str);
@@ -37,24 +38,42 @@ module.exports = async (client, msg) => {
         //     skipOnNoStream: true,
         //     selfDeaf: false,
         // });
-        await player.play(msg.channel.id, results, {
+        // await player.play(msg.channel.id, results, {
+        //     nodeOptions: {
+        //     metadata:{
+        //         channel: channel,
+        //         requestby: msg?.author,
+        //         embedCOLOR: embedCOLOR,
+        //     },
+        //     requestedBy: msg?.author,
+        //     volume: userddd?.vol || 50,
+        //     maxSize: 200,
+        //     maxHistorySize: 20,
+        //     leaveOnEmpty: true,
+        //     leaveOnEmptyCooldown: 2000,
+        //     leaveOnEnd:false,
+        //     skipOnNoStream: true,
+        //     selfDeaf: false,
+        //     }
+        // });
+        await queue.play(results , { 
             nodeOptions: {
-            metadata:{
-                channel: channel,
-                requestby: msg?.author,
-                embedCOLOR: embedCOLOR,
-            },
-            requestedBy: msg?.author,
-            volume: userddd?.vol || 50,
-            maxSize: 200,
-            maxHistorySize: 20,
-            leaveOnEmpty: true,
-            leaveOnEmptyCooldown: 2000,
-            leaveOnEnd:false,
-            skipOnNoStream: true,
-            selfDeaf: false,
-            }
-        });
+                metadata:{
+                    channel: channel,
+                    requestby: msg?.author,
+                    embedCOLOR: embedCOLOR,
+                },
+                requestedBy: msg?.author,
+                volume: userddd?.vol || 50,
+                maxSize: 200,
+                maxHistorySize: 20,
+                leaveOnEmpty: true,
+                leaveOnEmptyCooldown: 2000,
+                leaveOnEnd:false,
+                skipOnNoStream: true,
+                selfDeaf: false,
+                }
+         });
         return require("./player/playerStart")( client, queue );;
         // const entry = queue.tasksQueue.acquire();
         // await entry.getTask()
@@ -92,6 +111,11 @@ module.exports = async (client, msg) => {
                 vol: Math.abs(volume),
             }
         },{ upsert: true })
+        return require("./player/playerStart")( client, queue );
+    }
+    if (content?.includes("tiếp")){
+        const queue = useQueue(msg.channel.guild.id)
+      try {await queue?.node?.play()}catch(e){ console.log(e)}
         return require("./player/playerStart")( client, queue );;
     }
 }

@@ -93,6 +93,37 @@ try{
     let props = require(`../../commands/profile`);
     return props.run( lang , interaction, true );
     }
+    case "refLeaderboard":{
+    let UserI = await db?.ZiUser?.find()
+    return interaction.reply({ 
+      embeds:[
+        new EmbedBuilder()
+        .setDescription(      
+        UserI.sort((a, b) => b.lvl - a.lvl)
+          .sort((a, b) => b.Xp - a.Xp)
+          .filter(user => client.users.cache.has(user.userID))
+          .slice(0, 10)
+          .map((user, position) => `**${position + 1}** | **${(client.users.cache.get(user.userID).tag)}**: Level: **${user.lvl}** | Xp: **${user.Xp}**`)
+          .join('\n'))
+        .setColor( lang.COLOR|| client.color )
+        .setTitle("Zi bot top 10 leaderboard:")
+        .setTimestamp()
+        .setFooter({
+          text: `${lang?.RequestBY} ${interaction.user.tag}`,
+          iconURL: interaction.user.displayAvatarURL({ dynamic: true }) 
+        })
+        .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
+      ], 
+      components:[
+      new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setLabel("❌")
+            .setCustomId("cancel")
+            .setStyle(ButtonStyle.Secondary)
+        ),
+      ] ,
+    });
+    }
     default:
         console.log(interaction.customId)
 }

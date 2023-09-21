@@ -18,6 +18,10 @@ module.exports = {
 
         let userr = interaction?.options?.getUser("user") || interaction.user;
         let userDB = await db.ZiUser.findOne({ userID: userr.id })
+        let UserI = await db?.ZiUser?.find()
+        const sss = UserI.sort((a, b) => b.lvl - a.lvl)
+                .sort((a, b) => b.Xp - a.Xp)
+                .findIndex((user) => user.userID === interaction.user.id);
         let strimg = `https://cdn.discordapp.com/attachments/1064851388221358153/1149319190918991934/iu.png`
         let editProf = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -27,6 +31,10 @@ module.exports = {
                     new ButtonBuilder()
                         .setLabel("↻")
                         .setCustomId("refProfile")
+                        .setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder()
+                        .setEmoji("<:leaderboard:1154355691063087195>")
+                        .setCustomId("refLeaderboard")
                         .setStyle(ButtonStyle.Secondary),
                     new ButtonBuilder()
                         .setLabel("❌")
@@ -44,6 +52,7 @@ module.exports = {
             .setCustomStatusColor( userDB?.color || client.color )
             .setUsername(userr?.username, userDB?.color || client.color)
             .setBackground("IMAGE",userDB?.image || strimg )
+            .setRank(sss + 1)
   
         rank.build()
             .then(data => { 

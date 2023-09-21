@@ -14,7 +14,7 @@ module.exports = async ( client , queue ) =>{
     if (queue){
         if (!queue?.metadata?.Zimess) return Ziset( queue , lang)
     }
-    return queue?.metadata?.Zimess.edit( await zistart( queue, lang) ).catch(e => {
+    return queue?.metadata?.Zimess?.edit( await zistart( queue, lang) ).catch(e => {
         return Ziset( queue, lang);
     })
 }
