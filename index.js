@@ -4,6 +4,7 @@ const config = require("./config");
 (async () => {
   await require("./connectMONGO")()
   const manager = new ShardingManager('./bot.js', {
+    execArgv: ['--trace-warnings'],
     token: config.Ziusr.keygen,
     respawn: true
   });

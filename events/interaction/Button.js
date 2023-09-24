@@ -60,6 +60,54 @@ module.exports = async (client, interaction) => {
           .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
+      case "Statistics":{
+        const rowC = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setCustomId("cancel")
+            .setLabel("❌")
+            .setStyle(ButtonStyle.Secondary)
+        )
+        let totalGuilds
+        let totalMembers
+        let totalChannels
+        let shardSize
+        let voiceConnections
+        const promises = [
+          client.shard.fetchClientValues('guilds.cache.size'),
+          client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+          client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.channels.cache.size, 0)),
+          client.shard.broadcastEval(c => c.voice?.adapters?.size || 0)
+        ];
+        await Promise.all(promises)
+        .then(results => {
+           totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+           totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+           totalChannels = results[2].reduce((acc, channelCount) => acc + channelCount, 0);
+           shardSize = client.shard.count;
+            voiceConnections = results[3].reduce((acc, voiceCount) => acc + voiceCount, 0);
+        })
+        const embed = new EmbedBuilder()
+        .setTitle(client.user.username + lang.msg19)
+        .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
+        .setDescription(`**
+          • Owner/Developer: <@891275176409460746>
+          • User Count: \`${totalMembers || 0}\`
+          • Server Count: \`${totalGuilds || 0}\`
+          • Channel Count: \`${totalChannels || 0}\`
+          • Shard Count: \`${shardSize || 0}\`
+          • Connected Voice: \`${voiceConnections}\`
+          • Command Count: \`${client.commands.map(c => c.name).length}\`
+          • Operation Time: <t:${Math.floor(Number(Date.now() - client.uptime) / 1000)}:R>
+          • Ping: \`${client.ws.ping} MS\`
+          • Memory Usage: \`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\`
+          [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=1067357395521&scope=bot%20applications.commands) /  [Support Server](https://discord.gg/zaskhD7PTW)
+          **`)
+        .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        .setColor(lang.COLOR || client.color)
+        .setTimestamp()
+        .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
+        return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
+      }
       case "editProfile": {
         let rankkk = await db?.ZiUser?.findOne({ userID: interaction?.user.id }).catch(e => { })
         if (rankkk.lvl < 2) return interaction.reply({ content: `${lang?.canlvl2}`, ephemeral: true }).catch(e => { })
