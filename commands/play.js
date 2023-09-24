@@ -17,53 +17,56 @@ module.exports = {
   voiceC: true,
   NODMPer: true,
   cooldown: 3,
-  run: async ( lang, interaction ) => {
+  run: async (lang, interaction) => {
 
-    interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
-      Message?.delete().catch( e => { } );
-  },10000)}).catch(e => { console.log(e) })
+    interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
+      setTimeout(function() {
+        Message?.delete().catch(e => { });
+      }, 10000)
+    }).catch(e => { console.log(e) })
 
     const nameS = interaction.options.getString("name");
-    let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch( e=>{ } )
+    let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
     let res;
-        
-    let queue = player?.nodes?.create(interaction.guild,{
-        metadata:{
-            channel: interaction.channel,
-            requestby: interaction.user,
-            embedCOLOR: userddd?.color || client.color,
-        },
-        requestedBy: interaction.user,
-        volume: userddd?.vol || 50,
-        maxSize: 200,
-        maxHistorySize: 20,
-        leaveOnEmpty: true,
-        leaveOnEmptyCooldown: 2000,
-        leaveOnEnd:false,
-        skipOnNoStream: true,
-        selfDeaf: true,
+
+    let queue = player?.nodes?.create(interaction.guild, {
+      metadata: {
+        channel: interaction.channel,
+        requestby: interaction.user,
+        embedCOLOR: userddd?.color || client.color,
+      },
+      requestedBy: interaction.user,
+      volume: userddd?.vol || 50,
+      maxSize: 200,
+      maxHistorySize: 20,
+      leaveOnEmpty: true,
+      leaveOnEmptyCooldown: 2000,
+      leaveOnEnd: false,
+      skipOnNoStream: true,
+      selfDeaf: true,
     });
 
     try {
-        res =  await player.search(await processQuery(nameS),{
-            requestedBy:interaction.user,
-          });
-        if( !queue.connection ) await queue.connect(
-                interaction?.member.voice.channelId,
-                { deaf: true })
-    }catch(e){
-       return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
-            setTimeout(function(){
-              Message?.delete().catch( e => { } );
-            },10000)}).catch(e => { console.log(e) });
+      res = await player.search(await processQuery(nameS), {
+        requestedBy: interaction.user,
+      });
+      if (!queue.connection) await queue.connect(
+        interaction?.member.voice.channelId,
+        { deaf: true })
+    } catch (e) {
+      return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
+        setTimeout(function() {
+          Message?.delete().catch(e => { });
+        }, 10000)
+      }).catch(e => { console.log(e) });
     }
     const entry = queue.tasksQueue.acquire();
     await entry.getTask()
-    res.playlist? queue.addTrack(res?.tracks): queue.insertTrack( res?.tracks[0] , 0);
-    try{ 
-        if (!queue.isPlaying()) await queue.node.play()
+    res.playlist ? queue.addTrack(res?.tracks) : queue.insertTrack(res?.tracks[0], 0);
+    try {
+      if (!queue.isPlaying()) await queue.node.play()
     } finally {
-        queue.tasksQueue.release();
+      queue.tasksQueue.release();
     }
     return;
   },

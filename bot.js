@@ -30,8 +30,9 @@ const client = new Client({
     GatewayIntentBits.DirectMessageTyping, // for dm message typinh
     GatewayIntentBits.MessageContent, // enable if you need message content things
   ],
+  shards: 'auto',
 });
-addSpeechEvent(client,{lang:"vi"});
+addSpeechEvent(client, { lang: "vi" });
 client.color = config.color;
 module.exports = client;
 //-------------------------------------------------------------//
@@ -95,7 +96,8 @@ fs.readdir("./commands", (err, files) => {
 
 process.on('unhandledRejection', error => {
   client.errorLog?.send(`<t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
-  console.error('Unhandled promise rejection:', error); });
+  console.error('Unhandled promise rejection:', error);
+});
 
 client.login(config.token).catch(e => {
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")

@@ -28,7 +28,7 @@ const Zibot = Schema({
 })
 //-------------------------------------------//
 module.exports = {
-  Ziqueue: model("Ziqueue",Ziqueue),
+  Ziqueue: model("Ziqueue", Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
   Zibot: model("Zibot", Zibot),
 }

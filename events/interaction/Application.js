@@ -13,13 +13,13 @@ module.exports = async (client, interaction) => {
           let lang = await rank({ user: interaction?.user });
           //rank-end------------------------------------------------//
           //cooldows-------------------------------------------------//
-        const defaultCooldownDuration = 3;
-        const cooldownAmount = (props.cooldown ?? defaultCooldownDuration) * 1000;
-        const expirationTime = lang?.cooldowns + cooldownAmount;
-        
+          const defaultCooldownDuration = 3;
+          const cooldownAmount = (props.cooldown ?? defaultCooldownDuration) * 1000;
+          const expirationTime = lang?.cooldowns + cooldownAmount;
+
           if (Date.now() < expirationTime) {
             const expiredTimestamp = Math.round(expirationTime / 1000);
-            return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`,expiredTimestamp).replace(`{interaction.commandName}`,interaction.commandName)}`, ephemeral: true });
+            return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, interaction.commandName)}`, ephemeral: true });
           }
           //cooldows-end------------------------------------------------//
 
@@ -30,7 +30,7 @@ module.exports = async (client, interaction) => {
             if (voiceCME.voice.channelId && (voiceCME.voice.channelId !== interaction.member.voice.channelId))
               return interaction.reply({ content: `${lang?.NOvoiceChannel}`, ephemeral: true }).catch(e => { })
           };
-          return props.run( lang , interaction);
+          return props.run(lang, interaction);
         } catch (e) {
           return interaction.reply({ content: `ERROR\n\n\`\`\`${e.message}\`\`\``, ephemeral: true }).catch(e => { })
         }
