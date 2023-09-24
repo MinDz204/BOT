@@ -2,7 +2,7 @@ const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('
 const db = require("../../mongoDB");
 const{ ZiPlayerlinkAvt } = require('./ziStartTrack');
 const { lyricsExtractor } = require('@discord-player/extractor');
-const client = require('../..');
+const client = require('../../bot');
 // Tạo một hàm để tìm lời bài hát.
 async function searchForLyrics(songName) {
     const lyricsFinder = lyricsExtractor('zNcdOMl6eT89oKQR70sNWdqA556aJ2_0m6Iav4KeIuq0WyWc03rsLcFWElOB0Ma6');

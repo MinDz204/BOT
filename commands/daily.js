@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const db = require("./../mongoDB");
-const client = require('..');
+const client = require('../bot');
 const { rank } = require("../events/Zibot/ZilvlSys");
 const { msToTime } = require("../events/Zibot/ZiFunc");
 

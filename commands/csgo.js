@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const client = require("..");
+const client = require('../bot');
 const SteamAPIKey = "DDC8118250E17D86ED42E2502E9D2980";
 
 const getSteamID64 = async ( input )=> {

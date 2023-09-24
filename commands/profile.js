@@ -1,7 +1,7 @@
 const { ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const canvacord = require("canvacord");
 const db = require("./../mongoDB");
-const client = require('..');
+const client = require('../bot');
 module.exports = {
     name: "profile",
     description: "View profile.",

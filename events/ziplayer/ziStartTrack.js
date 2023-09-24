@@ -1,5 +1,5 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const client = require("../..");
+const client = require('../../bot');
 
 // const { rank } = require("../Zibot/ZilvlSys"); 
 const db = require ("./../../mongoDB")

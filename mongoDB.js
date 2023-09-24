@@ -22,10 +22,13 @@ const Ziqueue = Schema({
   page: Number,
   toplam: Number,
 })
-
+const Zibot = Schema({
+  keygen: String,
+  channelID: String,
+})
 //-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue",Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
-
+  Zibot: model("Zibot", Zibot),
 }

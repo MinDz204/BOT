@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require("discord.js");
 const db = require("./../../mongoDB");
-const client = require("../..");
+const client = require('../../bot');
 
 
 module.exports = async ( interaction, queue, lang, NOnextpage ) => {

@@ -1,7 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require('discord.js');
-const client = require('..');
 const Kitsu = require('kitsu');
 const { removeVietnameseTones } = require('../events/Zibot/ZiFunc');
+const client = require('../bot');
 const kitsu = new Kitsu();
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
     autocomplete: true,
   }],
   cooldown: 3,
-  run: async ( lang, interaction ) => { 
+  run: async ( lang, interaction ) => {
     const name = interaction.options.getString("name");
     interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
       Message?.delete().catch( e => { } );

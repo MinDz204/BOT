@@ -1,10 +1,10 @@
 
 const { useMainPlayer } = require('discord-player');
-const { joinVoiceChannel } = require("@discordjs/voice");
+const { joinVoiceChannel } = require("discord-voip");
 const player = useMainPlayer();
 const db = require("./../mongoDB");
 const { EmbedBuilder } = require('discord.js');
-const client = require('..');
+const client = require('../bot');
 
 module.exports = {
   name: "assictance",
@@ -46,7 +46,7 @@ module.exports = {
         selfDeaf: false,
     });
 
-    queue.createDispatcher(connection);
+    // queue.createDispatcher(connection);
 
   },
 };

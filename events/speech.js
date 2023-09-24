@@ -38,43 +38,48 @@ module.exports = async (client, msg) => {
         //     skipOnNoStream: true,
         //     selfDeaf: false,
         // });
-        // await player.play(msg.channel.id, results, {
-        //     nodeOptions: {
-        //     metadata:{
-        //         channel: channel,
-        //         requestby: msg?.author,
-        //         embedCOLOR: embedCOLOR,
-        //     },
-        //     requestedBy: msg?.author,
-        //     volume: userddd?.vol || 50,
-        //     maxSize: 200,
-        //     maxHistorySize: 20,
-        //     leaveOnEmpty: true,
-        //     leaveOnEmptyCooldown: 2000,
-        //     leaveOnEnd:false,
-        //     skipOnNoStream: true,
-        //     selfDeaf: false,
-        //     }
-        // });
-        await queue.play(results , { 
+        await player.play(msg.channel.id, results, {
             nodeOptions: {
-                metadata:{
-                    channel: channel,
-                    requestby: msg?.author,
-                    embedCOLOR: embedCOLOR,
-                },
-                requestedBy: msg?.author,
-                volume: userddd?.vol || 50,
-                maxSize: 200,
-                maxHistorySize: 20,
-                leaveOnEmpty: true,
-                leaveOnEmptyCooldown: 2000,
-                leaveOnEnd:false,
-                skipOnNoStream: true,
-                selfDeaf: false,
-                }
-         });
-        return require("./player/playerStart")( client, queue );;
+            metadata:{
+                channel: channel,
+                requestby: msg?.author,
+                embedCOLOR: embedCOLOR,
+            },
+            requestedBy: msg?.author,
+            volume: userddd?.vol || 50,
+            maxSize: 200,
+            maxHistorySize: 20,
+            leaveOnEmpty: true,
+            leaveOnEmptyCooldown: 2000,
+            leaveOnEnd:false,
+            skipOnNoStream: true,
+            selfDeaf: false,
+            }
+        });
+
+        
+        // await queue.play(results , { 
+        //     nodeOptions: {
+        //         metadata:{
+        //             channel: channel,
+        //             requestby: msg?.author,
+        //             embedCOLOR: embedCOLOR,
+        //         },
+        //         requestedBy: msg?.author,
+        //         volume: userddd?.vol || 50,
+        //         maxSize: 200,
+        //         maxHistorySize: 20,
+        //         leaveOnEmpty: true,
+        //         leaveOnEmptyCooldown: 2000,
+        //         leaveOnEnd:false,
+        //         skipOnNoStream: true,
+        //         selfDeaf: false,
+        //         }
+        //  });
+        // return require("./player/playerStart")( client, queue );;
+
+
+
         // const entry = queue.tasksQueue.acquire();
         // await entry.getTask()
         // queue.insertTrack( results?.tracks[0] );

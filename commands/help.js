@@ -1,5 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message, AttachmentBuilder } = require('discord.js');
-const client = require('..');
+const client = require('../bot');
 module.exports = {
   name: "help",
   description: "Show bot command.",
