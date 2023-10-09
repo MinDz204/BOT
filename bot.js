@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials } = require("discord.js");
+const { Client, GatewayIntentBits, Partials,Events } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');

@@ -55,4 +55,64 @@ function processQuery(query) {
   }
 }
 
-module.exports = { removeVietnameseTones, msToTime, validURL, processQuery }
+function getAvatar(user) {
+  if(!user.avatar) return `https://cdn.discordapp.com/embed/avatars/${(user.discriminator % 5)}.png`
+  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`
+}
+
+
+const renderFrame = async (frame, user, data, Guild ) => {
+  //::::::::::::::::::::mudule:::::::::::::::::::::::::::://
+  const Canvas = require('canvas');
+  const jimp = require('jimp');
+  /* Load the font */
+  Canvas.registerFont(require('@canvas-fonts/arial-bold'), {
+    family: 'Arial Bold',
+  });
+  //:::::::::::: BUILD ::::::::::::://
+  const canvas = Canvas.createCanvas(700, 250);
+  const ctx = canvas.getContext('2d');
+  
+  let scale = Math.max(canvas.width / data[0].frameInfo.width, canvas.height / data[0].frameInfo.height);
+  let x = (canvas.width / 2) - (data[0].frameInfo.width / 2) * scale;
+  let y = (canvas.height / 2) - (data[0].frameInfo.height / 2) * scale;
+  
+  
+  let layer = await Canvas.loadImage('./events/Zibot/layer.png');
+  let background = await jimp.read(frame.getImage()._obj);
+  
+  background.blur(2);
+  background = await background.getBufferAsync('image/png');
+  
+  ctx.drawImage(await Canvas.loadImage(background), x, y, data[0].frameInfo.width * scale, data[0].frameInfo.height * scale);
+  
+  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(layer, 0, 0, canvas.width, canvas.height);
+  let name = user.username;
+  name = name.length > 12 ? name.substring(0, 12).trim() + '...' : name;
+  
+  ctx.font = `bold 36px Arial Bold`;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'start';
+  ctx.strokeStyle = '#f5f5f5';
+  ctx.fillText(`Welcome ${name}`, 278, 113);
+  ctx.strokeText(`Welcome ${name}`, 278, 113);
+  
+  ctx.font = `bold 25px Arial Bold`;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText(`#${Guild?.name}`, 352, 156);
+  
+  let avatar = await jimp.read(
+    getAvatar(user)
+  );
+  avatar.resize(1024, 1024);
+  avatar.circle();
+  avatar = await avatar.getBufferAsync('image/png');
+  avatar = await Canvas.loadImage(avatar);
+  
+  ctx.drawImage(avatar, 72, 48, 150, 150);
+  
+  return ctx;
+}
+
+module.exports = { removeVietnameseTones, msToTime, validURL, processQuery, renderFrame }

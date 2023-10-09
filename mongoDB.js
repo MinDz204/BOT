@@ -27,8 +27,16 @@ const Zibot = Schema({
   channelID: String,
 })
 //-------------------------------------------//
+const Ziguild = Schema({
+  GuildID: String,
+  channelID: String,
+  content: String,
+  img: String,
+})
+//-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
   Zibot: model("Zibot", Zibot),
+  Ziguild: model("Ziguild", Ziguild),
 }
