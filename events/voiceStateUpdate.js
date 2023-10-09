@@ -10,7 +10,6 @@ module.exports = async (client, oldState, newState) => {
       lang = lang?.lang || `vi`
       lang = require(`../lang/${lang}.js`);
 
-
       if (oldState.serverMute === false && newState.serverMute === true) {
         if (queue?.metadata) {
           const embed = new EmbedBuilder()

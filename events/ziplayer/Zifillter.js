@@ -1,7 +1,7 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const client = require('../../bot');
 
-const ZiPlayerFillterRow = async (queue) => {
+const FillterRow = async (queue) => {
   const bassboost = new ButtonBuilder()
     .setLabel('Bass Boost')
     .setCustomId('Ziplayerbassboost')
@@ -41,8 +41,8 @@ const ZiPlayerFillterRow = async (queue) => {
 
   return new ActionRowBuilder().addComponents(bassboost, LOFI, nightcore, karaoke, Zifillteroff);
 }
-const ZiPlayerFillter = async (user, queue, lang) => {
-  let row = await ZiPlayerFillterRow(queue)
+const Fillter = async (user, queue, lang) => {
+  let row = await FillterRow(queue)
   let embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client?.color)
     .setTimestamp()
@@ -53,4 +53,6 @@ const ZiPlayerFillter = async (user, queue, lang) => {
   return { embeds: [embed], components: [row] }
 }
 
-module.exports = { ZiPlayerFillter, ZiPlayerFillterRow }
+module.exports = { 
+  ZiPlayerFillter: Fillter,
+  ZiPlayerFillterRow: FillterRow }

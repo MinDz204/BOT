@@ -10,7 +10,7 @@ async function searchForLyrics(songName) {
   return lyrics;
 }
 
-const lyricFind = async (trackk, user, lang) => {
+const lyric = async (trackk, user, lang) => {
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setLabel('❌')
@@ -48,4 +48,4 @@ const lyricFind = async (trackk, user, lang) => {
   return { embeds: [info], components: [row] }
 
 };
-module.exports = { lyricFind }
+module.exports = { lyricFind: lyric }

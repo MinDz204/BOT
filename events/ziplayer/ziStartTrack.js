@@ -162,7 +162,7 @@ const zistartEmber = async (queue, lang) => {
   return embed;
 }
 
-const zistart = async (queue, lang) => {
+const start = async (queue, lang) => {
   let code;
 
   if (queue?.currentTrack) {
@@ -187,6 +187,6 @@ const zistart = async (queue, lang) => {
 }
 
 module.exports = {
-  zistart,
+  zistart: start,
   ZiPlayerlinkAvt
 }

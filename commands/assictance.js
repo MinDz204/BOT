@@ -29,7 +29,7 @@ module.exports = {
       selfDeaf: false,
     });
 
-    let queue = await player?.nodes?.create(interaction.guild, {
+    let queue = player?.nodes?.create(interaction.guild, {
       metadata: {
         channel: interaction.channel,
         requestby: interaction.user,
@@ -45,8 +45,7 @@ module.exports = {
       skipOnNoStream: true,
       selfDeaf: false,
     });
-
-    // queue.createDispatcher(connection);
+    queue.createDispatcher(connection);
 
   },
 };
