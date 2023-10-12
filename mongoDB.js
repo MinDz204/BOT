@@ -25,6 +25,7 @@ const Ziqueue = Schema({
 const Zibot = Schema({
   keygen: String,
   channelID: String,
+  gif: String,
 })
 //-------------------------------------------//
 const Ziguild = Schema({

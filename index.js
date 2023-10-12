@@ -9,12 +9,5 @@ const config = require("./config");
     respawn: true
   });
   manager.on('shardCreate', shard => console.log(`Launched shard ${shard.id}`));
-  manager.spawn().then(shards => {
-    shards.forEach(shard => {
-      shard.on('message', message => {
-        console.log(`Shard[${shard.id}] : ${message._eval} : ${message._result}`);
-      });
-    });
-  })
-    .catch(console.error);
+  manager.spawn().catch(console.error);
 })()

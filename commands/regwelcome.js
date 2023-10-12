@@ -6,6 +6,10 @@ module.exports = {
         description: "content description... [[user]] = user add ",
         type: 3,
       },{
+        name: "gif",
+        description: "link gif welcome",
+        type: 3,
+      },{
         name: "imgcontent",
         description: "link img content",
         type: 3,
@@ -16,10 +20,16 @@ module.exports = {
 const { EmbedBuilder } = require('discord.js');
 const client = require('../bot');
 const db = require("../mongoDB");
+const { validURL } = require('../events/Zibot/ZiFunc');
   
 module.exports.run = async ( lang, interaction ) => {
 const name = interaction.options.getString("content");
-const img = interaction.options.getString("imgcontent");
+let img = interaction.options.getString("imgcontent");
+let gif = interaction.options.getString("gif");
+
+img = validURL(img)? img : "";
+gif = validURL(gif)? gif.includes(".gif")? gif : "" : "";
+
 if(!interaction?.member?.permissions?.has("0x0000000000000020")) return interaction.reply({content:`Bạn phải có quyền Administrator để sử dụng lệnh này :<`, ephemeral: true })
 interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
     Message?.delete().catch( e => { } );
@@ -38,6 +48,7 @@ await db.Ziguild.updateOne({ GuildID: interaction.guild.id }, {
         channelID: interaction.channel.id,
         content: name,
         img: img,
+        gif: gif,
     }
     }, { upsert: true })
 return interaction.channel.send({ embeds: [ embed ] })

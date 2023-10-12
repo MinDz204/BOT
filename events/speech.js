@@ -38,6 +38,7 @@ module.exports = async (client, msg) => {
           selfDeaf: false,
         }
       });
+      return require("./player/playerStart")(client, queue);
     } catch (e) { console.log(e) }
   }
   if (content?.includes("bỏ qua bài hát")) {
@@ -61,6 +62,6 @@ module.exports = async (client, msg) => {
   if (content?.includes("tiếp")) {
     const queue = useQueue(msg.channel.guild.id)
     try { await queue?.node?.play() } catch (e) { console.log(e) }
-    return require("./player/playerStart")(client, queue);;
+    return require("./player/playerStart")(client, queue);
   }
 }
