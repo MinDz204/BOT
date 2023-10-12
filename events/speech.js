@@ -7,14 +7,14 @@ module.exports = async (client, msg) => {
   if (!msg.content) return;
   console.log(`${msg.content}`)
   let content = msg.content?.toLowerCase()
-  if (content?.includes("play") || content?.includes("phát bài hát")) {
+  if (content?.includes("play") || content?.includes("phát")) {
 
     const player = useMainPlayer();
     const [getMetadata] = useMetadata(msg.channel.guild.id);
     const { channel, requestby, embedCOLOR } = getMetadata();
     const queue = useQueue(msg.channel.guild.id)
     try {
-      const nameSearch = content?.replace("play", "").replace("phát bài hát", "");
+      const nameSearch = content?.replace("play", "").replace("phát", "").replace("bài hát", "");
       console.log(nameSearch)
       const results = await player.search(nameSearch, {
         fallbackSearchEngine: "youtube"
