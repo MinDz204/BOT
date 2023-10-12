@@ -41,6 +41,7 @@ const language = {
     SeverMute: `음악 재생 중에 나를 음소거했습니다... 음악이 일시 중지됩니다!`,
     SeverUnMute: `음악이 돌아왔습니다!`,
     Assictance: `음성 검색이 켜졌습니다...\n노래 이름을 포함하여 **Play**/**Phát bài hát**이라고 말하면 음악이 재생됩니다\n**bỏ qua bài hát**라고 말하면 건너뜁니다`,
+    MENstion:`슬래시 명령어 또는 나를 언급하고 그 후에 노래 링크를 사용하여 음악을 재생할 수 있습니다...`,
   };
   module.exports = language;
   

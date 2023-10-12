@@ -1,32 +1,30 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require('../../bot');
 const { useMainPlayer, QueryType } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL, processQuery } = require("../Zibot/ZiFunc");
+const { validURL, processQuery, Zilink } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS) => {
-  interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, fetchReply: true, ephemeral: true })
-    .then(async Message => {
-      setTimeout(function() {
-        Message?.delete().catch(e => { });
-      }, 10000)
-    }).catch(e => { console.log(e) })
+  let messID;
+  interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
+    .then(Mess => { messID = Mess.id } ).catch(e => { console.log(e) })
+
   if (!nameS) return;
-  if (validURL(nameS)) {
+  if (validURL(nameS) || Zilink(nameS)) {
     try {
-      let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
+      let userddd = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { })
       const nameSearch = await processQuery(nameS);
       await player.play(interaction?.member.voice.channelId, nameSearch, {
         nodeOptions: {
           metadata: {
             channel: interaction.channel,
-            requestby: interaction.user,
+            requestby: interaction?.user ||interaction?.author,
             embedCOLOR: userddd?.color || client.color,
           },
-          requestedBy: interaction.user,
+          requestedBy: interaction.user || interaction?.author,
           selfDeaf: false,
           volume: userddd?.vol || 50,
           maxSize: 200,
@@ -37,21 +35,22 @@ module.exports = async (interaction, nameS) => {
           skipOnNoStream: true,
         }
       });
-      return;
+      return interaction.channel?.messages.fetch({ message: messID, cache: false, force: true }).then( mess => mess.delete()).catch(e =>{ })
     } catch (e) {
       console.log(e)
-      let lang = await rank({ user: interaction.user });
-      return interaction?.channel?.send(`${lang?.PlayerSearchErr}`).then(async Message => {
+      let lang = await rank({ user: interaction?.user || interaction?.author });
+      return interaction.channel?.messages.fetch({ message: messID, cache: false, force: true }).then(async mess =>
+        mess.edit(`${lang?.PlayerSearchErr}`).then(
         setTimeout(function() {
-          Message?.delete().catch(e => { });
+          mess?.delete().catch(e => { });
         }, 10000)
-      }).catch(e => { console.log(e) });
+      ))
     }
   }
-  let lang = await rank({ user: interaction.user });
+  let lang = await rank({ user: interaction?.user || interaction?.author });
   let res = await player.search(nameS, {
     fallbackSearchEngine: QueryType.YOUTUBE,
-    requestedBy: interaction.user,
+    requestedBy: interaction?.user || interaction?.author,
   });
   const maxTracks = res.tracks.filter(t => t?.title.length < 100 && t?.url.length < 100).slice(0, 20);
   let track_button_creator = maxTracks.map((Track, index) => {
@@ -76,7 +75,7 @@ module.exports = async (interaction, nameS) => {
     .setTitle(`${lang?.PlayerSearch} ${nameS}`)
     .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${track?.title.substr(0, 35) + "..."} | \`${track.author.substr(0, 18) + "..."}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
     .setTimestamp()
-    .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+    .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
 
   switch (track_button_creator.length) {
     case 1:
@@ -157,5 +156,7 @@ module.exports = async (interaction, nameS) => {
       code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
       break;
   }
-  return interaction?.channel?.send(code)
+  return interaction.channel?.messages.fetch({ message: messID, cache: false, force: true })
+      .then(async msg => msg.edit(code))
+      .catch(e => interaction.channel.send(code))
 }

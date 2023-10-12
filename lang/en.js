@@ -41,5 +41,6 @@ const language = {
     SeverMute: `You muted me while the music was playing... The music will be paused!`,
     SeverUnMute: `The music is back!`,
     Assictance: `Voice search for songs is on...\nSay **Play**/**Phát bài hát** + song name to play music\n Say **bỏ qua bài hát** to skip`,
+    MENstion: `You can use slash commands or mention me and the song link to play music...`,
   };
   module.exports = language;

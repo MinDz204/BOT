@@ -60,6 +60,9 @@ module.exports = async (client, interaction) => {
           .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
+      case "MesPiNJG":{
+        return interaction.reply("https://cdn.discordapp.com/attachments/1162041451895599154/1162047498572009493/image.png")
+      }
       case "Statistics":{
         const rowC = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
@@ -87,9 +90,8 @@ module.exports = async (client, interaction) => {
             voiceConnections = results[3].reduce((acc, voiceCount) => acc + voiceCount, 0);
         })
         const embed = new EmbedBuilder()
-        .setTitle(client.user.username + lang.msg19)
         .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
-        .setDescription(`**
+        .setDescription(`**${client.user.username} + Statistics:
           • Owner/Developer: <@891275176409460746>
           • User Count: \`${totalMembers || 0}\`
           • Server Count: \`${totalGuilds || 0}\`

@@ -41,7 +41,11 @@ function validURL(str) {
     '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
   return !!pattern.test(str);
 }
-function processQuery(query) {
+function Zilink(str){
+  return str.match(/(https?:\/\/[^\s]+)/g)[0]
+}
+function processQuery(qAuery) {
+  let query = Zilink(qAuery)
   // Regular expression to match YouTube and YouTube Music URLs
   const youtubeRegex = new RegExp(/^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtube\.com\/playlist\?list=(.*)$/);
   // If the query matches the YouTube regex, remove the &si= part of the URL
@@ -115,4 +119,4 @@ const renderFrame = async (frame, user, data, Guild ) => {
   return ctx;
 }
 
-module.exports = { removeVietnameseTones, msToTime, validURL, processQuery, renderFrame }
+module.exports = { removeVietnameseTones, msToTime, validURL, processQuery, renderFrame,Zilink }

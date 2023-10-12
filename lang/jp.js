@@ -41,5 +41,6 @@ const language = {
     SeverMute: `音楽を再生中に私をミュートしました... 音楽が一時停止されます！`,
     SeverUnMute: `音楽が戻ってきました！`,
     Assictance: `音声検索がオンになりました...\n曲名を含めて **Play**/**Phát bài hát**と言うと音楽が再生されます\n**bỏ qua bài hát** と言うとスキップします`,
+    MENstion:`斜線コマンドまたは私をメンションして、その後の曲のリンクを使用して音楽を再生できます...`,
   };
   module.exports = language;

@@ -38,7 +38,7 @@ const fetchPlayerUser = async (steamID) => {
 
 module.exports = {
   name: "csgo",
-  description: "Thống kê của một người chơi Counter-Strike: Global Offensive.",
+  description: "Số liệu hống kê của 1 player CSGO.",
   options: [{
     name: "id",
     description: "link/id profile steam",

@@ -41,6 +41,7 @@ const language = {
     SeverMute: `您在音乐播放时将我静音了... 音乐将被暂停！`,
     SeverUnMute: `音乐回来了！`,
     Assictance: `语音搜索歌曲已开启...\n说 **Play**/**Phát bài hát** + 歌曲名称来播放音乐\n说 **bỏ qua bài hát** 来跳过`,
+    MENstion:`您可以使用斜线命令或提到我和后面的歌曲链接来播放音乐..`,
   };
   module.exports = language;
   
