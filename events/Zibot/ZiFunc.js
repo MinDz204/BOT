@@ -42,7 +42,8 @@ function validURL(str) {
   return !!pattern.test(str);
 }
 function Zilink(str){
-  return str.match(/(https?:\/\/[^\s]+)/g)[0]
+  const match = str.match(/(https?:\/\/[^\s]+)/g);
+  return match ? match[0] : null;
 }
 function processQuery(qAuery) {
   let query = Zilink(qAuery)

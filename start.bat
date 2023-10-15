@@ -1,6 +1,4 @@
-echo off
-color 1
-cls
+@echo off
 :a
 node index.js
 goto a

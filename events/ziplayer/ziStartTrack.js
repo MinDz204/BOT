@@ -180,8 +180,8 @@ const start = async (queue, lang) => {
       .setCustomId('ZiplayerStop')
       .setStyle(ButtonStyle.Danger)
   );
-  const revEmbed = queue?.metadata?.Zimess?.embeds[0];
-  const embess = EmbedBuilder.from(revEmbed)
+  const revEmbed = queue?.metadata?.Zimess?.reactions?.message?.embeds || queue?.metadata?.Zimess?.embeds;
+  const embess = EmbedBuilder.from(revEmbed?revEmbed[0]:null)
     .setDescription(`${lang?.queueEMty}`)
   return code = { content: ``, embeds: [embess], components: [zisearch] }
 }

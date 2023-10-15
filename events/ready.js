@@ -7,10 +7,11 @@ module.exports = async (client) => {
   try {
     await require("../connectMONGO")()
     const rest = new REST({ version: "10" }).setToken(config.Ziusr.keygen);
+    if (config.rest){
     await rest.put(Routes.applicationCommands(client.user.id), {
       body: await client.commands,
     });
-    console.log("Successfully loadded application [/] commands.");
+    console.log("Successfully loadded application [/] commands.");}
     client.errorLog = client.channels.cache.get(config?.Ziusr?.channelID) ? client.channels.cache.get(config?.Ziusr?.channelID) : undefined
     client.Zicomand = await rest.get(Routes.applicationCommands(client.user.id))
     client.user.setStatus(config.Status)

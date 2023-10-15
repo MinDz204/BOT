@@ -6,6 +6,7 @@ const { renderFrame } = require("./Zibot/ZiFunc");
 const config = require("../config");
 
 module.exports = async (client , member ) =>{
+if (!config?.guildMemberAdd) return;
 let guild = await db?.Ziguild?.findOne({ GuildID: member?.guild.id })
 if (!guild) return;
 let channel = client.channels.cache.get( guild?.channelID )

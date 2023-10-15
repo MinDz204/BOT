@@ -1,16 +1,15 @@
-const { InteractionType } = require("discord.js");
+const { InteractionType } = require('discord.js');
+const config = require('../config');
+
+const interactionHandler = {
+  [InteractionType.ApplicationCommand]: require("./interaction/Application"),
+  [InteractionType.ApplicationCommandAutocomplete]: require("./interaction/Autocomplete"),
+  [InteractionType.MessageComponent]: require("./interaction/Button"),
+  [InteractionType.ModalSubmit]: require("./interaction/modal"),
+};
+
 module.exports = async (client, interaction) => {
   if (interaction.user.bot) return;
-  switch (interaction.type) {
-    case InteractionType.ApplicationCommand:
-      return require("./interaction/Application")(client, interaction);
-    case InteractionType.ApplicationCommandAutocomplete:
-      return require("./interaction/Autocomplete")(client, interaction);
-    case InteractionType.MessageComponent:
-      return require("./interaction/Button")(client, interaction);
-    case InteractionType.ModalSubmit:
-      return require("./interaction/modal")(client, interaction);
-    default:
-      return console.log(interaction?.type) // ping( 1 )
-  }
-}
+  const handler = interactionHandler[interaction.type];
+  if (handler && config?.interactionCreate?.[InteractionType?.[interaction.type]])  return handler(client, interaction);
+};

@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { Collection } = require("discord.js");
 const { rank } = require("./../Zibot/ZilvlSys")
+module.exports = { name: "Application" }
 module.exports = async (client, interaction) => {
   if (interaction.user.bot) return;
   fs.readdir("./commands", (err, files) => {

@@ -1,16 +1,22 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require('../../bot');
-const { useMainPlayer, QueryType } = require("discord-player");
+const { useMainPlayer, QueryType, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL, processQuery, Zilink } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS) => {
-  let messID;
-  interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
-    .then(Mess => { messID = Mess.id } ).catch(e => { console.log(e) })
+  let messid,message;
+  messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
+  const allowedTypes = [1, 2, 3, 4, 5];
+  if(allowedTypes.includes(interaction.type)){
+  message = await interaction.fetchReply().catch(e=>{ });
+  }else(
+  message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
+  )
+  const queue = useQueue(interaction.guild.id);
 
   if (!nameS) return;
   if (validURL(nameS) || Zilink(nameS)) {
@@ -23,6 +29,7 @@ module.exports = async (interaction, nameS) => {
             channel: interaction.channel,
             requestby: interaction?.user ||interaction?.author,
             embedCOLOR: userddd?.color || client.color,
+            Zimess: queue?.metadata? queue?.metadata?.Zimess : message,
           },
           requestedBy: interaction.user || interaction?.author,
           selfDeaf: false,
@@ -35,11 +42,12 @@ module.exports = async (interaction, nameS) => {
           skipOnNoStream: true,
         }
       });
-      return interaction.channel?.messages.fetch({ message: messID, cache: false, force: true }).then( mess => mess.delete()).catch(e =>{ })
+      if(queue?.metadata) message.delete();
+      return;
     } catch (e) {
       console.log(e)
       let lang = await rank({ user: interaction?.user || interaction?.author });
-      return interaction.channel?.messages.fetch({ message: messID, cache: false, force: true }).then(async mess =>
+      return interaction.fetchReply().then(async mess =>
         mess.edit(`${lang?.PlayerSearchErr}`).then(
         setTimeout(function() {
           mess?.delete().catch(e => { });
@@ -156,7 +164,7 @@ module.exports = async (interaction, nameS) => {
       code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
       break;
   }
-  return interaction.channel?.messages.fetch({ message: messID, cache: false, force: true })
+  return interaction.fetchReply()
       .then(async msg => msg.edit(code))
       .catch(e => interaction.channel.send(code))
 }
