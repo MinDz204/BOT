@@ -10,12 +10,12 @@ const player = useMainPlayer();
 module.exports = async (interaction, nameS) => {
   let messid,message;
   messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
-  const allowedTypes = [1, 2, 3, 4, 5];
-  if(allowedTypes.includes(interaction.type)){
+console.log(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction)
+  if(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction){
   message = await interaction.fetchReply().catch(e=>{ });
-  }else(
+  }else{
   message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
-  )
+  }
   const queue = useQueue(interaction.guild.id);
 
   if (!nameS) return;
@@ -47,12 +47,11 @@ module.exports = async (interaction, nameS) => {
     } catch (e) {
       console.log(e)
       let lang = await rank({ user: interaction?.user || interaction?.author });
-      return interaction.fetchReply().then(async mess =>
-        mess.edit(`${lang?.PlayerSearchErr}`).then(
+      return message.edit(`${lang?.PlayerSearchErr}`).then(
         setTimeout(function() {
-          mess?.delete().catch(e => { });
+          message?.delete().catch(e => { });
         }, 10000)
-      ))
+      )
     }
   }
   let lang = await rank({ user: interaction?.user || interaction?.author });
@@ -164,7 +163,5 @@ module.exports = async (interaction, nameS) => {
       code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
       break;
   }
-  return interaction.fetchReply()
-      .then(async msg => msg.edit(code))
-      .catch(e => interaction.channel.send(code))
+  return message.edit(code).catch(e => interaction.channel.send(code))
 }

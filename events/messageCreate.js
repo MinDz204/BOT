@@ -34,7 +34,7 @@ module.exports = async (client, message) => {
         if(content.includes("search")){
             return require("./../commands/search").run(lang, message, content.replace(`<@${client.user.id}>`,"").replace("search",""))
         }else{
-            return playmusic(lang, message, client, content )
+            return playmusic(lang, message, client, message?.content.replace(`<@${client.user.id}>`,"") )
         }
     }
 }

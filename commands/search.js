@@ -23,8 +23,6 @@ messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Lo
 }else(
 messid = await interaction?.edit({ content: `<a:loading:1151184304676819085> Loading...`, fetchReply: true, components: [  ]})
 )
-const allowedTypes = [1, 2, 3, 4, 5];
-
 const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
         .setCustomId(`ZsearchrefZi=${name}`)
@@ -40,11 +38,11 @@ const row = new ActionRowBuilder().addComponents(
         .setStyle(ButtonStyle.Secondary)
 )
 const paginatedMessage = await generatePaginatedMessage( name, !interaction?.channel?.nsfw || false, lang );
-if(allowedTypes.includes(interaction.type)){
+if(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction){
     message = await interaction.fetchReply().catch(e=>{ });
-}else(
-    message = await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true }).catch(e=>{ })
-)
+}else{
+    message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
+}
 if (!paginatedMessage?.embed[0] && !paginatedMessage?.attachment[0] ) {
     const IMGp = await generateIMGMessage( name, !interaction?.channel?.nsfw || false, lang );
     if(IMGp) return message.edit({ content: ``, files:IMGp,components: [ row ]})
