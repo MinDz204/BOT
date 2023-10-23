@@ -45,6 +45,19 @@ function Zilink(str){
   const match = str.match(/(https?:\/\/[^\s]+)/g);
   return match ? match[0] : null;
 }
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) { 
+ 
+      // Generate random number 
+      var j = Math.floor(Math.random() * (i + 1));
+                 
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+  }
+     
+  return array;
+}
 function processQuery(qAuery) {
   let query = Zilink(qAuery)
   // Regular expression to match YouTube and YouTube Music URLs
@@ -59,7 +72,13 @@ function processQuery(qAuery) {
     return query;
   }
 }
-
+function Zicrop(query){
+  if(query.includes('Zi=')){
+    const queryParts = query.split('Zi=');
+    queryParts.shift();
+    return queryParts.join(''); 
+  } else return query
+}
 function getAvatar(user) {
   if(!user.avatar) return `https://cdn.discordapp.com/embed/avatars/${(user.discriminator % 5)}.png`
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`
@@ -120,4 +139,4 @@ const renderFrame = async (frame, user, data, Guild ) => {
   return ctx;
 }
 
-module.exports = { removeVietnameseTones, msToTime, validURL, processQuery, renderFrame,Zilink }
+module.exports = { removeVietnameseTones, msToTime, validURL, processQuery, renderFrame, Zilink, Zicrop, shuffleArray }

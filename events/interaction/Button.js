@@ -1,7 +1,7 @@
 const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL } = require("../Zibot/ZiFunc");
+const { validURL, Zicrop } = require("../Zibot/ZiFunc");
 
 module.exports = async (client, interaction) => {
   try {
@@ -19,11 +19,15 @@ module.exports = async (client, interaction) => {
     }
     //cooldows-end------------------------------------------------//
     if (interaction?.customId.includes("Ziplayer")) return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
-
+    if (interaction?.customId.includes("Zsearchref")){
+      interaction?.deferUpdate()
+       return require("./../../commands/search").run(lang, interaction.message, Zicrop(interaction?.customId), true)}
     switch (interaction.customId) {
 
       case "cancel":
         return interaction?.message.delete();
+      case "cancelXcancel":
+        return interaction?.message.edit({components: [ ]})
       case "QueueCancel":
         await db.Ziqueue.deleteOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(e => { });
         return interaction?.message.delete();

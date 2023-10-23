@@ -9,16 +9,17 @@ const playmusic = async(lang, message, client, content) => {
 }
 module.exports = async (client, message) => {
     if (message.author.bot) return;
-    if (message.content.includes("@here") || message.content.includes("@everyone")) return;
+    let content = message?.content?.toLowerCase()
+    if (content.includes("@here") || content.includes("@everyone")) return;
     let lang = await rank({ user: message?.author });
-    if ( message?.reference && message.content.includes(`<@${client.user.id}>`) ){
+    if ( message?.reference && content.includes(`<@${client.user.id}>`) ){
     return message.channel?.messages.fetch({ message: message?.reference?.messageId, cache: false, force: true }).then( mess => {
        if(!mess?.content) return;
         return playmusic(lang, message, client, mess.content )
     })}
     
-    if (message.content.includes(`<@${client.user.id}>`))
-    if (message.content.match(new RegExp(`^<@!?${client.user.id}>( |)$`))) {
+    if (content.includes(`<@${client.user.id}>`))
+    if (content.match(new RegExp(`^<@!?${client.user.id}>( |)$`))) {
         message.reply({ embeds:[
             new EmbedBuilder()
             .setColor(lang?.COLOR || client.color)
@@ -30,6 +31,10 @@ module.exports = async (client, message) => {
             .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
         ]});
     }else{
-        return playmusic(lang, message, client, message.content )
+        if(content.includes("search")){
+            return require("./../commands/search").run(lang, message, content.replace(`<@${client.user.id}>`,"").replace("search",""))
+        }else{
+            return playmusic(lang, message, client, content )
+        }
     }
 }
