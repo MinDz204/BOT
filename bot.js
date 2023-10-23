@@ -1,8 +1,8 @@
-const { Client, GatewayIntentBits, Partials,Events } = require("discord.js");
+const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
-const { addSpeechEvent } = require("./events/Zibot/discord-speech");
+const { addSpeechEvent } = require("./events/Zibot/discord-speech/dist/index.js");
 const client = new Client({
   partials: [
     Partials.Message, // for message
