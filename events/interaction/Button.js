@@ -10,8 +10,21 @@ module.exports = async (client, interaction) => {
       await require("./../ziplayer/ziSearch")(interaction, interaction.customId);
       return interaction?.message.delete();
     }
+    let lang;
+    //Zi module------------------------------------------------//
+    if (interaction?.customId.includes("Ziplayer")){
+      if(!config.messCreate.PlayMusic) return;
+      lang = await rank({ user: interaction?.user });
+      return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
+    } 
+    if (interaction?.customId.includes("Zsearchref")){
+      if (!config.messCreate.GoogleSearch) return;
+      lang = await rank({ user: interaction?.user });
+      interaction?.deferUpdate()
+       return require("./../../commands/search").run(lang, interaction.message, Zicrop(interaction?.customId), true)}
+    if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys------------------------------------------------//
-    let lang = await rank({ user: interaction?.user });
+    lang = await rank({ user: interaction?.user });
     //cooldows-------------------------------------------------//
     const expirationTime = lang?.cooldowns + 3 * 1000;
     if (Date.now() < expirationTime) {
@@ -19,11 +32,6 @@ module.exports = async (client, interaction) => {
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
     //cooldows-end------------------------------------------------//
-    if (interaction?.customId.includes("Ziplayer") && config.messCreate.PlayMusic ) return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
-    if (interaction?.customId.includes("Zsearchref") && config.messCreate.GoogleSearch){
-      interaction?.deferUpdate()
-       return require("./../../commands/search").run(lang, interaction.message, Zicrop(interaction?.customId), true)}
-    if ( !config.interactionCreate.MessageComponentInside ) return;
     switch (interaction.customId) {
       case "cancel":
         return interaction?.message.delete();

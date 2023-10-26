@@ -95,7 +95,6 @@ const renderFrame = async (frame, user, data, Guild ) => {
   // });
   //:::::::::::: BUILD ::::::::::::://
   let width = 700, height = 250;  
-  console.log(frame.frameInfo)
   let FWidth = data[0]?.frameInfo?.width || data[1]?.frameInfo?.width || data[2]?.frameInfo?.width || frame.frameInfo.width
   let FHeight = data[0]?.frameInfo?.height || data[1]?.frameInfo?.height || data[2]?.frameInfo?.height || frame.frameInfo.height
   const canvas = Canvas.createCanvas(width, height);

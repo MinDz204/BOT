@@ -5,8 +5,10 @@ const { ActionRowBuilder, TextInputBuilder } = require("@discordjs/builders");
 const { lyricFind } = require("./Zilyric");
 const db = require("./../../mongoDB");
 const { ZiPlayerFillter, ZiPlayerFillterRow } = require("./Zifillter");
+const config = require("../../config");
 
 module.exports = async (interaction, lang) => {
+if(!config.messCreate.PlayMusic) return;
   try {
     const queue = useQueue(interaction?.guildId);
     switch (interaction.customId) {
