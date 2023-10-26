@@ -2,6 +2,7 @@ const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder, EmbedB
 const db = require("./../../mongoDB");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL, Zicrop } = require("../Zibot/ZiFunc");
+const config = require("../../config");
 
 module.exports = async (client, interaction) => {
   try {
@@ -18,12 +19,12 @@ module.exports = async (client, interaction) => {
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
     //cooldows-end------------------------------------------------//
-    if (interaction?.customId.includes("Ziplayer")) return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
-    if (interaction?.customId.includes("Zsearchref")){
+    if (interaction?.customId.includes("Ziplayer") && config.messCreate.PlayMusic ) return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
+    if (interaction?.customId.includes("Zsearchref") && config.messCreate.GoogleSearch){
       interaction?.deferUpdate()
        return require("./../../commands/search").run(lang, interaction.message, Zicrop(interaction?.customId), true)}
+    if ( !config.interactionCreate.MessageComponentInside ) return;
     switch (interaction.customId) {
-
       case "cancel":
         return interaction?.message.delete();
       case "cancelXcancel":

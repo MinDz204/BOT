@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const { rank } = require("./Zibot/ZilvlSys");
+const config = require("../config");
 const playmusic = async(lang, message, client, content) => {
     if (!message.member.voice.channelId) return message.reply({ content: `${lang?.NOvoice}`, ephemeral: true }).catch(e => { })
     const voiceCME = message?.guild.members.cache.get(client.user.id);
@@ -8,7 +9,7 @@ const playmusic = async(lang, message, client, content) => {
     return require("./ziplayer/ziSearch")(message, content)
 }
 module.exports = async (client, message) => {
-    if (message.author.bot) return;
+    if ( message.author.bot ) return;
     let content = message?.content?.toLowerCase()
     if (content.includes("@here") || content.includes("@everyone")) return;
     let lang = await rank({ user: message?.author });
@@ -32,8 +33,10 @@ module.exports = async (client, message) => {
         ]});
     }else{
         if(content.includes("search")){
+            if(config.messCreate.GoogleSearch)
             return require("./../commands/search").run(lang, message, content.replace(`<@${client.user.id}>`,"").replace("search",""))
         }else{
+            if(config.messCreate.PlayMusic)
             return playmusic(lang, message, client, message?.content.replace(`<@${client.user.id}>`,"") )
         }
     }

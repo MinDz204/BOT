@@ -14,8 +14,10 @@ const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, Button
 const client = require('../bot');
 const db = require("../mongoDB");
 const { shuffleArray } = require('../events/Zibot/ZiFunc');
+const config = require('../config');
 
 module.exports.run = async ( lang, interaction, searcher, button ) => {
+if( !config.messCreate.GoogleSearch ) return;
 const name = interaction?.options?.getString("content") || searcher;
 let messid,message;
 if(!button){
@@ -38,11 +40,17 @@ const row = new ActionRowBuilder().addComponents(
         .setStyle(ButtonStyle.Secondary)
 )
 const paginatedMessage = await generatePaginatedMessage( name, !interaction?.channel?.nsfw || false, lang );
-if(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction){
+try{
     message = await interaction.fetchReply().catch(e=>{ });
-}else{
+}catch(e){
     message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
 }
+
+// if(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction){
+//     message = await interaction.fetchReply().catch(e=>{ });
+// }else{
+//     message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
+// }
 if (!paginatedMessage?.embed[0] && !paginatedMessage?.attachment[0] ) {
     const IMGp = await generateIMGMessage( name, !interaction?.channel?.nsfw || false, lang );
     if(IMGp) return message.edit({ content: ``, files:IMGp,components: [ row ]})

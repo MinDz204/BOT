@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { Collection } = require("discord.js");
-const { rank } = require("./../Zibot/ZilvlSys")
+const { rank } = require("./../Zibot/ZilvlSys");
+const config = require("../../config");
 module.exports = { name: "Application" }
 module.exports = async (client, interaction) => {
   if (interaction.user.bot) return;
@@ -9,6 +10,7 @@ module.exports = async (client, interaction) => {
     files.forEach(async (f) => {
       let props = require(`../../commands/${f}`);
       if (interaction.commandName.toLowerCase() === props.name.toLowerCase()) {
+        if (!config.Discommands.includes(interaction?.commandName))
         try {
           //rank sys------------------------------------------------//
           let lang = await rank({ user: interaction?.user });

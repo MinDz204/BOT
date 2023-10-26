@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
-const { addSpeechEvent } = require("./events/Zibot/discord-speech/dist/index.js");
+
 const client = new Client({
   partials: [
     Partials.Message, // for message
@@ -32,38 +32,38 @@ const client = new Client({
   ],
   shards: 'auto',
 });
-addSpeechEvent(client, { lang: "vi" });
+if(config.messCreate.PlayMusic && config.messCreate.ASSis){
+  const { addSpeechEvent } = require("discord-speech-recognition");
+  addSpeechEvent(client, { lang: "vi" });
+}
 client.color = config.color;
 module.exports = client;
 //-------------------------------------------------------------//
 //        discord player          //
 //-------------------------------------------------------------//
-const player = new Player(client, {
-  useLegacyFFmpeg: true,
-  ytdlOptions: {
-    filter: "audioonly",
-    opusEncoded: true,
-    quality: 'highestaudio',
-  }
-});
-player.setMaxListeners(200);
-player.extractors.loadDefault()
-
-// player.events.on("debug",(_,m) => console.log(m));
-// player.on("debug",console.log)
-// console.log(player.scanDeps())
-
-fs.readdir("./events/player", (_err, files) => {
-  files.forEach((file) => {
-    if (!file.endsWith(".js")) return;
-    const Playerevent = require(`./events/player/${file}`);
-    let playerName = file.split(".")[0];
-    console.log(`👌 Loadded player Event: ${playerName}`);
-    player.events.on(playerName, Playerevent.bind(null, client));
-    delete require.cache[require.resolve(`./events/player/${file}`)];
+if(config.messCreate.PlayMusic){
+  const player = new Player(client, {
+    useLegacyFFmpeg: true,
+    ytdlOptions: {
+      filter: "audioonly",
+      opusEncoded: true,
+      quality: 'highestaudio',
+    }
   });
-});
+  player.setMaxListeners(200);
+  player.extractors.loadDefault()
 
+  fs.readdir("./events/player", (_err, files) => {
+    files.forEach((file) => {
+      if (!file.endsWith(".js")) return;
+      const Playerevent = require(`./events/player/${file}`);
+      let playerName = file.split(".")[0];
+      console.log(`👌 Loadded player Event: ${playerName}`);
+      player.events.on(playerName, Playerevent.bind(null, client));
+      delete require.cache[require.resolve(`./events/player/${file}`)];
+    });
+  });
+}
 fs.readdir("./events", (_err, files) => {
   files.forEach((file) => {
     if (!file.endsWith(".js")) return;

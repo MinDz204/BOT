@@ -1,10 +1,11 @@
 
 const { useMainPlayer } = require('discord-player');
-const { joinVoiceChannel } = require("discord-voip");
+const { joinVoiceChannel } = require("@discordjs/voice");
 const player = useMainPlayer();
 const db = require("./../mongoDB");
 const { EmbedBuilder } = require('discord.js');
 const client = require('../bot');
+const config = require('../config');
 
 module.exports = {
   name: "assictance",
@@ -14,6 +15,7 @@ module.exports = {
   NODMPer: true,
   cooldown: 3,
   run: async (lang, interaction) => {
+    if(!config.messCreate.PlayMusic || !config.messCreate.ASSis) return;
     let embed = new EmbedBuilder()
       .setColor(lang?.COLOR || client.color)
       .setDescription(`${lang?.Assictance}`)

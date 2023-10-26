@@ -87,31 +87,34 @@ function getAvatar(user) {
 
 const renderFrame = async (frame, user, data, Guild ) => {
   //::::::::::::::::::::mudule:::::::::::::::::::::::::::://
-  const Canvas = require('canvas');
+  const Canvas = require('@napi-rs/canvas');
   const jimp = require('jimp');
   /* Load the font */
-  Canvas.registerFont(require('@canvas-fonts/arial-bold'), {
-    family: 'Arial Bold',
-  });
+  // Canvas.registerFont(require('@canvas-fonts/arial-bold'), {
+  //   family: 'Arial Bold',
+  // });
   //:::::::::::: BUILD ::::::::::::://
-  const canvas = Canvas.createCanvas(700, 250);
+  let width = 700, height = 250;  
+  console.log(frame.frameInfo)
+  let FWidth = data[0]?.frameInfo?.width || data[1]?.frameInfo?.width || data[2]?.frameInfo?.width || frame.frameInfo.width
+  let FHeight = data[0]?.frameInfo?.height || data[1]?.frameInfo?.height || data[2]?.frameInfo?.height || frame.frameInfo.height
+  const canvas = Canvas.createCanvas(width, height);
   const ctx = canvas.getContext('2d');
   
-  let scale = Math.max(canvas.width / data[0].frameInfo.width, canvas.height / data[0].frameInfo.height);
-  let x = (canvas.width / 2) - (data[0].frameInfo.width / 2) * scale;
-  let y = (canvas.height / 2) - (data[0].frameInfo.height / 2) * scale;
-  
-  
+  let scale = Math.max(width / FWidth, height / FHeight);
+  let x = (width / 2) - (FWidth / 2) * scale;
+  let y = (height / 2) - (FHeight / 2) * scale;
+
   let layer = await Canvas.loadImage('./events/Zibot/layer.png');
   let background = await jimp.read(frame.getImage()._obj);
   
   background.blur(2);
   background = await background.getBufferAsync('image/png');
   
-  ctx.drawImage(await Canvas.loadImage(background), x, y, data[0].frameInfo.width * scale, data[0].frameInfo.height * scale);
+  ctx.drawImage(await Canvas.loadImage(background), x, y, FWidth * scale, FHeight * scale);
   
-  ctx.strokeRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(layer, 0, 0, canvas.width, canvas.height);
+  ctx.strokeRect(0, 0, width, height);
+  ctx.drawImage(layer, 0, 0, width, height);
   let name = user.username;
   name = name.length > 12 ? name.substring(0, 12).trim() + '...' : name;
   

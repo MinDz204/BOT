@@ -4,7 +4,6 @@ const gifFrames = require('gif-frames');
 const GIFEncoder = require('gif-encoder-2');
 const { renderFrame } = require("./Zibot/ZiFunc");
 const config = require("../config");
-
 module.exports = async (client , member ) =>{
 if (!config?.guildMemberAdd) return;
 let guild = await db?.Ziguild?.findOne({ GuildID: member?.guild.id })
@@ -23,9 +22,10 @@ let url = guild?.gif ? guild?.gif : config.Ziusr.gif
 
 const firstframe = await gifFrames({url, frames: 0})
 const cumulative = firstframe[0].frameInfo.disposal !== 1 ? false : true;
+  
+  let data = await gifFrames({url, frames: 'all', cumulative })
+  if(data.length >= 30) data = data.slice(0, 30)
 
-let data = await gifFrames({url, frames: 'all', cumulative })
-if(data.length >= 30) data = data.slice(0, 30)
 
 const encoder = new GIFEncoder(700, 250);
 encoder.start();
