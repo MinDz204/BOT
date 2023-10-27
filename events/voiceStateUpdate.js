@@ -1,9 +1,10 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle,PermissionsBitField  } = require("discord.js");
 const db = require("../mongoDB");
 const { useQueue } = require('discord-player');
-
+const config = require("../config");
+PermissionsBitField.Flags
 module.exports = async (client, oldState, newState) => {
-  const queue = useQueue(oldState.guild.id);
+  const queue = useQueue(oldState?.guild?.id);
   if (queue || queue?.node.isPlaying()) {
     if (newState.id === client.user.id) {
       let lang = await db?.ZiUser?.findOne({ userID: queue?.currentTrack?.requestby?.id || queue?.metadata?.requestby?.id })
@@ -29,5 +30,125 @@ module.exports = async (client, oldState, newState) => {
         }
       }
     }
+  }
+  //::::::::::::::::::::::::::::::::::::: join to create:::::::::::::::::::::::::::://
+  if(!config.EnableJOINTOCREATE) return;
+  let voiceManager = client.voiceManager;
+  const { member, guild } = oldState;
+  const newChannel = newState.channel;
+  const oldChannel = oldState.channel;
+
+  const channelid = config.JOINTOCREATECHANNEL;
+  const channel = client.channels.cache.get(channelid);
+
+  if (oldChannel !== newChannel && newChannel && newChannel.id === channel.id) {
+      const voiceChannel = await guild.channels.create({
+          name: `${member.user.tag}`,
+          type: ChannelType.GuildVoice,
+          parent: newChannel.parent,
+          permissionOverwrites: [
+              {
+                  id: member.id,
+                  allow: ["Connect", "ManageChannels"],
+              },
+              {
+                  id: guild.id,
+                  allow: ["Connect"],
+              },
+          ],
+      }
+      );
+      const textChannel = await guild.channels.create({
+        name: `${member.user.tag}-manager`,
+        type: ChannelType.GuildText,
+        parent: newChannel.parent,
+        permissionOverwrites: [
+            {
+                id: member.id,
+                allow: ["ViewChannel"],
+            },
+            {
+                id: guild.id,
+                deny: ["ViewChannel"],
+            },
+        ],
+    }
+    );
+    let lang = await db?.ZiUser?.findOne({ userID: member.id })
+    lang = lang?.lang || `vi`
+    lang = require(`../lang/${lang}.js`);
+    textChannel.send({embeds:[
+      new EmbedBuilder()
+      .setColor(lang.COLOR || client.color)
+      .setTitle(`${member.user.tag} voice channel manager`)
+      .setThumbnail( member?.user?.displayAvatarURL({ dynamic: true }) )
+      .setDescription(`sử dụng các nút bên dưới để setup voice channel của bạn:`)
+      .setTimestamp()
+      .setFooter({ text: `${lang?.RequestBY} ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+      .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
+    ], components:[
+      new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId("ZiVClock")
+        .setEmoji("<:LOck:1167543711283019776>")
+        .setLabel("lock"),
+        new ButtonBuilder()
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId("ZiVCrename")
+        .setEmoji("<:rename:1167545075958562886>")
+        .setLabel("rename"),
+        new ButtonBuilder()
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId("ZiVClimit")
+        .setEmoji("<:limit:1167545918518722661>")
+        .setLabel("limit"),
+      )
+    ]})
+      voiceManager.set(member.id, { voiceChannel:voiceChannel.id, textChannel: textChannel.id });
+
+      await newChannel.permissionOverwrites.edit(member, {
+          Connect: false
+      });
+      setTimeout(() => {
+          newChannel.permissionOverwrites.delete(member);
+      }, 30000);
+
+      return setTimeout(() => {
+          member.voice.setChannel(voiceChannel);
+      }, 500);
+  }
+
+  const jointocreate = voiceManager.get(member.id);
+  let channelmoddel = client.channels?.cache?.get(jointocreate?.textChannel);
+  const members = oldChannel?.members
+      .filter((m) => !m.user.bot)
+      .map((m) => m.id);
+  if (
+      jointocreate?.voiceChannel &&
+      oldChannel.id === jointocreate?.voiceChannel &&
+      (!newChannel || newChannel.id !== jointocreate?.voiceChannel)
+  ) {
+      if (members.length > 0) {
+          let randomID = members[Math.floor(Math.random() * members.length)];
+          let randomMember = guild.members.cache.get(randomID);
+          randomMember.voice.setChannel(oldChannel).then((v) => {
+              oldChannel.setName(randomMember.user.username).catch((e) => null);
+              channelmoddel.permissionOverwrites.edit(randomMember, {
+                ViewChannel: true
+            });
+              channelmoddel.permissionOverwrites.delete(member.id);
+              oldChannel.permissionOverwrites.edit(randomMember, {
+                  Connect: true,
+                  ManageChannels: true
+              });
+          });
+          voiceManager.set(member.id, null);
+          voiceManager.set(randomMember.id, {voiceChannel:oldChannel?.id, textChannel: jointocreate?.textChannel});
+      } else {
+          voiceManager.set(member.id, null);
+          oldChannel.delete().catch((e) => null);
+          channelmoddel.delete().catch((e) => null);
+      }
   }
 }

@@ -1,7 +1,6 @@
 const { useQueue, QueueRepeatMode, useHistory } = require("discord-player");
 const { zistart } = require("./ziStartTrack");
-const { ModalBuilder, TextInputStyle } = require("discord.js");
-const { ActionRowBuilder, TextInputBuilder } = require("@discordjs/builders");
+const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder  } = require("discord.js");
 const { lyricFind } = require("./Zilyric");
 const db = require("./../../mongoDB");
 const { ZiPlayerFillter, ZiPlayerFillterRow } = require("./Zifillter");

@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
+const { Client, GatewayIntentBits, Partials, Collection, Events } = require("discord.js");
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
@@ -37,7 +37,15 @@ if(config.messCreate.PlayMusic && config.messCreate.ASSis){
   addSpeechEvent(client, { lang: "vi" });
 }
 client.color = config.color;
+//-------------------------------------------------------------//
+if(config.EnableJOINTOCREATE){
+client.voiceManager = new Collection();}
+//-------------------------------------------------------------//
+
+//-------------------------------------------------------------//
 module.exports = client;
+//-------------------------------------------------------------//
+
 //-------------------------------------------------------------//
 //        discord player          //
 //-------------------------------------------------------------//

@@ -58,7 +58,22 @@ module.exports = async (client, interaction) => {
         let desp = okii == 0 ? `${lang?.profileErr}` : okii == 1 ? `${lang?.profilecol}` : okii == 2 ? `${lang?.profilepic}` : `${lang?.profilesuss}`
         return interaction.reply({ content: `${desp}`, ephemeral: true }).catch(e => { });
       }
-
+      case"ZiVCMODALrename":{
+        interaction.member.voice.channel.edit({
+          name: interaction.fields.getTextInputValue("resu")
+        })
+        interaction.deferReply().catch(e => { });
+        return interaction.deleteReply().catch(e => { });
+      }
+      case"ZiVCMODALlimit":{
+        const vol = interaction.fields.getTextInputValue("resu");
+        if (!isNumber(vol)) return interaction.editReply({ content: `${lang?.volumeErr}`, ephemeral: true }).catch(e => { });
+        interaction.member.voice.channel.edit({
+          userLimit: vol
+        })
+        interaction.deferReply().catch(e => { });
+        return interaction.deleteReply().catch(e => { });
+      }
       default:
         console.log(interaction.customId)
     }
