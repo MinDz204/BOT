@@ -22,6 +22,12 @@ module.exports = async (client, interaction) => {
       lang = await rank({ user: interaction?.user });
       interaction?.deferUpdate()
        return require("./../../commands/search").run(lang, interaction.message, Zicrop(interaction?.customId), true)}
+    //ZiVc---------------------------------------------------------//
+    if (interaction?.customId.includes("ZiVC")){
+      if(!config.EnableJOINTOCREATE) return;
+      lang = await rank({ user: interaction?.user });
+      return require("./../Zibot/Zivc")(interaction, lang)
+    } 
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys------------------------------------------------//
     lang = await rank({ user: interaction?.user });
@@ -31,12 +37,7 @@ module.exports = async (client, interaction) => {
       const expiredTimestamp = Math.round(expirationTime / 1000);
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
-    //ZiVc---------------------------------------------------------//
-    if (interaction?.customId.includes("ZiVC")){
-      if(!config.EnableJOINTOCREATE) return;
-      lang = await rank({ user: interaction?.user });
-      return require("./../Zibot/Zivc")(interaction, lang)
-    } 
+
     //cooldows-end------------------------------------------------//
     switch (interaction.customId) {
       case "cancel":
