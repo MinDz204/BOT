@@ -1,5 +1,5 @@
 
-const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require("discord.js");
 const db = require("./../../mongoDB");
 const config = require("../../config");
 module.exports = async (interaction, lang) => {
@@ -18,7 +18,7 @@ if(!config.EnableJOINTOCREATE) return;
                     allow: ["ViewChannel"],
                 },
             ]);
-            return interaction.message.edit({ components: [creaacs(true)] })
+            return interaction.message.edit({ components: creaacs(true) })
         case "ZiVCunlock":
             interaction.deferUpdate()
             interaction.member.voice.channel.permissionOverwrites.set([
@@ -31,7 +31,7 @@ if(!config.EnableJOINTOCREATE) return;
                     allow: ["ViewChannel"],
                 },
             ]);
-            return interaction.message.edit({ components: [creaacs(false)] })
+            return interaction.message.edit({ components: creaacs(false) })
         case "ZiVCrename":
           return interaction.showModal(
             new ModalBuilder()
@@ -51,7 +51,7 @@ if(!config.EnableJOINTOCREATE) return;
         interaction.member.voice.channel.edit({
             userLimit: vol
         })
-        interaction.deferUpdate().catch(e => { });
+        interaction.update().catch(e => { });
         return;
         }
     }
@@ -63,7 +63,7 @@ if(!config.EnableJOINTOCREATE) return;
 }
 
 function creaacs(log){
-    let zilog = new ActionRowBuilder().addComponents(
+    let zilog = [ new ActionRowBuilder().addComponents(
         new ButtonBuilder()
         .setStyle(ButtonStyle.Danger)
         .setCustomId("ZiVCunlock")
@@ -76,11 +76,41 @@ function creaacs(log){
         .setLabel("rename"),
         new ButtonBuilder()
         .setStyle(ButtonStyle.Secondary)
-        .setCustomId("ZiVClimit")
+        .setCustomId("ZiVClimitCOMMON")
+        .setDisabled(true)
         .setEmoji("<:limit:1167545918518722661>")
-        .setLabel("limit"),
-    )
-    let ziunlog = new ActionRowBuilder().addComponents(
+        .setLabel("common"),
+      ),
+      new ActionRowBuilder().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId("ZiVClimit")
+          .setMaxValues(1)
+          .setMinValues(1)
+          .setPlaceholder("Số lượng")
+          .setOptions([
+            { label: "Full", value: "0" },
+            { label: "1", value: "1" },
+            { label: "2", value: "2" },
+            { label: "3", value: "3" },
+            { label: "4", value: "4" },
+            { label: "5", value: "5" },
+            { label: "10", value: "10" },
+            { label: "15", value: "15" },
+            { label: "20", value: "20" },
+            { label: "25", value: "25" },
+            { label: "30", value: "30" },
+            { label: "35", value: "35" },
+            { label: "40", value: "40" },
+            { label: "45", value: "45" },
+            { label: "50", value: "50" },
+            { label: "60", value: "60" },
+            { label: "70", value: "70" },
+            { label: "80", value: "80" },
+            { label: "90", value: "90" },
+            { label: "95", value: "95" },
+          ])
+      )]
+    let ziunlog = [ new ActionRowBuilder().addComponents(
         new ButtonBuilder()
         .setStyle(ButtonStyle.Secondary)
         .setCustomId("ZiVClock")
@@ -93,9 +123,39 @@ function creaacs(log){
         .setLabel("rename"),
         new ButtonBuilder()
         .setStyle(ButtonStyle.Secondary)
-        .setCustomId("ZiVClimit")
+        .setCustomId("ZiVClimitCOMMON")
+        .setDisabled(true)
         .setEmoji("<:limit:1167545918518722661>")
-        .setLabel("limit"),
-    )
+        .setLabel("common"),
+      ),
+      new ActionRowBuilder().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId("ZiVClimit")
+          .setMaxValues(1)
+          .setMinValues(1)
+          .setPlaceholder("Số lượng")
+          .setOptions([
+            { label: "Full", value: "0" },
+            { label: "1", value: "1" },
+            { label: "2", value: "2" },
+            { label: "3", value: "3" },
+            { label: "4", value: "4" },
+            { label: "5", value: "5" },
+            { label: "10", value: "10" },
+            { label: "15", value: "15" },
+            { label: "20", value: "20" },
+            { label: "25", value: "25" },
+            { label: "30", value: "30" },
+            { label: "35", value: "35" },
+            { label: "40", value: "40" },
+            { label: "45", value: "45" },
+            { label: "50", value: "50" },
+            { label: "60", value: "60" },
+            { label: "70", value: "70" },
+            { label: "80", value: "80" },
+            { label: "90", value: "90" },
+            { label: "95", value: "95" },
+          ])
+      )]
     return log ? zilog : ziunlog;
 }

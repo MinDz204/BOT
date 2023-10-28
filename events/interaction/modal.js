@@ -62,8 +62,7 @@ module.exports = async (client, interaction) => {
         interaction.member.voice.channel.edit({
           name: interaction.fields.getTextInputValue("resu")
         })
-        interaction.deferReply().catch(e => { });
-        return interaction.deleteReply().catch(e => { });
+       	return interaction.deferUpdate().catch(e => { });
       }
       default:
         console.log(interaction.customId)
