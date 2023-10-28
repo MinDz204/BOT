@@ -2,7 +2,6 @@
 const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const config = require("../../config");
-
 module.exports = async (interaction, lang) => {
 if(!config.EnableJOINTOCREATE) return;
   try {
@@ -47,20 +46,14 @@ if(!config.EnableJOINTOCREATE) return;
                     .setStyle(TextInputStyle.Short)
                 )
           ));
-        case "ZiVClimit":
-            return interaction.showModal(
-                new ModalBuilder()
-                .setCustomId("ZiVCMODALlimit")
-                .setTitle(`limit VOICE CHANNEL:`)
-                .addComponents(
-                    new ActionRowBuilder().addComponents(
-                    new TextInputBuilder()
-                        .setMaxLength(2)
-                        .setCustomId("resu")
-                        .setLabel(`Nhập số lượng thành viên 99:`)
-                        .setStyle(TextInputStyle.Short)
-                    )
-              ));
+        case"ZiVClimit":{
+        const vol = interaction?.values[0];
+        interaction.member.voice.channel.edit({
+            userLimit: vol
+        })
+        interaction.deferUpdate().catch(e => { });
+        return;
+        }
     }
 
   } catch (e) {

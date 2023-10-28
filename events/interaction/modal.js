@@ -65,15 +65,6 @@ module.exports = async (client, interaction) => {
         interaction.deferReply().catch(e => { });
         return interaction.deleteReply().catch(e => { });
       }
-      case"ZiVCMODALlimit":{
-        const vol = interaction.fields.getTextInputValue("resu");
-        if (!isNumber(vol)) return interaction.editReply({ content: `${lang?.volumeErr}`, ephemeral: true }).catch(e => { });
-        interaction.member.voice.channel.edit({
-          userLimit: vol
-        })
-        interaction.deferReply().catch(e => { });
-        return interaction.deleteReply().catch(e => { });
-      }
       default:
         console.log(interaction.customId)
     }

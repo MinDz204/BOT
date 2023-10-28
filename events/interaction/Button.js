@@ -6,6 +6,7 @@ const config = require("../../config");
 
 module.exports = async (client, interaction) => {
   try {
+    if(config.messCreate.PlayMusic)
     if (validURL(interaction.customId)) {
       await require("./../ziplayer/ziSearch")(interaction, interaction.customId);
       return interaction?.message.delete();

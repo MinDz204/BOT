@@ -34,10 +34,16 @@ const Ziguild = Schema({
   content: String,
   img: String,
 })
+const voiceManager = Schema({
+  userID: String,
+  textChannel: String,
+  voiceChannel: String,
+})
 //-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
   Zibot: model("Zibot", Zibot),
   Ziguild: model("Ziguild", Ziguild),
+  voiceManager: model("voiceManager", voiceManager),
 }

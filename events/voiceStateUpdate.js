@@ -1,8 +1,7 @@
-const { EmbedBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle,PermissionsBitField  } = require("discord.js");
+const { EmbedBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle,PermissionsBitField, StringSelectMenuBuilder  } = require("discord.js");
 const db = require("../mongoDB");
 const { useQueue } = require('discord-player');
 const config = require("../config");
-PermissionsBitField.Flags
 module.exports = async (client, oldState, newState) => {
   const queue = useQueue(oldState?.guild?.id);
   if (queue || queue?.node.isPlaying()) {
@@ -33,7 +32,6 @@ module.exports = async (client, oldState, newState) => {
   }
   //::::::::::::::::::::::::::::::::::::: join to create:::::::::::::::::::::::::::://
   if(!config.EnableJOINTOCREATE) return;
-  let voiceManager = client.voiceManager;
   const { member, guild } = oldState;
   const newChannel = newState.channel;
   const oldChannel = oldState.channel;
@@ -43,7 +41,7 @@ module.exports = async (client, oldState, newState) => {
 
   if (oldChannel !== newChannel && newChannel && newChannel.id === channel.id) {
       const voiceChannel = await guild.channels.create({
-          name: `${member.user.tag}`,
+          name: `${member.user.tag}'s Channel`,
           type: ChannelType.GuildVoice,
           parent: newChannel.parent,
           permissionOverwrites: [
@@ -80,9 +78,9 @@ module.exports = async (client, oldState, newState) => {
     textChannel.send({embeds:[
       new EmbedBuilder()
       .setColor(lang.COLOR || client.color)
-      .setTitle(`${member.user.tag} voice channel manager`)
+      .setTitle(`${member.user.tag} voice channel manager:`)
       .setThumbnail( member?.user?.displayAvatarURL({ dynamic: true }) )
-      .setDescription(`sử dụng các nút bên dưới để setup voice channel của bạn:`)
+      .setDescription(`Sử dụng các nút bên dưới để setup voice channel của bạn:`)
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
       .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
@@ -100,12 +98,47 @@ module.exports = async (client, oldState, newState) => {
         .setLabel("rename"),
         new ButtonBuilder()
         .setStyle(ButtonStyle.Secondary)
-        .setCustomId("ZiVClimit")
+        .setCustomId("ZiVClimitCOMMON")
+        .setDisabled(true)
         .setEmoji("<:limit:1167545918518722661>")
-        .setLabel("limit"),
-      )
+        .setLabel("common"),
+      ),
+      new ActionRowBuilder().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId("ZiVClimit")
+          .setMaxValues(1)
+          .setMinValues(1)
+          .setPlaceholder("Số lượng")
+          .setOptions([
+            { label: "Full", value: "0" },
+            { label: "1", value: "1" },
+            { label: "2", value: "2" },
+            { label: "3", value: "3" },
+            { label: "4", value: "4" },
+            { label: "5", value: "5" },
+            { label: "10", value: "10" },
+            { label: "15", value: "15" },
+            { label: "20", value: "20" },
+            { label: "25", value: "25" },
+            { label: "30", value: "30" },
+            { label: "35", value: "35" },
+            { label: "40", value: "40" },
+            { label: "45", value: "45" },
+            { label: "50", value: "50" },
+            { label: "60", value: "60" },
+            { label: "70", value: "70" },
+            { label: "80", value: "80" },
+            { label: "90", value: "90" },
+            { label: "95", value: "95" },
+          ])
+      ),
     ]})
-      voiceManager.set(member.id, { voiceChannel:voiceChannel.id, textChannel: textChannel.id });
+      await db.voiceManager.updateOne({ userID: member.id }, {
+        $set: {
+          voiceChannel: voiceChannel.id,
+          textChannel: textChannel.id,
+        }
+      }, { upsert: true }).catch(e => { })
 
       await newChannel.permissionOverwrites.edit(member, {
           Connect: false
@@ -119,7 +152,7 @@ module.exports = async (client, oldState, newState) => {
       }, 500);
   }
 
-  const jointocreate = voiceManager.get(member.id);
+  const jointocreate = await db.voiceManager.findOne({ userID: member.id });
   let channelmoddel = client.channels?.cache?.get(jointocreate?.textChannel);
   const members = oldChannel?.members
       .filter((m) => !m.user.bot)
@@ -143,12 +176,17 @@ module.exports = async (client, oldState, newState) => {
                   ManageChannels: true
               });
           });
-          voiceManager.set(member.id, null);
-          voiceManager.set(randomMember.id, {voiceChannel:oldChannel?.id, textChannel: jointocreate?.textChannel});
+          await db.voiceManager.deleteOne({ userID: member.id })
+          await db.voiceManager.updateOne({ userID: randomMember.id }, {
+            $set: {
+              voiceChannel: oldChannel?.id,
+              textChannel: jointocreate?.textChannel,
+            }
+          }, { upsert: true }).catch(e => { })
       } else {
-          voiceManager.set(member.id, null);
-          oldChannel.delete().catch((e) => null);
-          channelmoddel.delete().catch((e) => null);
+        await db.voiceManager.deleteOne({ userID: member.id })
+        oldChannel.delete().catch((e) => null);
+        channelmoddel.delete().catch((e) => null);
       }
   }
 }

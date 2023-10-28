@@ -38,11 +38,6 @@ if(config.messCreate.PlayMusic && config.messCreate.ASSis){
 }
 client.color = config.color;
 //-------------------------------------------------------------//
-if(config.EnableJOINTOCREATE){
-client.voiceManager = new Collection();}
-//-------------------------------------------------------------//
-
-//-------------------------------------------------------------//
 module.exports = client;
 //-------------------------------------------------------------//
 
