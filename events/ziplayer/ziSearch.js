@@ -10,12 +10,6 @@ const player = useMainPlayer();
 module.exports = async (interaction, nameS) => {
   let messid,message;
   messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
-console.log(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction)
-  // if(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction){
-  // message = await interaction.fetchReply().catch(e=>{ });
-  // }else{
-  // message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
-  // }
   try{
     message = await interaction.fetchReply().catch(e=>{ });
   }catch(e){

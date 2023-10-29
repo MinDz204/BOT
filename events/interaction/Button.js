@@ -29,6 +29,12 @@ module.exports = async (client, interaction) => {
       lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zivc")(interaction, lang)
     } 
+    //GI------------------------------------------------//
+    if (interaction?.customId.includes("GI")){
+      if(!config.messCreate.GI) return;
+      lang = await rank({ user: interaction?.user });
+      return require("./../Zibot/enkapross")(interaction, lang)
+    } 
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys------------------------------------------------//
     lang = await rank({ user: interaction?.user });
@@ -39,7 +45,6 @@ module.exports = async (client, interaction) => {
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
 
-    //cooldows-end------------------------------------------------//
     switch (interaction.customId) {
       case "cancel":
         return interaction?.message.delete();
@@ -159,6 +164,22 @@ module.exports = async (client, interaction) => {
           )
 
         return interaction?.showModal(modal);
+      }
+      case "GIUIDProfile": {
+        return interaction?.showModal(
+          new ModalBuilder()
+          .setCustomId('GIUIDProfilemodal')
+          .setTitle(`Edit GI UID ${interaction.user.tag} `)
+          .addComponents(
+            new ActionRowBuilder().addComponents(
+              new TextInputBuilder()
+                .setCustomId('uid')
+                .setLabel(`uid`)
+                .setPlaceholder(`UID`)
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+          )
+        ));
       }
       case "refProfile": {
         let props = require(`../../commands/profile`);

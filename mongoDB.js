@@ -11,6 +11,9 @@ const ZiUser = Schema({
   vol: Number,
   cooldowns: Number,
   claimcheck: Number,
+  GIUID: Number,
+  GIdata:Array,
+  GIrow: Array,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
 })

@@ -64,6 +64,18 @@ module.exports = async (client, interaction) => {
         })
        	return interaction.deferUpdate().catch(e => { });
       }
+      case "GIUIDProfilemodal":{
+
+        const vol = interaction.fields.getTextInputValue("uid");
+        if (!isNumber(vol)) return interaction.reply({ content: `${lang?.volumeErr}`, ephemeral: true }).catch(e => { });
+        await interaction.deferUpdate( ).catch(e => { });
+        await db.ZiUser.updateOne({ userID: interaction.user.id }, {
+          $set: {
+            GIUID: vol,
+          }
+        }, { upsert: true })
+        return;
+      }
       default:
         console.log(interaction.customId)
     }

@@ -39,6 +39,10 @@ module.exports = {
         .setCustomId("refLeaderboard")
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
+        .setLabel("GI UID ✎")
+        .setCustomId("GIUIDProfile")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
         .setLabel("❌")
         .setCustomId("cancel")
         .setStyle(ButtonStyle.Secondary)
