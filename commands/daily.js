@@ -9,6 +9,7 @@ module.exports = {
   description: "View profile.",
   options: [],
   cooldown: 3,
+  dm_permission: true,
   run: async (lang, interaction) => {
 
     interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {

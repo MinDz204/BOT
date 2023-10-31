@@ -11,6 +11,7 @@ module.exports = {
     type: 6,
   }],
   cooldown: 3,
+  dm_permission: true,
   run: async (lang, interaction, Zi) => {
     interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
       setTimeout(function() {

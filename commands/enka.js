@@ -26,10 +26,12 @@ module.exports = {
       required: true,
     }],
     cooldown: 3,
+    dm_permission: true,
   };
   
 module.exports.run = async ( lang, interaction ) => {
-    await interaction.deferReply();
+    await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
+    let mess = await interaction.fetchReply().catch(e=>{ });
     let uid = interaction.options.getString("uid");
     tempus = client.users.cache.get(uid.replace("<@","").replace(">","")) ;
     let user = tempus || interaction.user;
@@ -49,7 +51,7 @@ module.exports.run = async ( lang, interaction ) => {
     try {
         playerData = await genshin.getPlayer(uid);
     } catch(e) {
-        return await interaction.editReply({ content: 'UID incorrect' });
+        return await mess.edit({ content: 'UID incorrect' });
     }
     await db.ZiUser.updateOne({ userID: user.id }, {
         $set: {
@@ -89,7 +91,7 @@ module.exports.run = async ( lang, interaction ) => {
                   .setOptions(result.player.showcase.map((Track, index) => {
                     return { label: `${result.player.showcase[Number(index)].name} - ${result.player.showcase[Number(index)].level}`, value: `GI${user.id}Zi=${result.player.showcase[Number(index)].characterId}`}
                 })))
-        await interaction.editReply({
+        await mess.edit({
             embeds: [ embed ],
             components:[ row ],
         });

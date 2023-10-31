@@ -16,6 +16,7 @@ module.exports = {
       }],
     cooldown: 3,
     NODMPer: true,
+    dm_permission: false,
   };
 const { EmbedBuilder } = require('discord.js');
 const client = require('../bot');

@@ -2,7 +2,9 @@ const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('
 const db = require("../../mongoDB");
 const { ZiPlayerlinkAvt } = require('./ziStartTrack');
 const { lyricsExtractor } = require('@discord-player/extractor');
+
 const client = require('../../bot');
+const { Zitrim } = require('../Zibot/ZiFunc');
 // Tạo một hàm để tìm lời bài hát.
 async function searchForLyrics(songName) {
   const lyricsFinder = lyricsExtractor('zNcdOMl6eT89oKQR70sNWdqA556aJ2_0m6Iav4KeIuq0WyWc03rsLcFWElOB0Ma6');
@@ -29,20 +31,18 @@ const lyric = async (trackk, user, lang) => {
     ]);
   //sercher lyr
   const lyrics = await searchForLyrics(trackk?.title);
-  console.log(lyrics)
   if (!lyrics) {
     let Ziic = await ZiPlayerlinkAvt(trackk?.queryType)
     info.setAuthor({ name: `${trackk?.title}`, iconURL: `${Ziic}`, url: trackk?.url });
     info.setDescription(`No Lyrics Found For \`${trackk?.title}\``);
   } else {
-    const trimmedLyrics = lyrics?.lyrics.substring(0, 1980)
     info.setAuthor({
       name: lyrics?.artist?.name,
       iconURL: lyrics?.artist?.image,
       url: lyrics?.url
     });
     info.setThumbnail(lyrics?.image)
-    info.setDescription(`[**${trackk?.title}**](${trackk?.url})\n**Lyric:**\n${trimmedLyrics.length === 1980 ? `${trimmedLyrics}...` : trimmedLyrics}\n`);
+    info.setDescription(`[**${trackk?.title}**](${trackk?.url})\n**Lyric:**\n${Zitrim(lyrics?.lyrics ,1980)}\n`);
   }
 
   return { embeds: [info], components: [row] }

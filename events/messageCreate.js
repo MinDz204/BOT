@@ -36,7 +36,7 @@ module.exports = async (client, message) => {
             if(config.messCreate.GoogleSearch)
             return require("./../commands/search").run(lang, message, content.replace(`<@${client.user.id}>`,"").replace("search",""))
         }else{
-            if(config.messCreate.PlayMusic)
+            if(config.messCreate.PlayMusic && message?.guild)
             return playmusic(lang, message, client, message?.content.replace(`<@${client.user.id}>`,"") )
         }
     }

@@ -9,6 +9,7 @@ module.exports = {
     autocomplete: true,
   }],
   cooldown: 3,
+  dm_permission: true,
 };
 
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require('discord.js');

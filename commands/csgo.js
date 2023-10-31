@@ -46,6 +46,7 @@ module.exports = {
     required: true,
   }],
   cooldown: 3,
+  dm_permission: true,
   run: async (lang, interaction) => {
     //defer
     interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {

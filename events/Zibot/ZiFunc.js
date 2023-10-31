@@ -27,6 +27,8 @@ function removeVietnameseTones(str) {
   return str;
 }
 
+const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+
 function msToTime(s) {
   let time = Math.floor(Number(Date.now() + s) / 1000)
   return (`<t:${time}:R>`)
@@ -141,4 +143,14 @@ const renderFrame = async (frame, user, data, Guild ) => {
   return ctx;
 }
 
-module.exports = { removeVietnameseTones, msToTime, validURL, processQuery, renderFrame, Zilink, Zicrop, shuffleArray }
+module.exports = {
+removeVietnameseTones,
+msToTime,
+validURL,
+processQuery,
+renderFrame,
+Zilink,
+Zicrop,
+shuffleArray,
+Zitrim: trim,
+}

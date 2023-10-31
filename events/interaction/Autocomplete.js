@@ -1,6 +1,6 @@
 const { useMainPlayer, QueryType } = require("discord-player");
 const Kitsu = require("kitsu");
-const { removeVietnameseTones } = require("../Zibot/ZiFunc");
+const { removeVietnameseTones, Zitrim } = require("../Zibot/ZiFunc");
 
 module.exports = async (client, interaction) => {
   try {
@@ -15,11 +15,10 @@ module.exports = async (client, interaction) => {
           });
           return interaction.respond(
             results.tracks
-              .filter(t => t.title.length < 100 && t.url.length < 100)
               .slice(0, 10)
               .map((t) => ({
-                name: t.title,
-                value: t.url
+                name: Zitrim(t.title, 100),
+                value: Zitrim(t.url, 100)
               }))
           );
         } catch (e) {

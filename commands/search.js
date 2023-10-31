@@ -9,6 +9,7 @@ module.exports = {
       }],
     cooldown: 3,
     NODMPer: false,
+    dm_permission: true,
   };
 const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const client = require('../bot');

@@ -4,7 +4,8 @@ module.exports = {
   name: "help",
   description: "Show bot command.",
   options: [],
-  cooldown: 3
+  cooldown: 3,
+  dm_permission: true,
 }
 
 module.exports.run = async (lang, interaction) => {

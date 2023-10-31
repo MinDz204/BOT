@@ -14,6 +14,7 @@ module.exports = {
   voiceC: true,
   NODMPer: true,
   cooldown: 3,
+  dm_permission: false,
   run: async (lang, interaction) => {
     if(!config.messCreate.PlayMusic || !config.messCreate.ASSis) return;
     let embed = new EmbedBuilder()

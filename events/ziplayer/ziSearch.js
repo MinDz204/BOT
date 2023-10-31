@@ -3,7 +3,7 @@ const db = require("./../../mongoDB");
 const client = require('../../bot');
 const { useMainPlayer, QueryType, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL, processQuery, Zilink } = require("../Zibot/ZiFunc");
+const { validURL, processQuery, Zilink, Zitrim } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
 
@@ -41,12 +41,12 @@ module.exports = async (interaction, nameS) => {
           skipOnNoStream: true,
         }
       });
-      if(queue?.metadata) message.delete();
+      if(queue?.metadata) message?.delete();
       return;
     } catch (e) {
       console.log(e)
       let lang = await rank({ user: interaction?.user || interaction?.author });
-      return message.edit(`${lang?.PlayerSearchErr}`).then(
+      return message?.edit(`${lang?.PlayerSearchErr}`).then(
         setTimeout(function() {
           message?.delete().catch(e => { });
         }, 10000)
@@ -58,7 +58,7 @@ module.exports = async (interaction, nameS) => {
     fallbackSearchEngine: QueryType.YOUTUBE,
     requestedBy: interaction?.user || interaction?.author,
   });
-  const maxTracks = res.tracks.filter(t => t?.title.length < 100 && t?.url.length < 100).slice(0, 20);
+  const maxTracks = res.tracks.filter(t => t?.url.length < 100).slice(0, 20);
   let track_button_creator = maxTracks.map((Track, index) => {
     return new ButtonBuilder()
       .setLabel(`${index + 1}`)
@@ -79,7 +79,7 @@ module.exports = async (interaction, nameS) => {
   const embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client.color)
     .setTitle(`${lang?.PlayerSearch} ${nameS}`)
-    .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${track?.title.substr(0, 35) + "..."} | \`${track.author.substr(0, 18) + "..."}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
+    .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${Zitrim( track?.title , 35)} | \`${Zitrim(track.author,10)}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
     .setTimestamp()
     .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
 
@@ -162,5 +162,5 @@ module.exports = async (interaction, nameS) => {
       code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
       break;
   }
-  return message.edit(code).catch(e => interaction.channel.send(code))
+  return message?.edit(code).catch(e => interaction?.channel?.send(code))
 }

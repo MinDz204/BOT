@@ -17,6 +17,7 @@ module.exports = {
   voiceC: true,
   NODMPer: true,
   cooldown: 3,
+  dm_permission: false,
   run: async (lang, interaction) => {
 
     interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
