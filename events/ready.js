@@ -1,5 +1,6 @@
 const config = require("../config.js");
-const { REST, Routes } = require('discord.js');
+const { REST } = require("@discordjs/rest");
+const { Routes } = require('discord.js');
 const db = require("./../mongoDB")
 // const mongoose = require("mongoose");
 module.exports = async (client) => {
