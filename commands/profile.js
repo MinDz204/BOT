@@ -2,6 +2,7 @@ const { ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = requ
 const canvacord = require("canvacord");
 const db = require("./../mongoDB");
 const client = require('../bot');
+const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 module.exports = {
   name: "profile",
   description: "View profile.",
@@ -13,12 +14,7 @@ module.exports = {
   cooldown: 3,
   dm_permission: true,
   run: async (lang, interaction, Zi) => {
-    interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
-      setTimeout(function() {
-        Message?.delete().catch(e => { });
-      }, 10000)
-    }).catch(e => { console.log(e) })
-
+    let messages = await ZifetchInteraction(interaction);
     let userr = interaction?.options?.getUser("user") || interaction.user;
     let userDB = await db.ZiUser.findOne({ userID: userr.id })
     let UserI = await db?.ZiUser?.find()
@@ -64,7 +60,7 @@ module.exports = {
     rank.build()
       .then(data => {
         const attachment = new AttachmentBuilder(data, { name: "RankCard.png" });
-        if (!Zi) return interaction.channel.send({ files: [attachment], components: [editProf] }).catch(e => { });
+        if (!Zi) return messages?.edit({ files: [attachment], components: [editProf] }).catch(e => interaction?.channel?.send({ files: [attachment], components: [editProf] }));
         interaction.message.edit({ files: [attachment], components: [editProf] }).catch(e => { });
         interaction.deleteReply();
 

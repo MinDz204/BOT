@@ -49,6 +49,5 @@ module.exports = {
       selfDeaf: false,
     });
     queue.createDispatcher(connection);
-
   },
 };

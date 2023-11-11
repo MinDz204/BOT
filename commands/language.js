@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('
 const client = require('../bot');
 const db = require("./../mongoDB");
 const { rank } = require('../events/Zibot/ZilvlSys');
+const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 
 module.exports = {
   name: "language",
@@ -22,11 +23,7 @@ module.exports = {
   cooldown: 10,
   dm_permission: true,
   run: async (langOld, interaction) => {
-    interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
-      setTimeout(function() {
-        Message?.delete().catch(e => { });
-      }, 10000)
-    }).catch(e => { console.log(e) })
+    let messages = await ZifetchInteraction(interaction);
 
     const name = interaction.options.getString("name");
     await db.ZiUser.updateOne({ userID: interaction?.user?.id }, {
@@ -49,10 +46,21 @@ module.exports = {
       .setDescription(`${lang?.ChangeLanguage}`)
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-    //
-    return interaction.channel.send({ embeds: [embed], components: [row] }).then(async Message => setTimeout(function() {
-      Message?.edit({ components: [] }).catch(e => { });
-    }, 10000)).catch(e => { });
 
+    return messages?.edit({ embeds: [embed], components: [row] })
+    .then(async Message => {
+      setTimeout(function () {
+        Message?.edit({ components: [] }).catch(console.error);
+      }, 10000);
+    })
+    .catch(async () => {
+      await interaction?.channel?.send({ embeds: [embed] })
+        .then(async Message => {
+          setTimeout(function () {
+            Message?.edit({ components: [] }).catch(console.error);
+          }, 10000);
+        })
+        .catch(console.error);
+    });
   },
 };

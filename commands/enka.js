@@ -30,8 +30,7 @@ module.exports = {
   };
   
 module.exports.run = async ( lang, interaction ) => {
-    await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
-    let mess = await interaction.fetchReply().catch(e=>{ });
+    let mess = await ZifetchInteraction(interaction);
     let uid = interaction.options.getString("uid");
     tempus = client.users.cache.get(uid.replace("<@","").replace(">","")) ;
     let user = tempus || interaction.user;
@@ -96,6 +95,7 @@ module.exports.run = async ( lang, interaction ) => {
             components:[ row ],
         });
     } catch (error) {
+        interaction?.channel?.send({  embeds: [ embed ], components:[ row ] })
         console.log(error);
     }
 }

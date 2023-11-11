@@ -28,7 +28,15 @@ function removeVietnameseTones(str) {
 }
 
 const trim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+async function fetchR(interaction){
+let messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
+try{
+  return await interaction.fetchReply().catch(e=>{ });
+}catch(e){
+  return await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
+}
 
+}
 function msToTime(s) {
   let time = Math.floor(Number(Date.now() + s) / 1000)
   return (`<t:${time}:R>`)
@@ -85,7 +93,19 @@ function getAvatar(user) {
   if(!user.avatar) return `https://cdn.discordapp.com/embed/avatars/${(user.discriminator % 5)}.png`
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`
 }
+function drawBarChart(data) {
+  return data.map(({ band, gain }) => {
+      const barLength = Math.round(Math.abs(gain) * 20); // Scale gain to adjust bar length
 
+      // Draw the bar chart using Unicode characters
+      const bar = gain >= 0 ? '+'.repeat(barLength) : '-'.repeat(barLength);
+
+      // Add spaces before the line if band is less than 10
+      const bandLabel = band < 9 ? ` Band ${band + 1} :` : ` Band ${band + 1}:`;
+
+      return `${bandLabel} ${bar} = (${gain})`;
+  }).join('\n');
+}
 
 const renderFrame = async (frame, user, data, Guild ) => {
   //::::::::::::::::::::mudule:::::::::::::::::::::::::::://
@@ -144,6 +164,7 @@ const renderFrame = async (frame, user, data, Guild ) => {
 }
 
 module.exports = {
+ZifetchInteraction :fetchR,
 removeVietnameseTones,
 msToTime,
 validURL,
@@ -153,4 +174,5 @@ Zilink,
 Zicrop,
 shuffleArray,
 Zitrim: trim,
+drawBarChart,
 }

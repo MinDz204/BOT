@@ -7,6 +7,7 @@ const full = {
     Ziguild: "1007597270704869387",
     JOINTOCREATECHANNEL: "1167513157137334282",
     EnableJOINTOCREATE: true,
+    Zmodule:"Full",
     //['anime', 'assictance', 'csgo', 'daily', 'help', 'language', 'p', 'ping', 'play', 'player','profile','regwelcome','search'],
     Discommands: [],
     rest: true,
@@ -34,6 +35,7 @@ const diva = {
    	Ziguild: "1007597270704869387",
     JOINTOCREATECHANNEL: "1167513157137334282",
     EnableJOINTOCREATE: true,
+    Zmodule:"diva",
     //['anime', 'assictance', 'csgo', 'daily', 'help', 'language', 'p', 'ping', 'play', 'player','profile','regwelcome','search','genshin],
     Discommands: ['anime', 'assictance', 'csgo', 'daily', 'help', 'language', 'p', 'ping', 'play', 'player','profile','regwelcome','genshin'],
     rest: false,
@@ -61,6 +63,7 @@ const daki = {
     Ziguild: "1007597270704869387",
     JOINTOCREATECHANNEL: "1167513157137334282",
     EnableJOINTOCREATE: false,
+    Zmodule:"daki",
     //['anime', 'assictance', 'csgo', 'daily', 'help', 'language', 'p', 'ping', 'play', 'player','profile','regwelcome','search','genshin'],
     Discommands: ['search'],
     rest: true,
@@ -80,4 +83,4 @@ const daki = {
     }
 }
 
-module.exports = daki;
+module.exports = full;

@@ -98,7 +98,7 @@ fs.readdir("./commands", (err, files) => {
 
 
 process.on('unhandledRejection', error => {
-  client.errorLog?.send(`<t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
+  client.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
   console.error('Unhandled promise rejection:', error);
 });
 

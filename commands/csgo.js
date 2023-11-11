@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const client = require('../bot');
+const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 const SteamAPIKey = "DDC8118250E17D86ED42E2502E9D2980";
 
 const getSteamID64 = async (input) => {
@@ -49,11 +50,7 @@ module.exports = {
   dm_permission: true,
   run: async (lang, interaction) => {
     //defer
-    interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
-      setTimeout(function() {
-        Message?.delete().catch(e => { });
-      }, 10000)
-    }).catch(e => { console.log(e) })
+    let messages = await ZifetchInteraction(interaction);
 
     const username = interaction.options.getString("id");
     let linkkkk = await getSteamID64(getSteamIDName(username))
@@ -100,7 +97,6 @@ module.exports = {
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
       .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png');
 
-    await interaction.channel.send({ embeds: [embed] });
-
+    return messages?.edit({ embeds: [ embed ] }).catch(e => interaction?.channel?.send({ embeds: [ embed ] }))
   },
 };

@@ -14,15 +14,14 @@ module.exports = {
 
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require('discord.js');
 const Kitsu = require('kitsu');
-const { removeVietnameseTones } = require('../events/Zibot/ZiFunc');
+const { removeVietnameseTones, ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 const client = require('../bot');
 const kitsu = new Kitsu();
 
 module.exports.run = async ( lang, interaction ) => {
   const name = interaction.options.getString("name");
-  interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
-    Message?.delete().catch( e => { } );
-},10000)}).catch(e => { console.log(e) })
+  let messages = await ZifetchInteraction(interaction);
+
   let search = encodeURI(removeVietnameseTones(name))
   const { data } = await kitsu.get('anime?filter[text]=' + search + '&page[limit]=' + 2)
   const anime = data[0];
@@ -45,7 +44,6 @@ module.exports.run = async ( lang, interaction ) => {
         { name: "**⏱️ Duration:**", value: `${anime?.episodeLength ? anime.episodeLength : "??"} minutes`, inline: true },
         { name: "**🏆 Rank:**", value: `${anime?.ratingRank ? anime.ratingRank : "Unknwon"}`, inline: true },
       ])
-
-  return interaction.channel.send({ embeds: [ info ] })
+  return messages?.edit({ embeds: [ info ] }).catch(e => interaction?.channel?.send({ embeds: [ info ] }))
 }
 

@@ -79,6 +79,13 @@ module.exports = async (client, interaction) => {
       default:
         console.log(interaction.customId)
     }
+//EQ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+    if (interaction?.customId.includes("ZiModalEQ")){
+      const queue = useQueue(interaction?.guildId);
+      const Gain = interaction.fields.getTextInputValue("Gain");
+      return require("./../ziplayer/ZiEQ")(interaction, lang, queue, Gain)
+    } 
+   
   } catch (e) {
     console.log(e)
   }

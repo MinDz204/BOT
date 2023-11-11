@@ -47,11 +47,6 @@ try{
     message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
 }
 
-// if(interaction?.commandName || interaction?.commandType || interaction?.commandId || !!interaction?.interaction){
-//     message = await interaction.fetchReply().catch(e=>{ });
-// }else{
-//     message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
-// }
 if (!paginatedMessage?.embed[0] && !paginatedMessage?.attachment[0] ) {
     const IMGp = await generateIMGMessage( name, !interaction?.channel?.nsfw || false, lang );
     if(IMGp) return message.edit({ content: ``, files:IMGp,components: [ row ]})

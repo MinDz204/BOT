@@ -50,8 +50,8 @@ const zistartButton = async (queue) => {
     .setCustomId('ZiplayerShuffl')
     .setStyle(ButtonStyle.Success);
   const commingfunc = new ButtonBuilder()
-    .setLabel('✨')
-    .setCustomId('Ziplayercommingfunc')
+    .setLabel('EQ')
+    .setCustomId('ZiplayerEq')
     .setStyle(ButtonStyle.Success)
   // .setDisabled(true);
 

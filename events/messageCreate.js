@@ -25,7 +25,7 @@ module.exports = async (client, message) => {
             new EmbedBuilder()
             .setColor(lang?.COLOR || client.color)
             .setTitle("Yo... Ziji desu :3")
-            .setDescription(`${lang?.MENstion}`)
+            .setDescription(`${lang?.MENstion}\n${config?.Zmodule} ✅`)
             .setURL("https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=1067357395521&scope=bot%20applications.commands")
             .setTimestamp()
             .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })

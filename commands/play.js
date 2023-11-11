@@ -1,7 +1,7 @@
-const { useMainPlayer } = require('discord-player');
+const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const db = require("./../mongoDB");
-const { processQuery } = require('../events/Zibot/ZiFunc');
+const { processQuery, ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
 
 module.exports = {
@@ -20,12 +20,8 @@ module.exports = {
   dm_permission: false,
   run: async (lang, interaction) => {
 
-    interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
-      setTimeout(function() {
-        Message?.delete().catch(e => { });
-      }, 10000)
-    }).catch(e => { console.log(e) })
-
+    let messages = await ZifetchInteraction(interaction);
+    const queues = useQueue(interaction.guild.id);
     const nameS = interaction.options.getString("name");
     let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
     let res;
@@ -35,6 +31,7 @@ module.exports = {
         channel: interaction.channel,
         requestby: interaction.user,
         embedCOLOR: userddd?.color || client.color,
+        Zimess: queues?.metadata ? queues?.metadata?.Zimess : messages,
       },
       requestedBy: interaction.user,
       volume: userddd?.vol || 50,

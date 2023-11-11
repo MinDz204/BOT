@@ -12,11 +12,7 @@ module.exports = {
   dm_permission: true,
   run: async (lang, interaction) => {
 
-    interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
-      setTimeout(function() {
-        Message?.delete().catch(e => { });
-      }, 10000)
-    }).catch(e => { console.log(e) })
+    let messages = await ZifetchInteraction(interaction);
 
     let userDB = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
 
@@ -38,7 +34,7 @@ module.exports = {
       let userDB2 = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
       embed.setDescription(`${lang?.claimsuss} lvl: ${userDB2?.lvl} xp: ${userDB2?.Xp}/${userDB2?.lvl * 50 + 1}`);
     }
+    return messages?.edit({ embeds: [ embed ] }).catch(e => interaction?.channel?.send({ embeds: [ embed ] }))
 
-    return interaction.channel.send({ embeds: [embed] }).catch(e => { })
   },
 };

@@ -3,20 +3,13 @@ const db = require("./../../mongoDB");
 const client = require('../../bot');
 const { useMainPlayer, QueryType, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL, processQuery, Zilink, Zitrim } = require("../Zibot/ZiFunc");
+const { validURL, processQuery, Zilink, Zitrim, ZifetchInteraction } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS) => {
-  let messid,message;
-  messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
-  try{
-    message = await interaction.fetchReply().catch(e=>{ });
-  }catch(e){
-    message =  await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
-  }
+  let message = await ZifetchInteraction(interaction);
   const queue = useQueue(interaction.guild.id);
-
   if (!nameS) return;
   if (validURL(nameS) || Zilink(nameS)) {
     try {

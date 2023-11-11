@@ -21,7 +21,7 @@ module.exports = {
 const { EmbedBuilder } = require('discord.js');
 const client = require('../bot');
 const db = require("../mongoDB");
-const { validURL } = require('../events/Zibot/ZiFunc');
+const { validURL, ZifetchInteraction } = require('../events/Zibot/ZiFunc');
   
 module.exports.run = async ( lang, interaction ) => {
 const name = interaction.options.getString("content");
@@ -32,9 +32,7 @@ img = validURL(img)? img : "";
 gif = validURL(gif)? gif.includes(".gif")? gif : "" : "";
 
 if(!interaction?.member?.permissions?.has("0x0000000000000020")) return interaction.reply({content:`Bạn phải có quyền Administrator để sử dụng lệnh này :<`, ephemeral: true })
-interaction?.reply({content:`<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => { setTimeout(function(){
-    Message?.delete().catch( e => { } );
-},10000)}).catch(e => { console.log(e) })
+let messages = await ZifetchInteraction(interaction);
 let embed = new EmbedBuilder()
     .setColor( lang?.COLOR || client.color )
     .setDescription(`Đã lấy ${interaction.channel} để gửi lời chào đến thành viên mới!`)
@@ -52,6 +50,7 @@ await db.Ziguild.updateOne({ GuildID: interaction.guild.id }, {
         gif: gif,
     }
     }, { upsert: true })
-return interaction.channel.send({ embeds: [ embed ] })
+return messages?.edit({ embeds: [ embed ] }).catch(e => interaction?.channel?.send({ embeds: [ embed ] }))
+
 }
 

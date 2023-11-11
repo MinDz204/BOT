@@ -14,6 +14,7 @@ const ZiUser = Schema({
   GIUID: Number,
   GIdata:Array,
   GIrow: Array,
+  EQband: Array,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
 })
