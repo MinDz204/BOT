@@ -17,38 +17,48 @@ module.exports = async (client, message) => {
     if(message?.channel?.id == "1182675589539307520"){
         try{
         let Gichannel =  client.channels.cache.get("1007723706379935747");
-        // Regular expression to match the expiration time pattern
+        ////////////////////////////////////////////////////////////////////
         const expirationPattern = /(\d+)h/;
         const CODEregex = /\(([^)]+)\)/g;
-        // Extract the expiration time from the input
-        const match = message?.content.match(expirationPattern);
-        const expirationHours = match ? parseInt(match[1], 10) : 12; // Default to 12 hours if not specified
-
-        // Calculate the expiration time in seconds
+        const messageContent = message?.content || '';
+        
+        // Extract expiration hours from the input or default to 12 hours
+        const expirationMatch = messageContent.match(expirationPattern);
+        const expirationHours = expirationMatch ? parseInt(expirationMatch[1], 10) : 12;
+        
+        // Calculate expiration time in seconds
         const expirationTime = Math.floor((Date.now() + expirationHours * 60 * 60 * 1000) / 1000);
-
+        
         // Replace substrings and add expiration time
-        const modifiedMessage = message?.content.replace(
-            /(:Primogem:)|(:Heros_Wit:)|(:Mora:)|(:Mystic_Enhancement_Ore:)/g,
-            (match, primogem, herosWit, mora, mysticEnhancementOre) => {
-              if (primogem) {
-                return "<:Primogem:1182685530245312583>";
-              } else if (herosWit) {
-                return "<:Heros_Wit:1182685523840618517>";
-              } else if (mora) {
-                return "<:Mora:1182685520602611803>";
-              } else if (mysticEnhancementOre) {
-                return "<:Mystic_Enhancement_Ore:1182685526407528528>";
-              }
-              return match; // No replacement needed for other cases
-            }
-          );
+        const modifiedMessage = messageContent.replace(
+          /(:Primogem:|:Heros_Wit:|:Mora:|:Mystic_Enhancement_Ore:)/g,
+          (match, primogem, herosWit, mora, mysticEnhancementOre) => {
+            const replacements = {
+              ':Primogem:': '<:Primogem:1182685530245312583>',
+              ':Heros_Wit:': '<:Heros_Wit:1182685523840618517>',
+              ':Mora:': '<:Mora:1182685520602611803>',
+              ':Mystic_Enhancement_Ore:': '<:Mystic_Enhancement_Ore:1182685526407528528>',
+            };
+        
+            return replacements[match] || match; // Return replacement or original match if not found
+          }
+        );
+        
+        const codeReplacedMessage = modifiedMessage.replace(
+          new RegExp(`${expirationHours}h`, 'g'),
+          ''
+        ).replace(
+          CODEregex,
+          (match) => `** [${match.replace(/\(|\)/g, '')}](https://genshin.hoyoverse.com/vi/gift?code=${match.replace(/\(|\)/g, '')}) **
+\`\`\`bash
+${match.replace(/\(|\)/g, '')}\`\`\``
+);        
         ///////////
         const info = new EmbedBuilder()
         .setColor("Random")
         .setTitle(`**New promote code found:**`)
         .setURL(`https://genshin.hoyoverse.com/vi/gift`)
-        .setDescription(`${modifiedMessage.replace(`${expirationHours}h`,"").replace(CODEregex, (match) => `** [${match.replace("(","").replace(")","")}](https://genshin.hoyoverse.com/vi/gift?code=${match.replace("(","").replace(")","")}) **`) } \n Code sẽ hết hạn sau <t:${expirationTime}:R>`)
+        .setDescription(`${codeReplacedMessage}\nCode sẽ hết hạn sau <t:${expirationTime}:R>`)
         .setTimestamp()
         .setFooter({ text: `By Ziji`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
         .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png");
