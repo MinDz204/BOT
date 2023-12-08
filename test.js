@@ -1,36 +1,15 @@
-function updateGain(bandArray, bandToUpdate, newGain) {
-    const index = bandArray.findIndex(band => band.band === bandToUpdate);
+const inputString = ':Primogem~3: ×100 + :Mora~2: ×50.000 (8BQ9CMMVS5PM)';
 
-    if (index !== -1) {
-        // If the band is found in the array, update its gain
-        bandArray[index].gain = newGain;
-    } else {
-        // If the band is not found, you can handle it accordingly
-        console.error(`Band ${bandToUpdate} not found in the array.`);
-    }
+// Define a regular expression pattern to match the content inside parentheses
+const regex = /\(([^)]+)\)/;
 
-    return bandArray;
+// Use the exec() method to find the first match
+const match = regex.exec(inputString);
+
+// Check if there is a match
+if (match && match[1]) {
+    const contentInsideParentheses = match[1];
+    console.log(contentInsideParentheses);
+} else {
+    console.log('No match found.');
 }
-
-// Example usage:
-let defBand = [
-    { band: 0, gain: 0 },
-    { band: 1, gain: 0 },
-    { band: 2, gain: 0 },
-    { band: 3, gain: 0 },
-    { band: 4, gain: 0 },
-    { band: 5, gain: 0 },
-    { band: 6, gain: 0 },
-    { band: 7, gain: 0 },
-    { band: 8, gain: 0 },
-    { band: 9, gain: 0 },
-    { band: 10, gain: 0 },
-    { band: 11, gain: 0 },
-    { band: 12, gain: 0 },
-    { band: 13, gain: 0 },
-]
-
-// Update the gain of band 5 to a new value, e.g., 10
-const updatedBandArray = updateGain(defBand, 50, 10);
-
-console.log(updatedBandArray);

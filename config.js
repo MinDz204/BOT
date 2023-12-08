@@ -83,4 +83,4 @@ const daki = {
     }
 }
 
-module.exports = full;
+module.exports = daki;
