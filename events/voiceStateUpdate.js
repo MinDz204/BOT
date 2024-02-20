@@ -83,7 +83,7 @@ module.exports = async (client, oldState, newState) => {
       .setDescription(`Sử dụng các nút bên dưới để setup voice channel của bạn:`)
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-      .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
+      .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png')
     ], components:[
       new ActionRowBuilder().addComponents(
         new ButtonBuilder()

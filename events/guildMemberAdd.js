@@ -21,7 +21,7 @@ channel.send({ embeds:[embedsss] })
 let url = guild?.gif ? guild?.gif : config.Ziusr.gif
 
 const firstframe = await gifFrames({url, frames: 0})
-const cumulative = firstframe[0].frameInfo.disposal !== 1 ? false : true;
+const cumulative = firstframe[0]?.frameInfo?.disposal !== 1 ? false : true;
   
   let data = await gifFrames({url, frames: 'all', cumulative })
   if(data.length >= 30) data = data.slice(0, 30)

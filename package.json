@@ -1,26 +1,36 @@
 {
-  "name": "ziji-bot",
+  "name": "zibot",
   "version": "1.0.0",
-  "description": "Zijibot",
+  "description": "Ziji discord bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "test.js"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zijipia/Zibot.git"
+  },
+  "keywords": [
+    "Ziji"
+  ],
   "author": "Ziji",
-  "license": "MIT",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zijipia/Zibot/issues"
+  },
+  "homepage": "https://github.com/zijipia/Zibot#readme",
   "dependencies": {
     "@canvas-fonts/arial-bold": "^1.0.4",
-    "@discord-player/extractor": "^4.4.4",
+    "@discord-player/extractor": "^4.4.6",
     "@discord-player/utils": "^0.2.2",
     "@discordjs/opus": "^0.9.0",
-    "@discordjs/rest": "^2.0.1",
+    "@discordjs/rest": "^2.0.0",
     "@discordjs/voice": "^0.16.0",
     "@distube/ytdl-core": "^4.13.0",
     "@napi-rs/canvas": "^0.1.44",
     "canvacord": "^5.4.10",
     "canvas": "^2.11.2",
-    "discord-player": "^6.6.4",
+    "discord-player": "^6.6.2",
     "discord-speech-recognition": "^3.4.1",
     "discord-voip": "^0.1.3",
     "discord.js": "^14.12.1",
@@ -34,10 +44,10 @@
     "kitsu": "^10.1.2",
     "link-preview-js": "^3.0.5",
     "mediaplex": "^0.0.8",
-    "mongoose": "^7.5.0",
+    "mongoose": "^7.6.8",
     "node-fetch": "^3.3.2",
     "opusscript": "^0.0.8",
-    "play-dl": "^1.9.6",
+    "play-dl": "^1.9.7",
     "prism-media": "^1.3.5"
   }
 }

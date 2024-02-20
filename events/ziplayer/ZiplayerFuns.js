@@ -65,7 +65,7 @@ if(!config.messCreate.PlayMusic) return;
         .setDescription(`**EQ:**
         ${drawBarChart(banstoUP)}`)
         .setTimestamp()
-        .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
+        .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png')
         .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
         .setThumbnail('https://cdn.discordapp.com/attachments/1064851388221358153/1172944748294709268/iu.png')
         queue.filters.equalizer.setEQ(banstoUP);

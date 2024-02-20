@@ -61,7 +61,7 @@ ${match.replace(/\(|\)/g, '')}\`\`\``
         .setDescription(`${codeReplacedMessage}\nCode sẽ hết hạn sau <t:${expirationTime}:R>`)
         .setTimestamp()
         .setFooter({ text: `By Ziji`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-        .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png");
+        .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png");
         Gichannel?.send({ embeds: [info] });
     }catch(e){
         message.reply(`ERR: ${e}`);
@@ -84,7 +84,7 @@ ${match.replace(/\(|\)/g, '')}\`\`\``
             .setURL("https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=1067357395521&scope=bot%20applications.commands")
             .setTimestamp()
             .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-            .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1122054818425479248/okk.png')
+            .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png')
         ]});
     }else{
         if(content.includes("search")){
