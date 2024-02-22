@@ -15,7 +15,7 @@ module.exports = async (client) => {
     client.errorLog = client.channels.cache.get(config?.Ziusr?.channelID) ? client.channels.cache.get(config?.Ziusr?.channelID) : undefined
     client.Zicomand = await rest.get(Routes.applicationCommands(client.user.id))
     client.user.setStatus(config.Status)
-    client.user.setActivity(`${config.botStatus} shard #${Number(client?.shard?.ids) + 1 ? Number(client?.shard?.ids) + 1 : "1"}`)
+    client.user.setActivity(`${config.botStatus} /help`)
     console.log(`${client.user.tag} Bot Online!`)
   } catch (e) {
     console.log("Failed to load application [/] commands. " + e);
