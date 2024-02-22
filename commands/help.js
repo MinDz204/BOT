@@ -36,7 +36,7 @@ module.exports.run = async (lang, interaction) => {
       ])
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-      .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png');
+      .setImage(lang?.banner);
     //
     return interaction.reply({ embeds: [embed], components: [
       new ActionRowBuilder().addComponents(

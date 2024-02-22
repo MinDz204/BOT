@@ -27,7 +27,7 @@ const zistartButton = async (queue) => {
     .setCustomId('ZiplayerPrew')
     .setStyle(ButtonStyle.Success);
   const lyric = new ButtonBuilder()
-    .setEmoji('<:lyric:1150770291941851187>')
+    .setLabel('Seek')
     .setCustomId('ZiplayerLyric')
     .setDisabled(false)
     .setStyle(ButtonStyle.Success);

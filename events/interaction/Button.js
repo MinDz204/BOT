@@ -83,7 +83,7 @@ module.exports = async (client, interaction) => {
           .setTimestamp()
           .setDescription(`${client.guilds.cache.map((guild) => `${Index++} |\`${guild.name}\``).join('\n')}`)
           .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-          .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png');
+          .setImage(lang?.banner);
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
       case "MesPiNJG":{
@@ -133,7 +133,7 @@ module.exports = async (client, interaction) => {
         .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
         .setColor(lang.COLOR || client.color)
         .setTimestamp()
-        .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png');
+        .setImage(lang?.banner);
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
       case "editProfile": {
@@ -204,7 +204,7 @@ module.exports = async (client, interaction) => {
                 text: `${lang?.RequestBY} ${interaction.user.tag}`,
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true })
               })
-              .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png')
+              .setImage(lang?.banner)
           ],
           components: [
             new ActionRowBuilder().addComponents(

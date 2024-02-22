@@ -84,13 +84,14 @@ ${match.replace(/\(|\)/g, '')}\`\`\``
             .setURL("https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=1067357395521&scope=bot%20applications.commands")
             .setTimestamp()
             .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-            .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png')
+            .setImage(lang?.banner)
         ]});
     }else{
         if(content.includes("search")){
             if(config.messCreate.GoogleSearch)
             return require("./../commands/search").run(lang, message, content.replace(`<@${client.user.id}>`,"").replace("search",""))
         }else{
+            message.react("<a:likee:1210193685501706260>")
             if(config.messCreate.PlayMusic && message?.guild)
             return playmusic(lang, message, client, message?.content.replace(`<@${client.user.id}>`,"") )
         }

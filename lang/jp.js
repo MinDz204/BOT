@@ -1,5 +1,6 @@
 const language = {
     COLOR: "#1a8cff",
+    banner:`https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png`,
     Err: "予期しないエラーが発生しました [bé zi](https://discord.com/invite/zaskhD7PTW) にサポートを依頼してください:",
     RequestBY: "リクエスト元:",
     PlayerSearch: "検索結果:",

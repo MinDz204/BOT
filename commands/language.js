@@ -42,6 +42,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(lang.COLOR || client.color)
+      .setImage(lang?.banner)
       .setThumbnail(client.user.displayAvatarURL())
       .setDescription(`${lang?.ChangeLanguage}`)
       .setTimestamp()

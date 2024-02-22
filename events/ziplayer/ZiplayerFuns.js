@@ -5,8 +5,25 @@ const { lyricFind } = require("./Zilyric");
 const db = require("./../../mongoDB");
 const { ZiPlayerFillter, ZiPlayerFillterRow } = require("./Zifillter");
 const config = require("../../config");
-const { drawBarChart } = require("../Zibot/ZiFunc");
-
+const { drawBarChart, timeToSeconds } = require("../Zibot/ZiFunc");
+const Ziseek = async(interaction, queue, lang, str)=> {
+  if (!queue) return;
+  const timestamp = queue.node.getTimestamp();
+  if (timestamp.progress == 'Forever') return interaction.reply({ content: `❌ | Can't seek in a live stream.`});
+  let tragetTime = 0;
+  if(str !== "BEGIN"){
+    tragetTime = timeToSeconds(str) + timeToSeconds(timestamp?.current.label);}
+  const musicLength = timeToSeconds(timestamp?.total.label);
+  if(!tragetTime) return interaction.reply({ content: `❌ | Invalid format for the target time.\n(**\`ex: 3m20s, 1m 50s, 1:20:55, 5:20\`**)`});
+  if (tragetTime >= musicLength) return interaction.reply({ content: `❌ | Target time exceeds music duration. (\`${timestamp?.total.label}\`)`});
+  const success = queue.node.seek(tragetTime * 1000);
+  if (success){
+    await interaction?.message.edit(await lyricFind(queue?.currentTrack, interaction?.user, lang, queue)).catch(e => { });
+    return interaction.deferUpdate().catch(e => { });
+  }else{
+    return interaction.reply({ content: `❌ | Something went wrong.`});
+  }
+}
 module.exports = async (interaction, lang) => {
 if(!config.messCreate.PlayMusic) return;
   try {
@@ -65,7 +82,7 @@ if(!config.messCreate.PlayMusic) return;
         .setDescription(`**EQ:**
         ${drawBarChart(banstoUP)}`)
         .setTimestamp()
-        .setImage('https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png')
+        .setImage(lang?.banner)
         .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
         .setThumbnail('https://cdn.discordapp.com/attachments/1064851388221358153/1172944748294709268/iu.png')
         queue.filters.equalizer.setEQ(banstoUP);
@@ -149,13 +166,15 @@ if(!config.messCreate.PlayMusic) return;
     //--------------------------------------------------------------------------------------------------//
     let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();
     if (!ZiisPlaying) return interaction?.reply({ content: `${lang?.NoPlaying}`, ephemeral: true })
+
+    //::::::::::::::::::::::::::::::::::::::: PLAYER ::::::::::::::::::::::::::::::::::::::::::::::::::://
     switch (interaction.customId) {
       case "ZiplayerNext":
         if (queue.repeatMode == 1) queue.setRepeatMode(QueueRepeatMode.QUEUE)
         queue.node.skip()
         return interaction?.deferUpdate().catch(e => { });
       case "ZiplayerLyric":
-        return interaction.reply(await lyricFind(queue?.currentTrack, interaction?.user, lang))
+        return interaction.reply(await lyricFind(queue?.currentTrack, interaction?.user, lang, queue))
       case "ZiplayerQueuE":
         await require("./Ziqueue")(interaction, queue, lang, false);
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
@@ -193,9 +212,36 @@ if(!config.messCreate.PlayMusic) return;
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
-
-
+    //::::::::::::::::::::::::::::::::::::::: SEEK ::::::::::::::::::::::::::::::::::::::::::::::::::::://
+      case "ZiplayerSEEK0":
+      return Ziseek(interaction, queue, lang, "BEGIN")
+      case "ZiplayerSEEKP30":
+        return Ziseek(interaction, queue, lang, "-30s")
+      case "ZiplayerSEEKP10":
+        return Ziseek(interaction, queue, lang, "-10s")
+      case "ZiplayerSEEK10":
+        return Ziseek(interaction, queue, lang, "10s")
+      case "ZiplayerSEEK30":
+        return Ziseek(interaction, queue, lang, "30s")
+      case "ZiplayerSEEKINP": 
+        return interaction?.showModal(
+        new ModalBuilder()
+          .setCustomId(`ZiSEEKK`)
+          .setTitle(`Seek custom Update`)
+          .addComponents(
+            new ActionRowBuilder()
+              .addComponents(
+                new TextInputBuilder()
+                  .setMinLength(1)
+                  .setCustomId("Time")
+                  .setLabel(`<[hhmm]ss/[hh:mm]:ss> (ex: 3m20s, 1:20:55)`)
+                  .setStyle(TextInputStyle.Short)
+                  .setRequired(true)
+              )
+          )
+        )
     }
+
  if (interaction?.customId.includes("EQ")){
       return interaction?.showModal(  
     new ModalBuilder()

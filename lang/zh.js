@@ -1,5 +1,6 @@
 const language = {
     COLOR: "#1a8cff",
+    banner:`https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png`,
     Err: "发生了意外错误 [联系 bé zi](https://discord.com/invite/zaskhD7PTW) 以获取尽快的支持：",
     RequestBY: "由：",
     PlayerSearch: "搜索结果：",

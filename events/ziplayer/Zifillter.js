@@ -49,7 +49,7 @@ const Fillter = async (user, queue, lang) => {
     .setTitle(`Music Filter`)
     .setDescription(`${lang?.fillter}`)
     .setFooter({ text: `${lang?.RequestBY} ${user?.tag}`, iconURL: user?.displayAvatarURL({ dynamic: true }) })
-
+    .setImage(lang?.banner)
   return { embeds: [embed], components: [row] }
 }
 
