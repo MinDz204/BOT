@@ -3,6 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 const db = require("./../mongoDB");
 const { processQuery, ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
+const client = require('../bot');
 
 module.exports = {
   name: "play",

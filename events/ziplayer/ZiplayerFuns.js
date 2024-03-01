@@ -6,6 +6,7 @@ const db = require("./../../mongoDB");
 const { ZiPlayerFillter, ZiPlayerFillterRow } = require("./Zifillter");
 const config = require("../../config");
 const { drawBarChart, timeToSeconds } = require("../Zibot/ZiFunc");
+const client = require("../../bot");
 const Ziseek = async(interaction, queue, lang, str)=> {
   if (!queue) return;
   const timestamp = queue.node.getTimestamp();

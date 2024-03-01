@@ -17,6 +17,7 @@ module.exports = async (client, message) => {
     if(message?.channel?.id == "1182675589539307520"){
         try{
         let Gichannel =  client.channels.cache.get("1007723706379935747");
+        let Gichannel2 =  client.channels.cache.get("946303749448663040");
         ////////////////////////////////////////////////////////////////////
         const expirationPattern = /(\d+)h/;
         const CODEregex = /\(([^)]+)\)/g;
@@ -63,6 +64,7 @@ ${match.replace(/\(|\)/g, '')}\`\`\``
         .setFooter({ text: `By Ziji`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
         .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png");
         Gichannel?.send({ embeds: [info] });
+        Gichannel2?.send({ embeds: [info] });
     }catch(e){
         message.reply(`ERR: ${e}`);
     }
