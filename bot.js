@@ -46,12 +46,13 @@ module.exports = client;
 //-------------------------------------------------------------//
 if(config.messCreate.PlayMusic){
   const player = new Player(client, {
-    useLegacyFFmpeg: true,
-    ytdlOptions: {
-      filter: "audioonly",
-      opusEncoded: true,
-      quality: 'highestaudio',
-    }
+    SkipFFmpeg: false
+    // useLegacyFFmpeg: false,
+    // ytdlOptions: {
+    //   filter: "audioonly",
+    //   opusEncoded: true,
+    //   quality: 'highestaudio',
+    // }
   });
   player.setMaxListeners(200);
   player.extractors.loadDefault()
