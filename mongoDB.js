@@ -19,6 +19,14 @@ const ZiUser = Schema({
   coin: { type: Number, default: 0 },
 })
 
+const ZiUserLock = Schema({
+  guildID: String,
+  channelID: String,
+  userID: String,
+  messageID: String,
+  status: Boolean,
+})
+
 const Ziqueue = Schema({
   guildID: String,
   channelID: String,
@@ -50,4 +58,5 @@ module.exports = {
   Zibot: model("Zibot", Zibot),
   Ziguild: model("Ziguild", Ziguild),
   voiceManager: model("voiceManager", voiceManager),
+  ZiUserLock: model("ZiUserLock", ZiUserLock),
 }

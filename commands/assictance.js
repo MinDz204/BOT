@@ -8,7 +8,7 @@ const client = require('../bot');
 const config = require('../config');
 
 module.exports = {
-  name: "assictance",
+  name: "assistance",
   description: "Play/add music.",
   options: [],
   voiceC: true,

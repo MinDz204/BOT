@@ -13,7 +13,10 @@ const Ziseek = async(interaction, queue, lang, str)=> {
   if (timestamp.progress == 'Forever') return interaction.reply({ content: `❌ | Can't seek in a live stream.`});
   let tragetTime = 0;
   if(str !== "BEGIN"){
-    tragetTime = timeToSeconds(str) + timeToSeconds(timestamp?.current.label);}
+    tragetTime = timeToSeconds(str) + timeToSeconds(timestamp?.current.label);
+    }else{
+      tragetTime = timeToSeconds(`0:01`)
+    }
   const musicLength = timeToSeconds(timestamp?.total.label);
   if(!tragetTime) return interaction.reply({ content: `❌ | Invalid format for the target time.\n(**\`ex: 3m20s, 1m 50s, 1:20:55, 5:20\`**)`});
   if (tragetTime >= musicLength) return interaction.reply({ content: `❌ | Target time exceeds music duration. (\`${timestamp?.total.label}\`)`});
@@ -29,7 +32,37 @@ module.exports = async (interaction, lang) => {
 if(!config.messCreate.PlayMusic) return;
   try {
     const queue = useQueue(interaction?.guildId);
+    switch(interaction.customId) {
+      case "ZiplayerSeach":
+        const modal = new ModalBuilder()
+          .setCustomId("ZiCompSearch")
+          .setTitle(`${lang?.SearchTrack}:`)
+          .addComponents(
+            new ActionRowBuilder().addComponents(
+              new TextInputBuilder()
+                .setMaxLength(100)
+                .setCustomId("resu")
+                .setLabel(`${lang?.SearchTrackDEs}:`)
+                .setStyle(TextInputStyle.Short)
+            )
+          )
+        return interaction.showModal(modal);
+    }
+//::::::::::::::::::::::::lock::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+    let ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
+    let requestby = ZiUserLock?.userID || queue?.metadata.requestby?.id;
+    if (!!ZiUserLock?.status && requestby !== interaction.user?.id) return  interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
     switch (interaction.customId) {
+      case 'ZiplayerControll':{
+        if (!!requestby && requestby !== interaction.user?.id) return  interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
+        await db.ZiUserLock.updateOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }, {
+          $set: {
+            status: !(ZiUserLock?.status ?? true),
+          }
+        }, { upsert: true })
+        interaction.deferUpdate();
+        return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
+      }
       case "ZiplayerEq": {
         if( !queue ) return;
         let defband = [
@@ -96,24 +129,8 @@ if(!config.messCreate.PlayMusic) return;
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
       case "ZiplayerStop":
-        let requestby = queue?.currentTrack?.requestby || queue?.metadata.requestby;
-        if (!!requestby && requestby?.id !== interaction.user?.id) return interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${queue?.metadata.requestby.id}>`)}`, ephemeral: true }).catch(e => { })
         interaction.message.edit({ components: [] })
         return queue?.delete()
-      case "ZiplayerSeach":
-        const modal = new ModalBuilder()
-          .setCustomId("ZiCompSearch")
-          .setTitle(`${lang?.SearchTrack}:`)
-          .addComponents(
-            new ActionRowBuilder().addComponents(
-              new TextInputBuilder()
-                .setMaxLength(100)
-                .setCustomId("resu")
-                .setLabel(`${lang?.SearchTrackDEs}:`)
-                .setStyle(TextInputStyle.Short)
-            )
-          )
-        return interaction.showModal(modal);
       case "ZiplayerPrew":
         try {
           const history = useHistory(interaction.guild.id)
