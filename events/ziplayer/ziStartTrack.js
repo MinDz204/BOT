@@ -7,7 +7,7 @@ const zistartButton = async (queue) => {
   let ziQueue = await db.Ziqueue.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
   let ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
   if (!ZiUserLock){
-    let requestby = ZiUserLock?.userID || queue?.metadata.requestby.id;
+    let requestby = ZiUserLock?.userID || queue?.metadata?.requestby?.id;
     await db.ZiUserLock.updateOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }, {
       $set: {
         status: false,

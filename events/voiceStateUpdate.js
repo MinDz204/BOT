@@ -133,7 +133,7 @@ module.exports = async (client, oldState, newState) => {
           ])
       ),
     ]})
-      await db.voiceManager.updateOne({ userID: member.id }, {
+      await db.voiceManager.updateOne({ userID: member?.id }, {
         $set: {
           voiceChannel: voiceChannel.id,
           textChannel: textChannel.id,
@@ -152,7 +152,7 @@ module.exports = async (client, oldState, newState) => {
       }, 500);
   }
 
-  const jointocreate = await db.voiceManager.findOne({ userID: member.id });
+  const jointocreate = await db.voiceManager.findOne({ userID: member?.id });
   let channelmoddel = client.channels?.cache?.get(jointocreate?.textChannel);
   const members = oldChannel?.members
       .filter((m) => !m.user.bot)

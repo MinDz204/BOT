@@ -107,61 +107,6 @@ function drawBarChart(data) {
   }).join('\n');
 }
 
-const renderFrame = async (frame, user, data, Guild ) => {
-  //::::::::::::::::::::mudule:::::::::::::::::::::::::::://
-  const Canvas = require('@napi-rs/canvas');
-  const jimp = require('jimp');
-  /* Load the font */
-  // Canvas.registerFont(require('@canvas-fonts/arial-bold'), {
-  //   family: 'Arial Bold',
-  // });
-  //:::::::::::: BUILD ::::::::::::://
-  let width = 700, height = 250;  
-  let FWidth = data[0]?.frameInfo?.width || data[1]?.frameInfo?.width || data[2]?.frameInfo?.width || frame.frameInfo.width
-  let FHeight = data[0]?.frameInfo?.height || data[1]?.frameInfo?.height || data[2]?.frameInfo?.height || frame.frameInfo.height
-  const canvas = Canvas.createCanvas(width, height);
-  const ctx = canvas.getContext('2d');
-  
-  let scale = Math.max(width / FWidth, height / FHeight);
-  let x = (width / 2) - (FWidth / 2) * scale;
-  let y = (height / 2) - (FHeight / 2) * scale;
-
-  let layer = await Canvas.loadImage('./events/Zibot/layer.png');
-  let background = await jimp.read(frame.getImage()._obj);
-  
-  background.blur(2);
-  background = await background.getBufferAsync('image/png');
-  
-  ctx.drawImage(await Canvas.loadImage(background), x, y, FWidth * scale, FHeight * scale);
-  
-  ctx.strokeRect(0, 0, width, height);
-  ctx.drawImage(layer, 0, 0, width, height);
-  let name = user.username;
-  name = name.length > 12 ? name.substring(0, 12).trim() + '...' : name;
-  
-  ctx.font = `bold 36px Arial Bold`;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.textAlign = 'start';
-  ctx.strokeStyle = '#f5f5f5';
-  ctx.fillText(`Welcome ${name}`, 278, 113);
-  ctx.strokeText(`Welcome ${name}`, 278, 113);
-  
-  ctx.font = `bold 25px Arial Bold`;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillText(`#${Guild?.name}`, 352, 156);
-  
-  let avatar = await jimp.read(
-    getAvatar(user)
-  );
-  avatar.resize(1024, 1024);
-  avatar.circle();
-  avatar = await avatar.getBufferAsync('image/png');
-  avatar = await Canvas.loadImage(avatar);
-  
-  ctx.drawImage(avatar, 72, 48, 150, 150);
-  
-  return ctx;
-}
 
 const timeToSeconds = (time) => {
   const timeString = time.toLowerCase();
@@ -229,7 +174,6 @@ removeVietnameseTones,
 msToTime,
 validURL,
 processQuery,
-renderFrame,
 Zilink,
 Zicrop,
 shuffleArray,
