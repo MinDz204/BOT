@@ -1,6 +1,7 @@
 const full = {
     Ziusr:{},
     color: "Random",
+    InviteBot: "https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=139610933824&scope=bot%20applications.commands",
     MOGOURL:"mongodb+srv://zijipia:DsmTFCGPLWLIW0xT@divahost.vfxpbsy.mongodb.net/?retryWrites=true&w=majority",
     Status: "idle",
     botStatus:"Ziji",
@@ -10,6 +11,7 @@ const full = {
     Zmodule:"Full",
     //['anime', 'assictance', 'csgo', 'daily', 'help', 'language', 'p', 'ping', 'play', 'player','profile','regwelcome','search'],
     Discommands: [],
+    DisContext: [],
     rest: true,
     messCreate:{
         GI:true,
@@ -29,6 +31,7 @@ const full = {
 const diva = {
     Ziusr:{},
     color: "Random",
+    InviteBot: "https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=139610933824&scope=bot%20applications.commands",
     MOGOURL:"mongodb+srv://zijipia:DsmTFCGPLWLIW0xT@divahost.vfxpbsy.mongodb.net/?retryWrites=true&w=majority",
     Status: "idle",
     botStatus:"Ziji",
@@ -57,6 +60,7 @@ const diva = {
 const daki = {
     Ziusr:{},
     color: "Random",
+    InviteBot: "https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=139610933824&scope=bot%20applications.commands",
     MOGOURL:"mongodb+srv://zijipia:DsmTFCGPLWLIW0xT@divahost.vfxpbsy.mongodb.net/?retryWrites=true&w=majority",
     Status: "idle",
     botStatus:"Ziji",

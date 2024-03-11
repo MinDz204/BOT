@@ -37,6 +37,7 @@ if(config.messCreate.PlayMusic && config.messCreate.ASSis){
   addSpeechEvent(client, { lang: "vi" });
 }
 client.color = config.color;
+client.InviteBot = config.InviteBot;
 //-------------------------------------------------------------//
 module.exports = client;
 //-------------------------------------------------------------//

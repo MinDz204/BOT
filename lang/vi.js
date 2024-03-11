@@ -1,5 +1,6 @@
 const language ={
     COLOR:`#1a8cff`,
+    langdef:"vi",
     banner:`https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png`,
     Err:`Đã có lỗi không mong muốn đã xảy ra [liên hệ bé zi](https://discord.com/invite/zaskhD7PTW) để được nhận hỗ trợ sớm nhất:`,
     RequestBY: `Được yêu cầu bởi:`,

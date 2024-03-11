@@ -1,4 +1,4 @@
-const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const db = require("./../../mongoDB");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL, Zicrop } = require("../Zibot/ZiFunc");
@@ -28,12 +28,6 @@ module.exports = async (client, interaction) => {
       if(!config.EnableJOINTOCREATE) return;
       lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zivc")(interaction, lang)
-    } 
-    //GI------------------------------------------------//
-    if (interaction?.customId.includes("GI")){
-      if(!config.messCreate.GI) return;
-      lang = await rank({ user: interaction?.user });
-      return require("./../Zibot/enkapross")(interaction, lang)
     } 
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys------------------------------------------------//
@@ -89,6 +83,24 @@ module.exports = async (client, interaction) => {
       case "MesPiNJG":{
         return interaction.reply("https://cdn.discordapp.com/attachments/1162041451895599154/1162047498572009493/image.png")
       }
+      case "ContextMenu":{
+        const rowC = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setCustomId("cancel")
+            .setLabel("❌")
+            .setStyle(ButtonStyle.Secondary)
+        )
+        let linkvis = "https://cdn.discordapp.com/attachments/1162041451895599154/1216835730630774814/context.mp4?ex=6601d595&is=65ef6095&hm=595a96cfbca9e10f76522f98589f70d60000ef3c246317819f3e584edda03618&"
+        // let vids =  new AttachmentBuilder( linkvis , "vids.mp4")
+        // const embed = new EmbedBuilder()
+        // .setColor(lang.COLOR || client.color)
+        // .setTitle("Context Menu Help:")
+        // .setTimestamp()
+        // .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        // .setImage("attachment://vids.mp4");
+      return interaction.reply({content: linkvis, components: [rowC] })//.catch(e => { })
+      }
+
       case "Statistics":{
         const rowC = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
@@ -128,7 +140,7 @@ module.exports = async (client, interaction) => {
           • Operation Time: <t:${Math.floor(Number(Date.now() - client.uptime) / 1000)}:R>
           • Ping: \`${client.ws.ping} MS\`
           • Memory Usage: \`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\`
-          [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=1067357395521&scope=bot%20applications.commands) /  [Support Server](https://discord.gg/zaskhD7PTW)
+          [Invite Bot](${client.InviteBot}) /  [Support Server](https://discord.gg/zaskhD7PTW)
           **`)
         .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
         .setColor(lang.COLOR || client.color)
@@ -186,35 +198,7 @@ module.exports = async (client, interaction) => {
         return props.run(lang, interaction, true);
       }
       case "refLeaderboard": {
-        let UserI = await db?.ZiUser?.find()
-        return interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                UserI.sort((a, b) => b.lvl - a.lvl)
-                  .sort((a, b) => b.Xp - a.Xp)
-                  .filter(user => client.users.cache.has(user.userID))
-                  .slice(0, 10)
-                  .map((user, position) => `**${position + 1}** | **${(client.users.cache.get(user.userID).tag)}**: Level: **${user.lvl}** | Xp: **${user.Xp}**`)
-                  .join('\n'))
-              .setColor(lang.COLOR || client.color)
-              .setTitle("Zi bot top 10 leaderboard:")
-              .setTimestamp()
-              .setFooter({
-                text: `${lang?.RequestBY} ${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-              })
-              .setImage(lang?.banner)
-          ],
-          components: [
-            new ActionRowBuilder().addComponents(
-              new ButtonBuilder()
-                .setLabel("❌")
-                .setCustomId("cancel")
-                .setStyle(ButtonStyle.Secondary)
-            ),
-          ],
-        });
+        return require("./../Zibot/Zileaderboard")({ interaction: interaction, lang: lang });
       }
       default:
         console.log(interaction.customId)

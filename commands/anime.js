@@ -1,6 +1,6 @@
 module.exports = {
   name: "anime",
-  description: "get anime infomation.",
+  description: "Get anime infomation.",
   options: [{
     name: "name",
     description: "Name anime",

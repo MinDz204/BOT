@@ -82,7 +82,7 @@ const zistartButton = async (queue) => {
   const Controll = new ButtonBuilder()
     .setEmoji(`${ ZiUserLock?.status? `<:LOck:1167543711283019776>` : `<:UNlock:1167543715632521368>` }`)
     .setCustomId('ZiplayerControll')
-    .setStyle(ButtonStyle.Secondary);
+    .setStyle( ZiUserLock?.status? ButtonStyle.Secondary : ButtonStyle.Danger );
 
 
   if (!queue?.history.previousTrack) prew.setDisabled(true);

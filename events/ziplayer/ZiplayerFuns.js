@@ -130,6 +130,7 @@ if(!config.messCreate.PlayMusic) return;
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
       case "ZiplayerStop":
         interaction.message.edit({ components: [] })
+        await db?.ZiUserLock.deleteOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
         return queue?.delete()
       case "ZiplayerPrew":
         try {

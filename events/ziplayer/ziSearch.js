@@ -23,15 +23,17 @@ module.exports = async (interaction, nameS) => {
             embedCOLOR: userddd?.color || client.color,
             Zimess: queue?.metadata? queue?.metadata?.Zimess : message,
           },
-          requestedBy: interaction.user || interaction?.author,
+          requestedBy: interaction?.user || interaction?.author,
           selfDeaf: false,
           volume: userddd?.vol || 50,
           maxSize: 200,
           maxHistorySize: 20,
           leaveOnEmpty: true,
           leaveOnEmptyCooldown: 2000,
-          leaveOnEnd: false,
+          leaveOnEnd: true,
+          leaveOnEndCooldown: 120000,
           skipOnNoStream: true,
+          selfDeaf: true,
         }
       });
       if(queue?.metadata) message?.delete();
@@ -71,7 +73,7 @@ module.exports = async (interaction, nameS) => {
 
   const embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client.color)
-    .setTitle(`${lang?.PlayerSearch} ${nameS}`)
+    .setTitle(`${lang?.PlayerSearch} ${Zitrim( nameS , 200)}`)
     .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${Zitrim( track?.title , 35)} | \`${Zitrim(track.author,10)}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
     .setTimestamp()
     .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
@@ -152,7 +154,7 @@ module.exports = async (interaction, nameS) => {
       buttons4 = new ActionRowBuilder()
         .addComponents(track_button_creator.slice(15, Math.min(track_button_creator.length, 19)))
         .addComponents(cancel);
-      code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
+      code = {content:``, embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
       break;
   }
   return message?.edit(code).catch(e => interaction?.channel?.send(code))

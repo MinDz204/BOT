@@ -72,8 +72,19 @@ ${match.replace(/\(|\)/g, '')}\`\`\``
 //////////////////////////////////////////////////////////////////////////////////
     if ( message?.reference && content.includes(`<@${client.user.id}>`) ){
     return message.channel?.messages.fetch({ message: message?.reference?.messageId, cache: false, force: true }).then( mess => {
-       if(!mess?.content) return;
-        return playmusic(lang, message, client, mess.content )
+        let  msgcontenet = mess?.content;
+       if(!msgcontenet){
+            const targetMessage = mess?.embeds[0]?.data;
+            if (targetMessage?.fields[0]?.name.includes("▒") || targetMessage?.fields[0]?.name.includes("█")) {
+                msgcontenet = targetMessage.author?.url;
+            }
+            else return  interaction?.reply(`${lang?.PlayerSearchErr}`).then( async messs => {
+                setTimeout(function() {
+                  messs?.delete().catch(e => { });
+                }, 10000)
+            })
+       }
+        return playmusic(lang, message, client, msgcontenet )
     })}
     
     if (content.includes(`<@${client.user.id}>`))
@@ -83,7 +94,7 @@ ${match.replace(/\(|\)/g, '')}\`\`\``
             .setColor(lang?.COLOR || client.color)
             .setTitle("Yo... Ziji desu :3")
             .setDescription(`${lang?.MENstion}\n${config?.Zmodule} ✅`)
-            .setURL("https://discord.com/api/oauth2/authorize?client_id=1005716197259612193&permissions=1067357395521&scope=bot%20applications.commands")
+            .setURL(`${client?.InviteBot}`)
             .setTimestamp()
             .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
             .setImage(lang?.banner)

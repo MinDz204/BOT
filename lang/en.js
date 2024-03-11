@@ -1,5 +1,6 @@
 const language = {
     COLOR: "#1a8cff",
+    langdef:"en",
     banner:`https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png`,
     Err: "An unexpected error occurred [contact bé zi](https://discord.com/invite/zaskhD7PTW) for support as soon as possible:",
     RequestBY: "Requested by:",

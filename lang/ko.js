@@ -1,5 +1,6 @@
 const language = {
     COLOR: "#1a8cff",
+    langdef:"ko",
     banner:`https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png`,
     Err: "예기치 않은 오류가 발생했습니다. 가능한 한 빨리 [bé zi](https://discord.com/invite/zaskhD7PTW)에 문의하세요:",
     RequestBY: "요청자:",

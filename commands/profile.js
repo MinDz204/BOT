@@ -1,5 +1,5 @@
 const { ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
-const canvacord = require("canvacord");
+const { Font, RankCardBuilder } = require("canvacord");
 const db = require("./../mongoDB");
 const client = require('../bot');
 const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
@@ -15,13 +15,13 @@ module.exports = {
   dm_permission: true,
   run: async (lang, interaction, Zi) => {
     let messages = await ZifetchInteraction(interaction);
-    let userr = interaction?.options?.getUser("user") || interaction.user;
+    let userr =  await interaction.guild.members.fetch( interaction?.options?.getUser("user") || interaction.user );
     let userDB = await db.ZiUser.findOne({ userID: userr.id })
     let UserI = await db?.ZiUser?.find()
     const sss = UserI.sort((a, b) => b.lvl - a.lvl)
       .sort((a, b) => b.Xp - a.Xp)
-      .findIndex((user) => user.userID === interaction.user.id);
-    let strimg = `https://cdn.discordapp.com/attachments/1064851388221358153/1149319190918991934/iu.png`
+      .findIndex((user) => user.userID === userr.user.id);
+    let strimg = `https://cdn.discordapp.com/attachments/1064851388221358153/1149319190918991934/iu.png?ex=65fc26e8&is=65e9b1e8&hm=2941beeaef776eb14c8d0c1e41d3990adf60854da49e91958e7296a4cdd2b9f7&`
     let editProf = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setLabel("edit ✎")
@@ -40,26 +40,30 @@ module.exports = {
         .setCustomId("cancel")
         .setStyle(ButtonStyle.Secondary)
     )
-    const rank = new canvacord.Rank()
-      .setAvatar(userr.displayAvatarURL({ dynamic: false, format: 'png' }))
-      .setDiscriminator(`${userDB?.coin || 0} xu`)
-      .setCurrentXP(userDB?.Xp || 0)
-      .setLevel(userDB?.lvl || 1)
-      .setRequiredXP((userDB?.lvl || 1) * 50 + 1)
-      .setStatus("dnd")
-      .setProgressBar(userDB?.color || client.color, "COLOR")
-      .setCustomStatusColor(userDB?.color || client.color)
-      .setUsername(userr?.username, userDB?.color || client.color)
-      .setBackground("IMAGE", userDB?.image || strimg)
-      .setRank(sss + 1)
 
-    rank.build()
-      .then(data => {
-        const attachment = new AttachmentBuilder(data, { name: "RankCard.png" });
-        if (!Zi) return messages?.edit({ files: [attachment], components: [editProf] }).catch(e => interaction?.channel?.send({ files: [attachment], components: [editProf] }));
-        interaction.message.edit({ files: [attachment], components: [editProf] }).catch(e => { });
-        interaction.deleteReply();
-
-      });
+  Font.loadDefault();
+  const status = userr.presence && userr.presence.status
+  ? userr.presence.status
+  : 'none';
+  const rankCard = new RankCardBuilder()
+    .setAvatar(userr.displayAvatarURL({ dynamic: false, format: 'png' }))
+    .setUsername(`${userDB?.coin || 0} xu`)
+    // .setUsername("@wumpus")
+    .setCurrentXP(userDB?.Xp || 0)
+    .setLevel(userDB?.lvl || 1)
+    .setRequiredXP((userDB?.lvl || 1) * 50 + 1)
+    .setProgressCalculator(() => {
+      return Math.floor(((userDB?.Xp || 0)/(userDB?.lvl * 50 + 1) * 100));
+    })
+    .setStatus(status)
+    .setDisplayName(userr?.username, userDB?.color || client.color)
+    .setBackground(userDB?.image || strimg)
+    .setRank(sss + 1)
+    .setOverlay(15.5);
+    const rankCardBuffer = await rankCard.build({ format: "png" });
+    const attachment = new AttachmentBuilder(rankCardBuffer, { name: "RankCard.png" });
+    if (!Zi) return messages?.edit({content:``, files: [attachment], components: [editProf] }).catch(e => interaction?.channel?.send({ files: [attachment], components: [editProf] }));
+    interaction.message.edit({content:``, files: [attachment], components: [editProf] }).catch(e => {console.log(e) });
+    interaction.deleteReply();
   },
 };

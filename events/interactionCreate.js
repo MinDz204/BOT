@@ -10,6 +10,7 @@ const interactionHandler = {
 
 module.exports = async (client, interaction) => {
   if (interaction.user.bot) return;
+  // console.log(interaction);
   const handler = interactionHandler[interaction.type];
   if (handler && config?.interactionCreate?.[InteractionType?.[interaction.type]])  return handler(client, interaction);
 };
