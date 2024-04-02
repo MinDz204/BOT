@@ -2,9 +2,41 @@ const { EmbedBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle,
 const db = require("../mongoDB");
 const { useQueue } = require('discord-player');
 const config = require("../config");
+
+async function Ziset(queue, requestby) {
+  const { useMetadata } = require("discord-player");
+  const { rank } = require("./Zibot/ZilvlSys");
+  const { zistart } = require("./ziplayer/ziStartTrack");
+  const [getMetadata, setMetadata] = useMetadata(queue?.guild.id);
+  const { channel, embedCOLOR, Zimess } = getMetadata();
+  setMetadata({ channel, requestby, embedCOLOR, Zimess });
+  await db.ZiUserLock.deleteOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
+  let lang = await rank({ user: queue?.currentTrack?.requestby || queue?.metadata.requestby });
+  if (queue && !queue?.metadata?.Zimess) return;
+  return queue?.metadata?.Zimess?.edit(await zistart(queue, lang)).catch(e => {  })
+}
+
 module.exports = async (client, oldState, newState) => {
   const queue = useQueue(oldState?.guild?.id);
   if (queue || queue?.node.isPlaying()) {
+    let botChannel = oldState?.guild?.channels?.cache?.get( queue?.dispatcher?.voiceConnection?.joinConfig?.channelId )
+    if (botChannel){
+    if(botChannel.id == oldState.channelId){
+      if( !botChannel?.members?.find(x => x == queue?.metadata?.requestby?.id )){
+        if(botChannel?.members?.size > 1){
+          const members = oldState.channel?.members
+          .filter((m) => !m.user.bot)
+          .map((m) => m.id);
+          let randomID = members[Math.floor(Math.random() * members.length)];
+          let randomMember = oldState?.guild.members.cache.get(randomID);
+          return Ziset(queue, randomMember.user);
+          // console.log(randomMember?.user);
+          // console.log("-------------------");
+          // console.log(queue?.metadata?.requestby)
+        }
+      }
+    }
+    }
     if (newState.id === client.user.id) {
       let lang = await db?.ZiUser?.findOne({ userID: queue?.currentTrack?.requestby?.id || queue?.metadata?.requestby?.id })
       lang = lang?.lang || `vi`
@@ -159,7 +191,7 @@ module.exports = async (client, oldState, newState) => {
       .map((m) => m.id);
   if (
       jointocreate?.voiceChannel &&
-      oldChannel.id === jointocreate?.voiceChannel &&
+      oldChannel?.id === jointocreate?.voiceChannel &&
       (!newChannel || newChannel.id !== jointocreate?.voiceChannel)
   ) {
       if (members.length > 0) {

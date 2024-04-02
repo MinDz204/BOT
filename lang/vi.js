@@ -39,7 +39,7 @@ const language ={
     fillter: `Lưu ý: nếu thời lượng nhạc dài, thời gian áp dụng bộ lọc có thể dài hơn tương ứng.`,
     Deltrack: `Nhập số thứ tự nhạc cần xóa!`,
     DeltrackErr: `Số thứ tự bài hát không hợp lệ ❌`,
-    StopFail: `Bạn không phải người bật nhạc hãy liên hệ {uerrr} để tắt`,
+    StopFail: `Bạn không phải người bật nhạc hãy liên hệ {uerrr}`,
     SeverMute: `Bạn đã tắt âm tôi trong khi nhạc đang phát... Âm nhạc sẽ được tạm dừng!`,
     SeverUnMute: `Âm nhạc đã trở lại!`,
     Assictance: `Đã bật tìm kiếm bài hát bằng giọng nói...\nNói **Play**/**Phát bài hát** + tên bài hát để phát nhạc\nNói **bỏ qua bài hát** để skip\nNói **volume**/**âm lượng** + âm lượng % để chỉnh âm lượng @@

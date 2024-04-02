@@ -39,7 +39,7 @@ const language = {
     fillter: "Note: if the song length is long, the filter application time may be longer accordingly.",
     Deltrack: "Enter the track number to delete!",
     DeltrackErr: "Invalid track number ❌",
-    StopFail: `You are not the one who turned on the music, please contact {uerrr} to turn it off.`,
+    StopFail: `You are not the one who turned on the music, please contact {uerrr}.`,
     SeverMute: `You muted me while the music was playing... The music will be paused!`,
     SeverUnMute: `The music is back!`,
     Assictance: `Voice search for songs is on...\nSay **Play**/**Phát bài hát** + song name to play music\n Say **bỏ qua bài hát** to skip`,

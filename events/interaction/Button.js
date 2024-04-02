@@ -8,8 +8,8 @@ module.exports = async (client, interaction) => {
   try {
     if(config.messCreate.PlayMusic)
     if (validURL(interaction.customId)) {
-      await require("./../ziplayer/ziSearch")(interaction, interaction.customId);
-      return interaction?.message.delete();
+      return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
+      //  interaction?.message.delete();
     }
     let lang;
     //Zi module------------------------------------------------//
@@ -91,13 +91,6 @@ module.exports = async (client, interaction) => {
             .setStyle(ButtonStyle.Secondary)
         )
         let linkvis = "https://cdn.discordapp.com/attachments/1162041451895599154/1216835730630774814/context.mp4?ex=6601d595&is=65ef6095&hm=595a96cfbca9e10f76522f98589f70d60000ef3c246317819f3e584edda03618&"
-        // let vids =  new AttachmentBuilder( linkvis , "vids.mp4")
-        // const embed = new EmbedBuilder()
-        // .setColor(lang.COLOR || client.color)
-        // .setTitle("Context Menu Help:")
-        // .setTimestamp()
-        // .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-        // .setImage("attachment://vids.mp4");
       return interaction.reply({content: linkvis, components: [rowC] })//.catch(e => { })
       }
 

@@ -98,12 +98,18 @@ fs.readdir("./commands", (err, files) => {
   });
 });
 
-
+client.login(config.token).catch(e => {
+  console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
+})
+//---------------------------------------------------------------------------------------------------------------------------------------
 process.on('unhandledRejection', error => {
   client.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
   console.error('Unhandled promise rejection:', error);
 });
-
-client.login(config.token).catch(e => {
-  console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
-})
+process.on('warning', (warning) => {
+	if (
+		warning.name !== 'ExperimentalWarning' &&
+		warning.message !== 'The Fetch API is an experimental feature. This feature could change at any time' ){
+		console.warn(warning);
+	}
+});

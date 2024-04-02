@@ -1,14 +1,20 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require('../../bot');
 const { useMainPlayer, QueryType, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL, processQuery, Zilink, Zitrim, ZifetchInteraction } = require("../Zibot/ZiFunc");
+const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction } = require("../Zibot/ZiFunc");
 
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS) => {
-  let message = await ZifetchInteraction(interaction);
+  let message;
+  if( interaction.type == 3 ){
+    interaction.deferUpdate().catch(e => { });
+    await interaction?.message.edit({ content: `<a:loading:1151184304676819085> Loading...`})
+    message = await interaction.channel?.messages.fetch({ message: interaction?.message?.id , cache: false, force: true })
+  }else{
+    message = await ZifetchInteraction(interaction);
+  }
   const queue = useQueue(interaction.guild.id);
   if (!nameS) return;
   if (validURL(nameS) || Zilink(nameS)) {
@@ -31,7 +37,7 @@ module.exports = async (interaction, nameS) => {
           leaveOnEmpty: true,
           leaveOnEmptyCooldown: 2000,
           leaveOnEnd: true,
-          leaveOnEndCooldown: 120000,
+          leaveOnEndCooldown: 150000,
           skipOnNoStream: true,
           selfDeaf: true,
         }
@@ -53,109 +59,6 @@ module.exports = async (interaction, nameS) => {
     fallbackSearchEngine: QueryType.YOUTUBE,
     requestedBy: interaction?.user || interaction?.author,
   });
-  const maxTracks = res.tracks.filter(t => t?.url.length < 100).slice(0, 20);
-  let track_button_creator = maxTracks.map((Track, index) => {
-    return new ButtonBuilder()
-      .setLabel(`${index + 1}`)
-      .setStyle(ButtonStyle.Secondary)
-      .setCustomId(`${maxTracks[Number(index)].url}`)
-  })
-  let buttons1, buttons2, buttons3, buttons4, code;
-  let cancel = new ButtonBuilder()
-    .setLabel("❌")
-    .setStyle(ButtonStyle.Danger)
-    .setCustomId('cancel');
-  let cancelB = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setLabel("❌")
-      .setStyle(ButtonStyle.Danger)
-      .setCustomId('cancel'));
-
-  const embed = new EmbedBuilder()
-    .setColor(lang?.COLOR || client.color)
-    .setTitle(`${lang?.PlayerSearch} ${Zitrim( nameS , 200)}`)
-    .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${Zitrim( track?.title , 35)} | \`${Zitrim(track.author,10)}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
-    .setTimestamp()
-    .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
-
-  switch (track_button_creator.length) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, Math.min(track_button_creator.length, 4)))
-        .addComponents(cancel);
-      code = { embeds: [embed], components: [buttons1] }
-      break;
-    case 5:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      code = { embeds: [embed], components: [buttons1, cancelB] }
-      break;
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      buttons2 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(5, Math.min(track_button_creator.length, 9)))
-        .addComponents(cancel);
-      code = { embeds: [embed], components: [buttons1, buttons2] }
-      break;
-    case 10:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      buttons2 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(5, 10));
-      code = { embeds: [embed], components: [buttons1, buttons2, cancelB] }
-      break;
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      buttons2 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(5, 10));
-      buttons3 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(10, Math.min(track_button_creator.length, 14)))
-        .addComponents(cancel);
-      code = { embeds: [embed], components: [buttons1, buttons2, buttons3] }
-      break;
-    case 15:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      buttons2 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(5, 10));
-      buttons3 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(10, 15));
-      code = { embeds: [embed], components: [buttons1, buttons2, buttons3, cancelB] }
-      break;
-    case 20:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      buttons2 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(5, 10));
-      buttons3 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(10, 15));
-      buttons4 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(15, 20));
-      code = { embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4, cancelB] }
-      break;
-    default:
-      buttons1 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(0, 5));
-      buttons2 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(5, 10));
-      buttons3 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(10, 15));
-      buttons4 = new ActionRowBuilder()
-        .addComponents(track_button_creator.slice(15, Math.min(track_button_creator.length, 19)))
-        .addComponents(cancel);
-      code = {content:``, embeds: [embed], components: [buttons1, buttons2, buttons3, buttons4] }
-      break;
-  }
-  return message?.edit(code).catch(e => interaction?.channel?.send(code))
+ let embed = await tracsrowslecs(res, lang, nameS, interaction);
+  return message?.edit( embed ).catch( async e => interaction?.channel?.send( embed ))
 }
