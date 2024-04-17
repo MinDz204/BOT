@@ -101,6 +101,14 @@ const zistartButton = async (queue) => {
   return { row, row2, row3 }
 
 }
+const RelatedTracks = async (queue,track) => {
+  const tracks = (await track.extractor?.getRelatedTracks(track, queue?.history ))?.tracks || (await queue?.player.extractors.run(async (ext) => {
+    const res = await ext.getRelatedTracks(track, queue.history);
+    if (!res.tracks.length) return false;
+    return res.tracks;
+  }))?.result || [];
+  return tracks;
+}
 
 const ZiPlayerlinkAvt = async (query) => {
   switch (query) {
@@ -156,6 +164,8 @@ const zistartEmber = async (queue, lang) => {
     rightChar: `▒`,
     length: 20,
   })
+  
+  RelatedTracks(queue,track);
   const imgggg = await ZiImg(track)
   const timestamps = queue?.node.getTimestamp();
   const trackDurationsymbal = timestamps?.progress == "Infinity" ? "" : "%"

@@ -15,7 +15,7 @@ module.exports = {
   dm_permission: true,
   run: async (lang, interaction, Zi) => {
     let messages = await ZifetchInteraction(interaction);
-    let userr =  await interaction.guild?.members.fetch(interaction?.options?.getUser("user")) || interaction.user;
+    let userr =  await interaction.guild?.members.fetch(interaction?.options?.getUser("user") || interaction.user ) || interaction.user;
     let userDB = await db.ZiUser.findOne({ userID: userr.id })
     let UserI = await db?.ZiUser?.find()
     const sss = UserI.sort((a, b) => b.lvl - a.lvl)

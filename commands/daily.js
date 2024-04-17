@@ -34,7 +34,7 @@ module.exports = {
       let userDB2 = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
       embed.setDescription(`${lang?.claimsuss} lvl: ${userDB2?.lvl} xp: ${userDB2?.Xp}/${userDB2?.lvl * 50 + 1}`);
     }
-    return messages?.edit({ embeds: [ embed ] }).catch(e => interaction?.channel?.send({ embeds: [ embed ] }))
+    return messages?.edit({ content:` `, embeds: [ embed ] }).catch(e => interaction?.channel?.send({content:` `, embeds: [ embed ] }))
 
   },
 };
