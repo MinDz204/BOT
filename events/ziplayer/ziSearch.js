@@ -42,7 +42,7 @@ module.exports = async (interaction, nameS) => {
           selfDeaf: true,
         }
       });
-      if(queue?.metadata) message?.delete();
+      if(queue?.metadata && ( queue?.metadata?.Zimess.id != message.id ) ) message?.delete();
       return;
     } catch (e) {
       console.log(e)

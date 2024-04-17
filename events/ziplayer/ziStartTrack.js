@@ -1,8 +1,9 @@
-const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, StringSelectMenuOptionBuilder, StringSelectMenuBuilder } = require("discord.js");
 const client = require('../../bot');
 
 // const { rank } = require("../Zibot/ZilvlSys"); 
-const db = require("./../../mongoDB")
+const db = require("./../../mongoDB");
+const { Zitrim } = require("../Zibot/ZiFunc");
 const zistartButton = async (queue) => {
   let ziQueue = await db.Ziqueue.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
   let ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
@@ -101,13 +102,52 @@ const zistartButton = async (queue) => {
   return { row, row2, row3 }
 
 }
-const RelatedTracks = async (queue,track) => {
+const RelatedTracks = async (queue) => {
+  const track = queue?.currentTrack;
   const tracks = (await track.extractor?.getRelatedTracks(track, queue?.history ))?.tracks || (await queue?.player.extractors.run(async (ext) => {
     const res = await ext.getRelatedTracks(track, queue.history);
     if (!res.tracks.length) return false;
     return res.tracks;
   }))?.result || [];
   return tracks;
+}
+const RelatedTracksRow = async (queue) => {
+  let resu = await RelatedTracks(queue)
+  const maxTracks = resu.filter(t => t?.url.length < 100).slice(0, 20);
+  let track_creator = maxTracks.map((track, index) => {
+    return new StringSelectMenuOptionBuilder()
+      .setLabel(`${index + 1}.${Zitrim( track?.title , 20)}`)
+      .setDescription(`${ track?.duration }`)
+      .setValue(`${maxTracks[Number(index)].url}`)
+      .setEmoji('<:Playbutton:1230129096160182322>')
+  })
+if(!track_creator){
+  return new ActionRowBuilder()
+    .addComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId('Ziselectmusix')
+        .setMinValues(1)
+        .setMaxValues(1)
+        .setPlaceholder('❌ No Tracks!')
+        .setDisabled( true )
+        .addOptions( 
+        new StringSelectMenuOptionBuilder()
+          .setLabel(`No Tracks`)
+          .setDescription(`00:00`)
+          .setValue(`No Tracks`)
+        )
+      );
+   }
+  const select = new ActionRowBuilder()
+    .addComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId('Ziselectmusix')
+        .setMinValues(1)
+        .setMaxValues(1)
+        .setPlaceholder('Make a selection!')
+        .addOptions( track_creator )
+      );
+    return select;
 }
 
 const ZiPlayerlinkAvt = async (query) => {
@@ -164,8 +204,6 @@ const zistartEmber = async (queue, lang) => {
     rightChar: `▒`,
     length: 20,
   })
-  
-  RelatedTracks(queue,track);
   const imgggg = await ZiImg(track)
   const timestamps = queue?.node.getTimestamp();
   const trackDurationsymbal = timestamps?.progress == "Infinity" ? "" : "%"
@@ -187,8 +225,8 @@ const start = async (queue, lang) => {
   let code;
 
   if (queue?.currentTrack) {
-    const [_embed, _button] = await Promise.all([zistartEmber(queue, lang), zistartButton(queue)])
-    return code = { content: ``, embeds: [_embed], components: [_button.row, _button.row2, _button.row3] }
+    const [_embed, _button, _select] = await Promise.all([zistartEmber(queue, lang), zistartButton(queue), RelatedTracksRow(queue)])
+    return code = { content: ``, embeds: [_embed], components: [_select, _button.row, _button.row2, _button.row3] }
   }
 
   const zisearch = new ActionRowBuilder().addComponents(

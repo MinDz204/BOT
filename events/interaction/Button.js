@@ -6,10 +6,17 @@ const config = require("../../config");
 
 module.exports = async (client, interaction) => {
   try {
+    //SEARCH MUSIC------------------------------------------------//
     if(config.messCreate.PlayMusic)
     if (validURL(interaction.customId)) {
       return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
-      //  interaction?.message.delete();
+    }
+    if (interaction?.customId.includes("Ziselectmusix")) {
+      if( interaction?.values[0] != "cancelSEARCHTRACK" ) {
+        return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
+      }else{
+        return interaction?.message.delete();
+      }
     }
     let lang;
     //Zi module------------------------------------------------//
