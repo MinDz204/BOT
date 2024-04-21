@@ -31,7 +31,6 @@ module.exports = {
       adapterCreator: voiceChannel.guild.voiceAdapterCreator,
       selfDeaf: false,
     });
-
     let queue = player?.nodes?.create(interaction.guild, {
       metadata: {
         channel: interaction.channel,

@@ -5,7 +5,6 @@ function isNumber(str) {
 }
 module.exports = async (client, msg) => {
   if (!msg.content) return;
-  console.log(`${msg.content}`)
   let content = msg.content?.toLowerCase()
   if (content?.includes("play") || content?.includes("phát")) {
 
@@ -46,9 +45,10 @@ module.exports = async (client, msg) => {
     if (queue.repeatMode == 1) queue?.setRepeatMode(QueueRepeatMode.QUEUE)
     return queue?.node?.skip()
   }
-  if (content?.includes("volume") || content.includes("âm lượng")) {
+  if (content?.includes("volume") || content.includes("âm lượng")|| content.includes("độ to")) {
     const queue = useQueue(msg.channel.guild.id)
     const vol = content?.match(/\d+/);
+    try { 
     if (!isNumber(vol[0])) return;
     let volume = vol[0] > 100 ? 100 : vol[0];
     queue.node.setVolume(Math.abs(volume))
@@ -58,7 +58,8 @@ module.exports = async (client, msg) => {
       }
     }, { upsert: true })
     return require("./player/playerStart")(client, queue);
-  }
+    }catch(e){ }
+  } 
   if (content?.includes("tiếp")) {
     const queue = useQueue(msg.channel.guild.id)
     try { await queue?.node?.play() } catch (e) { console.log(e) }
