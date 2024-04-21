@@ -1,20 +1,35 @@
+const { zistart } = require("./ziStartTrack");
+const db = require("./../../mongoDB");
+function isNumber(str) {
+    return /^[0-9]+$/.test(str);
+  }
 const deleteAfterTimeout = (message, timeout = 10000) => {
     setTimeout(() => {
-      message.delete().catch(e => { console.error('Error deleting message:', e); });
+      message.delete().catch(e => {  });
     }, timeout);
   };
-  
-  const replyWithPrompt = async (interaction, content) => {
+
+const replyWithPrompt = async (interaction, content) => {
     const message = await interaction.reply({ content, fetchReply: true });
     return message;
   };
   
-  const editReplyWithTimeout = async (interaction, content, timeout = 1000) => {
+const editReplyWithTimeout = async (interaction, content, timeout = 1000) => {
     const message = await interaction.editReply({ content, ephemeral: true });
     deleteAfterTimeout(message, timeout);
   };
+
+const resetAfterTimeout = (message, lang, timeout = 10000) => {
+    setTimeout(() => {
+      message.edit({ content: `${lang?.volumedes} ex: 1 - 100:` }).catch(e => { console.error(e); });
+    }, timeout);
+  };
+const editReplyWithNOTimeout = async (interaction, content, lang, timeout = 1000) => {
+    const message = await interaction.editReply({ content, ephemeral: true });
+    resetAfterTimeout(message, lang, timeout);
+  };
   
-  const handleVolumeChange = async (interaction, queue, lang) => {
+const handleVolumeChange = async (interaction, queue, lang) => {
     const reply = await replyWithPrompt(interaction, `${lang?.volumedes}`);
     
     const collectorFilter = (i) => i.author.id === interaction.user.id;
@@ -24,8 +39,8 @@ const deleteAfterTimeout = (message, timeout = 10000) => {
       const userVol = i.content;
       
       if (!isNumber(userVol)) {
-        await editReplyWithTimeout(interaction, `${lang?.volumeErr}`);
-        return reply.edit({ content: `${lang?.volumedes} ex: 1 - 100:` }).catch(e => { console.error(e); });
+        await editReplyWithNOTimeout(interaction, `${lang?.volumeErr}`, lang);
+        return;
       }
   
       const volume = Math.abs(userVol);
@@ -56,3 +71,4 @@ const deleteAfterTimeout = (message, timeout = 10000) => {
   };
   
   
+  module.exports = { handleVolumeChange }

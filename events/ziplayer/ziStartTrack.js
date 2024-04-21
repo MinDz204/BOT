@@ -5,105 +5,82 @@ const client = require('../../bot');
 const db = require("./../../mongoDB");
 const { Zitrim } = require("../Zibot/ZiFunc");
 const zistartButton = async (queue) => {
-  let ziQueue = await db.Ziqueue.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
-  let ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
-  if (!ZiUserLock){
-    let requestby = ZiUserLock?.userID || queue?.metadata?.requestby?.id;
-    await db.ZiUserLock.updateOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }, {
-      $set: {
-        status: false,
-        userID: requestby,
-      }
-    }, { upsert: true })
-  ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
-  };
-  let volicon = (queue.node.volume > 60) ? "1150769211526885416" : (queue.node.volume > 30) ? "1150769215255625759" : "1150769217763815454";
-  const refsh = new ButtonBuilder()
-    .setLabel('F5')
-    .setCustomId('Ziplayerf5')
-    .setStyle(ButtonStyle.Success);
-  const Stop = new ButtonBuilder()
-    .setEmoji('⬜')
-    .setCustomId('ZiplayerStop')
-    .setStyle(ButtonStyle.Danger);
-  const Next = new ButtonBuilder()
-    .setLabel('▷')
-    .setCustomId('ZiplayerNext')
-    .setStyle(ButtonStyle.Success);
-  const pause = new ButtonBuilder()
-    .setLabel(`${queue.node.isPaused() ? '▶' : '❚❚'}`)
-    .setCustomId('ZiplayerPause')
-    .setStyle(ButtonStyle.Success);
-  const prew = new ButtonBuilder()
-    .setLabel('◁')
-    .setCustomId('ZiplayerPrew')
-    .setStyle(ButtonStyle.Success);
-  const lyric = new ButtonBuilder()
-    .setLabel('Seek')
-    .setCustomId('ZiplayerLyric')
-    .setDisabled(false)
-    .setStyle(ButtonStyle.Success);
-
-  const vol = new ButtonBuilder()
-    .setEmoji(`<:sound:${volicon}>`)
-    .setCustomId('ZiplayerVol')
-    .setStyle(ButtonStyle.Success);
-
-  const AutoPlay = new ButtonBuilder()
-    .setLabel('Auto')
-    .setCustomId('ZiplayerAutoPlay')
-    .setStyle(ButtonStyle.Success);
-  const loopA = new ButtonBuilder()
-    .setLabel('↻')
-    .setCustomId('ZiplayerLoopA')
-    .setStyle(ButtonStyle.Success);
-  const shuffl = new ButtonBuilder()
-    .setLabel('⤮')
-    .setCustomId('ZiplayerShuffl')
-    .setStyle(ButtonStyle.Success);
-  const commingfunc = new ButtonBuilder()
-    .setLabel('EQ')
-    .setCustomId('ZiplayerEq')
-    .setStyle(ButtonStyle.Success)
-  // .setDisabled(true);
-
-  const queuE = new ButtonBuilder()
-    .setCustomId('ZiplayerQueuE')
-    .setStyle(ButtonStyle.Success);
-  const Fillter = new ButtonBuilder()
-    .setLabel('Fx')
-    .setCustomId('ZiplayerFillter')
-    .setStyle(ButtonStyle.Success);
-
-  const ZSearch = new ButtonBuilder()
-    .setEmoji('<:search:1150766173332443189>')
-    .setCustomId('ZiplayerSeach')
-    .setStyle(ButtonStyle.Success);
+  const guildID = queue?.guild?.id;
+  const channelID = queue?.metadata?.channel?.id;
+  // Fetch ZiQueue and ZiUserLock objects asynchronously, handling exceptions gracefully
+  const [ziQueue, ZiUserLock] = await Promise.all([
+    db.Ziqueue.findOne({ guildID, channelID }).catch(() => null),
+    db.ZiUserLock.findOne({ guildID, channelID }).catch(() => null),
+  ]);
+  // If ZiUserLock is null, set the status and userID, then update the database
+  if (!ZiUserLock) {
+    const requestby = queue?.metadata?.requestby?.id; // Get requestor ID
+    await db.ZiUserLock.updateOne({ guildID, channelID },
+      { $set: { status: false, userID: requestby } },
+      { upsert: true } // Ensure entry exists
+    );
+  }
   
-  const Controll = new ButtonBuilder()
-    .setEmoji(`${ ZiUserLock?.status? `<:LOck:1167543711283019776>` : `<:UNlock:1167543715632521368>` }`)
-    .setCustomId('ZiplayerControll')
-    .setStyle( ZiUserLock?.status? ButtonStyle.Secondary : ButtonStyle.Danger );
+  let volicon = (queue.node.volume > 60) ? "1150769211526885416" :
+                (queue.node.volume > 30) ? "1150769215255625759" :
+                                           "1150769217763815454";
+  // Helper function to create a button with default settings
+function createButton({ label, customId, style = ButtonStyle.Success, emoji = null, disabled = false }) {
+  const button = new ButtonBuilder()
+    .setCustomId(customId)
+    .setStyle(style)
+    .setDisabled(disabled);
 
-
-  if (!queue?.history.previousTrack) prew.setDisabled(true);
-  if (queue.isEmpty()) queuE.setDisabled(true);
-  if (ziQueue) {
-    queuE.setLabel(`${ziQueue.page}/${ziQueue.toplam}`)
-  } else {
-    queuE.setEmoji(`<:queue:1150639849901133894>`)
+  if (label) {
+    button.setLabel(label);
   }
 
-  const row = new ActionRowBuilder().addComponents(prew, pause, Next, vol, lyric);
-  const row2 = new ActionRowBuilder().addComponents(refsh, shuffl, loopA, Controll, Stop);
-  const row3 = new ActionRowBuilder().addComponents(queuE, commingfunc, Fillter, AutoPlay, ZSearch);
+  if (emoji) {
+    button.setEmoji(emoji);
+  }
 
+  return button;
+}
 
-  return { row, row2, row3 }
+// Conditional button labels and statuses
+const pauseLabel = queue.node.isPaused() ? '▶' : '❚❚';
+const controllEmoji = ZiUserLock?.status ? `<:LOck:1167543711283019776>` : `<:UNlock:1167543715632521368>`;
+const controllStyle = ZiUserLock?.status ? ButtonStyle.Secondary : ButtonStyle.Danger;
+const previousTrackExists = !!queue?.history.previousTrack;
+
+// Creating buttons using the helper function
+const prew = createButton({ label: '◁', customId: 'ZiplayerPrew', disabled: !previousTrackExists });
+const pause = createButton({ label: pauseLabel, customId: 'ZiplayerPause' });
+const Next = createButton({ label: '▷', customId: 'ZiplayerNext' });
+const vol = createButton({ emoji: `<:sound:${volicon}>`, customId: 'ZiplayerVol' });
+const seek = createButton({ label: 'Seek', customId: 'ZiplayerSeek' });
+const refsh = createButton({ label: 'F5', customId: 'Ziplayerf5' });
+const shuffl = createButton({ label: '⤮', customId: 'ZiplayerShuffl' });
+const loopA = createButton({ label: '↻', customId: 'ZiplayerLoopA' });
+const Stop = createButton({ emoji: '⬜', customId: 'ZiplayerStop', style: ButtonStyle.Danger });
+const Controll = createButton({ emoji: controllEmoji, customId: 'ZiplayerControll', style: controllStyle });
+
+const queuE = createButton({
+  customId: 'ZiplayerQueuE',
+  label: ziQueue ? `${ziQueue.page}/${ziQueue.toplam}` : null,
+  emoji: !ziQueue ? `<:queue:1150639849901133894>` : null,
+  disabled: queue.isEmpty(),
+});
+const lyrics = createButton({ emoji: '<:lyric:1150770291941851187>', customId: 'ZiplayerLyrics', disabled: true });
+const AutoPlay = createButton({ label: 'Auto', customId: 'ZiplayerAutoPlay' });
+const Fillter = createButton({ label: 'Fx', customId: 'ZiplayerFillter' });
+const ZSearch = createButton({ emoji: '<:search:1150766173332443189>', customId: 'ZiplayerSeach' });
+
+// Building action rows
+const row = new ActionRowBuilder().addComponents(prew, pause, Next, vol, seek);
+const row2 = new ActionRowBuilder().addComponents(refsh, shuffl, loopA, Controll, Stop);
+const row3 = new ActionRowBuilder().addComponents(queuE, lyrics, Fillter, AutoPlay, ZSearch);
+
+return { row, row2, row3 };
 
 }
 const RelatedTracks = async (queue) => {
-  const track = queue?.currentTrack;
+  const track = queue?.currentTrack || queue?.history.previousTrack;
   const tracks = (await track.extractor?.getRelatedTracks(track, queue?.history ))?.tracks || (await queue?.player.extractors.run(async (ext) => {
     const res = await ext.getRelatedTracks(track, queue.history);
     if (!res.tracks.length) return false;
@@ -121,56 +98,52 @@ const RelatedTracksRow = async (queue) => {
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })
-if(!track_creator){
+  if(track_creator?.length === 0){
+    return new ActionRowBuilder()
+      .addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId('Ziselectmusix')
+          .setMinValues(1)
+          .setMaxValues(1)
+          .setPlaceholder('❌ No Tracks!')
+          .setDisabled( true )
+          .addOptions( 
+          new StringSelectMenuOptionBuilder()
+            .setLabel(`No Tracks`)
+            .setDescription(`00:00`)
+            .setValue(`No Tracks`)
+          )
+        );
+    }
   return new ActionRowBuilder()
     .addComponents(
       new StringSelectMenuBuilder()
         .setCustomId('Ziselectmusix')
         .setMinValues(1)
         .setMaxValues(1)
-        .setPlaceholder('❌ No Tracks!')
-        .setDisabled( true )
-        .addOptions( 
-        new StringSelectMenuOptionBuilder()
-          .setLabel(`No Tracks`)
-          .setDescription(`00:00`)
-          .setValue(`No Tracks`)
-        )
-      );
-   }
-  const select = new ActionRowBuilder()
-    .addComponents(
-      new StringSelectMenuBuilder()
-        .setCustomId('Ziselectmusix')
-        .setMinValues(1)
-        .setMaxValues(1)
-        .setPlaceholder('Make a selection!')
+        .setPlaceholder('▶️ | Pick the track u want to add to queue.')
         .addOptions( track_creator )
       );
-    return select;
 }
 
-const ZiPlayerlinkAvt = async (query) => {
-  switch (query) {
-    case `youtube`:
-    case `youtubePlaylist`:
-    case `youtubeSearch`:
-    case `youtubeVideo`:
-      return `https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif`;
-    case `spotifySong`:
-    case `spotifyAlbum`:
-    case `spotifySearch`:
-    case `spotifyPlaylist`:
-      return `https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif`;
-    case `soundcloudTrack`:
-    case `soundcloudPlaylist`:
-    case `soundcloud`:
-    case `soundcloudSearch`:
-      return `https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif`;
-    default:
-      return `https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif`;
-  }
-}
+const ZiPlayerlinkAvt = (query) => ({
+  youtube: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
+  youtubePlaylist: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
+  youtubeSearch: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
+  youtubeVideo: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
+
+  spotifySong: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
+  spotifyAlbum: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
+  spotifySearch: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
+  spotifyPlaylist: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
+
+  soundcloudTrack: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
+  soundcloudPlaylist: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
+  soundcloud: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
+  soundcloudSearch: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
+}[query] || 'https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif');
+
+
 function ZiImg(track) {
   let id = track?.raw?.id || track?.thumbnail?.id || track?.raw?.thumbnail?.id || track?.__metadata?.id || track?.__metadata?.thumbnail?.id || track?.metadata?.id;
   switch (track?.queryType) {
@@ -208,7 +181,7 @@ const zistartEmber = async (queue, lang) => {
   const timestamps = queue?.node.getTimestamp();
   const trackDurationsymbal = timestamps?.progress == "Infinity" ? "" : "%"
   const trackDuration = timestamps?.progress == "Infinity" ? "∞" : timestamps?.progress
-  const embed = new EmbedBuilder()
+  return new EmbedBuilder()
     .setAuthor({ name: track?.title, url: track?.url, iconURL: avtlink })
     .setColor(queue?.metadata?.embedCOLOR || client?.color)
     .setImage(`${imgggg??`https://cdn.discordapp.com/attachments/1064851388221358153/1215655934546804746/NoImage.png`}`)
@@ -218,17 +191,16 @@ const zistartEmber = async (queue, lang) => {
         ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Fillter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()} \n
         `)
     .addFields({ name: `${proress}`, value: ` ` })
-  return embed;
+
 }
 
 const start = async (queue, lang) => {
-  let code;
 
   if (queue?.currentTrack) {
     const [_embed, _button, _select] = await Promise.all([zistartEmber(queue, lang), zistartButton(queue), RelatedTracksRow(queue)])
-    return code = { content: ``, embeds: [_embed], components: [_select, _button.row, _button.row2, _button.row3] }
+    return { content: ``, embeds: [_embed], components: [_select, _button.row, _button.row2, _button.row3] }
   }
-
+  const  _selecttrack = await RelatedTracksRow(queue);
   const zisearch = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setLabel('Search')
@@ -242,7 +214,7 @@ const start = async (queue, lang) => {
   const revEmbed = queue?.metadata?.Zimess?.reactions?.message?.embeds || queue?.metadata?.Zimess?.embeds;
   const embess = EmbedBuilder.from(revEmbed?revEmbed[0]:null)
     .setDescription(`${lang?.queueEMty}`)
-  return code = { content: ``, embeds: [embess], components: [zisearch] }
+  return { content: ``, embeds: [embess], components: [_selecttrack, zisearch] }
 }
 
 module.exports = {

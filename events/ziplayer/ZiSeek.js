@@ -2,7 +2,7 @@ const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('
 const client = require('../../bot');
 const { ZiPlayerlinkAvt } = require('./ziStartTrack');
 
-const lyric = async (trackk, user, lang, queue) => {
+const SEEKfunc = async (trackk, user, lang, queue) => {
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
     .setLabel('↼')
@@ -54,4 +54,6 @@ const lyric = async (trackk, user, lang, queue) => {
 
   return { embeds: [info], components: [row,row2] }
 };
-module.exports = { lyricFind: lyric }
+
+
+module.exports = { SEEKfunc }

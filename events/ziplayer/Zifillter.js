@@ -1,46 +1,33 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const client = require('../../bot');
 
+const createButton = (label, customId) => {
+  return new ButtonBuilder()
+    .setLabel(label)
+    .setCustomId(customId)
+    .setStyle(ButtonStyle.Secondary);
+};
+
 const FillterRow = async (queue) => {
-  const bassboost = new ButtonBuilder()
-    .setLabel('Bass Boost')
-    .setCustomId('Ziplayerbassboost')
+  const buttonConfigs = [
+    { label: 'Bass Boost', id: 'Ziplayerbassboost' },
+    { label: 'Lofi', id: 'Ziplayerlofi' },
+    { label: 'Nightcore', id: 'Ziplayernightcore' },
+    { label: 'Karaoke', id: 'Ziplayerkaraoke' },
+    { label: '❌', id: 'Ziplayerfillteroff', style: ButtonStyle.Secondary },
+  ];
 
-  const LOFI = new ButtonBuilder()
-    .setLabel('Lofi')
-    .setCustomId('Ziplayerlofi')
+  const buttons = buttonConfigs.map((config) => {
+    const button = createButton(config.label, config.id);
+    if (queue.filters.ffmpeg.isEnabled(config.id.substring(8).toLowerCase())) {
+      button.setStyle(ButtonStyle.Success);
+    }
+    return button;
+  });
 
-  const nightcore = new ButtonBuilder()
-    .setLabel('Nightcore')
-    .setCustomId('Ziplayernightcore')
+  return new ActionRowBuilder().addComponents(...buttons);
+};
 
-  const karaoke = new ButtonBuilder()
-    .setLabel('Karaoke')
-    .setCustomId('Ziplayerkaraoke')
-
-  const Zifillteroff = new ButtonBuilder()
-    .setLabel('❌')
-    .setCustomId('Ziplayerfillteroff')
-    .setStyle(ButtonStyle.Secondary)
-
-  if (queue.filters.ffmpeg.isEnabled(`bassboost`)) { bassboost.setStyle(ButtonStyle.Success) } else {
-    bassboost.setStyle(ButtonStyle.Secondary)
-  }
-
-  if (queue.filters.ffmpeg.isEnabled(`lofi`)) { LOFI.setStyle(ButtonStyle.Success) } else {
-    LOFI.setStyle(ButtonStyle.Secondary)
-  }
-
-  if (queue.filters.ffmpeg.isEnabled(`nightcore`)) { nightcore.setStyle(ButtonStyle.Success) } else {
-    nightcore.setStyle(ButtonStyle.Secondary)
-  }
-
-  if (queue.filters.ffmpeg.isEnabled(`karaoke`)) { karaoke.setStyle(ButtonStyle.Success) } else {
-    karaoke.setStyle(ButtonStyle.Secondary)
-  }
-
-  return new ActionRowBuilder().addComponents(bassboost, LOFI, nightcore, karaoke, Zifillteroff);
-}
 const Fillter = async (user, queue, lang) => {
   let row = await FillterRow(queue)
   let embed = new EmbedBuilder()

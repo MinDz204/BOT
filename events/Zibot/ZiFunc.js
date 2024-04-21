@@ -20,7 +20,7 @@ function removeVietnameseTones(str) {
   // Remove extra spaces
   // Bỏ các khoảng trắng liền nhau
   str = str.replace(/ + /g, " ");
-  str = str.Zitrim();
+  str = str.trim();
   // Remove punctuations
   // Bỏ dấu câu, kí tự đặc biệt
   str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
@@ -93,27 +93,14 @@ function getAvatar(user) {
   if(!user.avatar) return `https://cdn.discordapp.com/embed/avatars/${(user.discriminator % 5)}.png`
   return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`
 }
-function drawBarChart(data) {
-  return data.map(({ band, gain }) => {
-      const barLength = Math.round(Math.abs(gain) * 20); // Scale gain to adjust bar length
-
-      // Draw the bar chart using Unicode characters
-      const bar = gain >= 0 ? '+'.repeat(barLength) : '-'.repeat(barLength);
-
-      // Add spaces before the line if band is less than 10
-      const bandLabel = band < 9 ? ` Band ${band + 1} :` : ` Band ${band + 1}:`;
-
-      return `${bandLabel} ${bar} = (${gain})`;
-  }).join('\n');
-}
-
 
 const timeToSeconds = (time) => {
   const timeString = time.toLowerCase();
   let hours = 0,
       minutes = 0,
-      seconds = 0;
-
+      seconds = 0,
+      soam = 1;
+     if( timeString.includes(`-`)){ soam = -1 }
   // Check if the timeString consists only of digits
   if (/^\d+$/.test(timeString)) {
       seconds = parseInt(timeString);
@@ -165,7 +152,7 @@ const timeToSeconds = (time) => {
 
 
   const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  return totalSeconds;
+  return totalSeconds*soam;
 }
 
 const tracsrowslecs = async(res, lang, nameS, interaction) => {
@@ -218,7 +205,6 @@ Zilink,
 Zicrop,
 shuffleArray,
 Zitrim,
-drawBarChart,
 timeToSeconds,
 tracsrowslecs
 }

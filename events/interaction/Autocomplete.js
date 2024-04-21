@@ -37,7 +37,7 @@ module.exports = async (client, interaction) => {
             }))
           ).catch(e => { console.log(e) });
         } catch (e) {
-          return interaction?.respond().catch(e => { console.log(e) });
+          return interaction?.respond().catch(e => {  });
         }
 
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://

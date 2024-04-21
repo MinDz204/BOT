@@ -12,7 +12,7 @@ module.exports = {
   dm_permission: true,
 };
 
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const Kitsu = require('kitsu');
 const { removeVietnameseTones, ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 const client = require('../bot');
@@ -44,6 +44,6 @@ module.exports.run = async ( lang, interaction ) => {
         { name: "**⏱️ Duration:**", value: `${anime?.episodeLength ? anime.episodeLength : "??"} minutes`, inline: true },
         { name: "**🏆 Rank:**", value: `${anime?.ratingRank ? anime.ratingRank : "Unknwon"}`, inline: true },
       ])
-  return messages?.edit({ embeds: [ info ] }).catch(e => interaction?.channel?.send({ embeds: [ info ] }))
+  return messages?.edit({ content: ``, embeds: [ info ] }).catch(e => interaction?.channel?.send({ embeds: [ info ] }))
 }
 

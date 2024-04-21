@@ -62,7 +62,7 @@ module.exports = async (client, interaction) => {
             new ActionRowBuilder().addComponents(
               new TextInputBuilder()
                 .setCustomId('number')
-                .setLabel(`Track Number`)
+                .setLabel(`Track Number ex: 1,3,4...`)
                 .setPlaceholder(`${lang?.Deltrack}`)
                 .setStyle(TextInputStyle.Short)
                 .setRequired(true)

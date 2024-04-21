@@ -3,7 +3,7 @@ const db = require("./../../mongoDB");
 const { zistart } = require("./../ziplayer/ziStartTrack");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL, timeToSeconds } = require("../Zibot/ZiFunc");
-const { lyricFind } = require("../ziplayer/Zilyric");
+const { SEEKfunc } = require("../ziplayer/ZiSeek");
 
 //test func
 var hextest = /^#[0-9A-F]{6}$/i;
@@ -32,33 +32,35 @@ module.exports = async (client, interaction) => {
         if (tragetTime >= musicLength) return interaction.reply({ content: `❌ | Target time exceeds music duration. (\`${timestamp.total.label}\`)`});
         const success = queue.node.seek(tragetTime * 1000);
         if (success){
-          await interaction?.message.edit(await lyricFind(queue?.currentTrack, interaction?.user, lang, queue)).catch(e => { });
+          await interaction?.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue)).catch(e => { });
           return interaction.deleteReply().catch(e => { });
         }else{
           return interaction.reply({ content: `❌ | Something went wrong.`});
         }
       }
       break;
-      case "ZiModalVol": {
-        await interaction.deferReply({ ephemeral: true }).catch(e => { });
-        const queue = useQueue(interaction?.guildId);
-        const vol = interaction.fields.getTextInputValue("resu");
-        if (!isNumber(vol)) return interaction.editReply({ content: `${lang?.volumeErr}`, ephemeral: true }).catch(e => { });
-        queue.node.setVolume(Math.abs(vol))
-        await db.ZiUser.updateOne({ userID: interaction.user.id }, {
-          $set: {
-            vol: Math.abs(vol),
-          }
-        }, { upsert: true })
-        interaction.deleteReply().catch(e => { });
-        return queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
-      }
       case "DelTrackmodal": {
-        const num = interaction.fields.getTextInputValue("number");
-        if (!isNumber(num)) return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
+        const input = interaction.fields.getTextInputValue("number");
         const queue = useQueue(interaction?.guildId);
-        queue.removeTrack(Math.abs(num) - 1)
-        return require("./../ziplayer/Ziqueue")(interaction, queue, lang, true);
+        
+        // Sử dụng biểu thức chính quy để tách các chỉ số bài hát
+        const trackIndices = input.split(/[\s,;]+/); // phân cách bằng khoảng trắng, dấu phẩy, hoặc dấu chấm phẩy
+        const invalidInput = trackIndices.some(index => !isNumber(index));
+        
+        if (invalidInput) {
+            return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
+        }
+        
+        // Chuyển đổi các giá trị thành số và loại bỏ các bài hát trong hàng chờ
+        const validIndices = trackIndices
+            .map(index => Math.abs(Number(index)) - 1)
+            .filter(index => index >= 0);
+        
+        validIndices
+            .sort((a, b) => b - a) // xóa từ cuối về đầu để tránh lỗi khi xóa liên tiếp
+            .forEach(index => queue.removeTrack(index));
+        
+        return require("./../ziplayer/Ziqueue")(interaction, queue, lang, true);        
       }
       case "editProfilemodal": {
         let hexcolo = interaction.fields.getTextInputValue("Probcolor");
@@ -101,12 +103,7 @@ module.exports = async (client, interaction) => {
         console.log(interaction.customId)
     }
 //EQ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
-    if (interaction?.customId.includes("ZiModalEQ")){
-      const queue = useQueue(interaction?.guildId);
-      const Gain = interaction.fields.getTextInputValue("Gain");
-      return require("./../ziplayer/ZiEQ")(interaction, lang, queue, Gain)
-    } 
-   
+
   } catch (e) {
     console.log(e)
   }
