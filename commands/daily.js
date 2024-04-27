@@ -52,7 +52,7 @@ module.exports = {
     try {
       await messages.edit({ content: ` `, embeds: [embed] });
     } catch (e) {
-      await interaction?.channel?.send({ content: ` `, embeds: [embed] });
+      await interaction?.user?.send({ content: ` `, embeds: [embed] });
     }
   },
 };

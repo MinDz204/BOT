@@ -33,6 +33,7 @@ module.exports = {
         requestby: interaction.user,
         embedCOLOR: userddd?.color || client.color,
         Zimess: queues?.metadata ? queues?.metadata?.Zimess : messages,
+        ZsyncedLyrics: { messages: null , Status: queues?.metadata?.ZsyncedLyrics?.Status || false },
       },
       requestedBy: interaction.user,
       volume: userddd?.vol || 50,

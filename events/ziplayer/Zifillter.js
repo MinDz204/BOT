@@ -10,7 +10,7 @@ const createButton = (label, customId) => {
 
 const FillterRow = async (queue) => {
   const buttonConfigs = [
-    { label: 'Bass Boost', id: 'Ziplayerbassboost' },
+    { label: 'Silence Remove', id: 'Ziplayersilenceremove' },
     { label: 'Lofi', id: 'Ziplayerlofi' },
     { label: 'Nightcore', id: 'Ziplayernightcore' },
     { label: 'Karaoke', id: 'Ziplayerkaraoke' },

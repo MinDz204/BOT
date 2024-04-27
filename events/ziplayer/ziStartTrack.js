@@ -66,7 +66,7 @@ const queuE = createButton({
   emoji: !ziQueue ? `<:queue:1150639849901133894>` : null,
   disabled: queue.isEmpty(),
 });
-const lyrics = createButton({ emoji: '<:lyric:1150770291941851187>', customId: 'ZiplayerLyrics', disabled: true });
+const lyrics = createButton({ emoji: '<:lyric:1150770291941851187>', customId: 'ZiplayerLyrics'});
 const AutoPlay = createButton({ label: 'Auto', customId: 'ZiplayerAutoPlay' });
 const Fillter = createButton({ label: 'Fx', customId: 'ZiplayerFillter' });
 const ZSearch = createButton({ emoji: '<:search:1150766173332443189>', customId: 'ZiplayerSeach' });
@@ -81,10 +81,10 @@ return { row, row2, row3 };
 }
 const RelatedTracks = async (queue) => {
   const track = queue?.currentTrack || queue?.history.previousTrack;
-  const tracks = (await track.extractor?.getRelatedTracks(track, queue?.history ))?.tracks || (await queue?.player.extractors.run(async (ext) => {
+  const tracks = (await track?.extractor?.getRelatedTracks(track, queue?.history ))?.tracks || (await queue?.player?.extractors.run(async (ext) => {
     const res = await ext.getRelatedTracks(track, queue.history);
-    if (!res.tracks.length) return false;
-    return res.tracks;
+    if (!res?.tracks.length) return false;
+    return res?.tracks;
   }))?.result || [];
   return tracks;
 }

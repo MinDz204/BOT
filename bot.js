@@ -41,19 +41,11 @@ client.InviteBot = config.InviteBot;
 //-------------------------------------------------------------//
 module.exports = client;
 //-------------------------------------------------------------//
-
-//-------------------------------------------------------------//
 //        discord player          //
 //-------------------------------------------------------------//
 if(config.messCreate.PlayMusic){
   const player = new Player(client, {
     SkipFFmpeg: false
-    // useLegacyFFmpeg: false,
-    // ytdlOptions: {
-    //   filter: "audioonly",
-    //   opusEncoded: true,
-    //   quality: 'highestaudio',
-    // }
   });
   player.setMaxListeners(200);
   player.extractors.loadDefault()

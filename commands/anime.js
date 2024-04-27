@@ -44,6 +44,6 @@ module.exports.run = async ( lang, interaction ) => {
         { name: "**⏱️ Duration:**", value: `${anime?.episodeLength ? anime.episodeLength : "??"} minutes`, inline: true },
         { name: "**🏆 Rank:**", value: `${anime?.ratingRank ? anime.ratingRank : "Unknwon"}`, inline: true },
       ])
-  return messages?.edit({ content: ``, embeds: [ info ] }).catch(e => interaction?.channel?.send({ embeds: [ info ] }))
+  return messages?.edit({ content: ``, embeds: [ info ] }).catch(e => interaction?.user?.send({ embeds: [ info ] }))
 }
 

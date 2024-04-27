@@ -87,8 +87,9 @@ if(!config.messCreate.PlayMusic) return;
       }
       case "ZiplayerLyrics": {
         if( !queue ) return;
-        return;
+        return require("./../../commands/lyrics").run( lang, interaction );
       }
+      break;
       case "Ziplayerf5":
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
@@ -125,7 +126,7 @@ if(!config.messCreate.PlayMusic) return;
         await queue?.filters?.ffmpeg?.setFilters(false);
         await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
         return interaction?.message?.delete().catch(e => { })
-      case "Ziplayerbassboost":
+      case "Ziplayersilenceremove":
       case "Ziplayerlofi":
       case "Ziplayernightcore":
       case "Ziplayerkaraoke":
@@ -200,6 +201,7 @@ if(!config.messCreate.PlayMusic) return;
           const success = queue.node.seek(targetTime * 1000);
           if (success) {
             try {
+              collector.stop(); // stop collector explicitly
               await interaction.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue));
             } catch (e) {
               sendTemporaryReply(interaction, '❌ | Something went wrong.');

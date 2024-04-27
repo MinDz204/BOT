@@ -28,6 +28,7 @@ module.exports = async (interaction, nameS) => {
             requestby: interaction?.user ||interaction?.author,
             embedCOLOR: userddd?.color || client.color,
             Zimess: queue?.metadata? queue?.metadata?.Zimess : message,
+            ZsyncedLyrics: { messages: null , Status: queue?.metadata?.ZsyncedLyrics?.Status || false },
           },
           requestedBy: interaction?.user || interaction?.author,
           selfDeaf: false,
@@ -60,5 +61,5 @@ module.exports = async (interaction, nameS) => {
     requestedBy: interaction?.user || interaction?.author,
   });
  let embed = await tracsrowslecs(res, lang, nameS, interaction);
-  return message?.edit( embed ).catch( async e => interaction?.channel?.send( embed ))
+  return message?.edit( embed ).catch(  e => interaction?.user?.send( e?.message ))
 }

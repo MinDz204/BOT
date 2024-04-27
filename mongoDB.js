@@ -51,6 +51,16 @@ const voiceManager = Schema({
   textChannel: String,
   voiceChannel: String,
 })
+const useLyrics = Schema({
+  guildID: String,
+  channelID: String,
+  userID: String,
+  messageID: String,
+  liveLyricsID: String,
+  status: Boolean,
+  ms1:Number,
+  ms2:Number,
+})
 //-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
@@ -59,4 +69,5 @@ module.exports = {
   Ziguild: model("Ziguild", Ziguild),
   voiceManager: model("voiceManager", voiceManager),
   ZiUserLock: model("ZiUserLock", ZiUserLock),
+  useLyrics: model("useLyrics", useLyrics),
 }

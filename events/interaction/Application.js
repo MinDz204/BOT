@@ -4,7 +4,7 @@ const { rank } = require("./../Zibot/ZilvlSys");
 const config = require("../../config");
 module.exports = { name: "Application" }
 module.exports = async (client, interaction) => {
-  if (interaction.user.bot) return;
+try {  if (interaction.user.bot) return;
   fs.readdir("./commands", (err, files) => {
     if (err) throw err;
     files.forEach(async (f) => {
@@ -75,6 +75,10 @@ module.exports = async (client, interaction) => {
         }
       }
     });
-  });
+  }); 
+}catch (e) {
+  interaction.user.send({ content: `ERROR\n\n\`\`\`${e.message}\`\`\`` }).catch(e => { })
+    console.log(e)
+  }
   
 }

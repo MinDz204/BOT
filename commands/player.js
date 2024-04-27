@@ -7,13 +7,13 @@ async function Ziset(queue, lang, messages) {
   try{
   return messages.edit(await zistart(queue, lang)).then(async Message => {
     const [getMetadata, setMetadata] = useMetadata(queue?.guild.id);
-    const { channel, requestby, embedCOLOR } = getMetadata();
-    setMetadata({ channel, requestby, embedCOLOR, Zimess: Message })
+    const { channel, requestby, embedCOLOR, ZsyncedLyrics } = getMetadata();
+    setMetadata({ channel, requestby, embedCOLOR, ZsyncedLyrics, Zimess: Message })
   })}catch(e){
-    return interaction?.channel?.send(await zistart(queue, lang)).then(async Message => {
+    return messages?.channel?.send(await zistart(queue, lang)).then(async Message => {
       const [getMetadata, setMetadata] = useMetadata(queue?.guild.id);
-      const { channel, requestby, embedCOLOR } = getMetadata();
-      setMetadata({ channel, requestby, embedCOLOR, Zimess: Message })
+      const { channel, requestby, embedCOLOR, ZsyncedLyrics } = getMetadata();
+      setMetadata({ channel, requestby, embedCOLOR, ZsyncedLyrics, Zimess: Message })
     }).catch(e => { })
   }
 }

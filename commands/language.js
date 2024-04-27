@@ -55,7 +55,7 @@ module.exports = {
       }, 10000);
     })
     .catch(async () => {
-      await interaction?.channel?.send({ embeds: [embed] })
+      await interaction?.user?.send({ embeds: [embed] })
         .then(async Message => {
           setTimeout(function () {
             Message?.edit({ components: [] }).catch(console.error);

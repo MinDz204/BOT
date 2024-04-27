@@ -24,6 +24,24 @@ module.exports = async (client, interaction) => {
         } catch (e) {
           return interaction.respond().catch(e => { })
         }
+      case "lyrics":
+        try {
+          const player = useMainPlayer();// main player
+          const nameS = interaction.options.getString("name", true)
+          const results = await player.search(nameS, {
+            fallbackSearchEngine: QueryType.YOUTUBE
+          });
+          return interaction.respond(
+            results.tracks
+              .slice(0, 10)
+              .map((t) => ({
+                name: Zitrim(t.title, 100),
+                value: Zitrim(t.title, 100)
+              }))
+          );
+        } catch (e) {
+          return interaction.respond().catch(e => { })
+        }
       case "anime":
         try {
           const kitsu = new Kitsu();//kitsu
@@ -39,7 +57,7 @@ module.exports = async (client, interaction) => {
         } catch (e) {
           return interaction?.respond().catch(e => {  });
         }
-
+        
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
       default: {
         console.log(interaction?.customId)

@@ -21,7 +21,7 @@ module.exports = {
     const sss = UserI.sort((a, b) => b.lvl - a.lvl)
       .sort((a, b) => b.Xp - a.Xp)
       .findIndex((user) => user.userID === userr.id);
-    let strimg = `https://cdn.discordapp.com/attachments/1064851388221358153/1149319190918991934/iu.png?ex=65fc26e8&is=65e9b1e8&hm=2941beeaef776eb14c8d0c1e41d3990adf60854da49e91958e7296a4cdd2b9f7&`
+    let strimg = `https://cdn.discordapp.com/attachments/1064851388221358153/1149319190918991934/iu.png`
     let editProf = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setLabel("edit ✎")

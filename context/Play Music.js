@@ -25,6 +25,5 @@ module.exports.run = async (lang, interaction) => {
             }, 10000)
         })
     }
-    console.log(name);
     return require("../events/ziplayer/ziSearch")(interaction, name);
 }
