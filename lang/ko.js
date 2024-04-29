@@ -44,6 +44,7 @@ const language = {
     SeverUnMute: `음악이 돌아왔습니다!`,
     Assictance: `음성 검색이 켜졌습니다...\n노래 이름을 포함하여 **Play**/**Phát bài hát**이라고 말하면 음악이 재생됩니다\n**bỏ qua bài hát**라고 말하면 건너뜁니다`,
     MENstion:`슬래시 명령어 또는 나를 언급하고 그 후에 노래 링크를 사용하여 음악을 재생할 수 있습니다...`,
+    NOPer:`이 채널에 메시지를 보낼 권한이 없는 것 같습니다... 명령을 사용하려면 MOD에게 권한을 요청하십시오...`,
   };
   module.exports = language;
   

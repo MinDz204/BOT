@@ -29,13 +29,13 @@ function removeVietnameseTones(str) {
 
 const Zitrim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 async function fetchR(interaction){
-let messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`})
-try{
-  return await interaction.fetchReply().catch(e=>{ });
-}catch(e){
-  return await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
-}
-
+  let messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, allowedMentions: { repliedUser: false } })
+  await interaction.channel?.sendTyping();
+  try{
+    return await interaction.fetchReply().catch(e=>{ });
+  }catch(e){
+    return await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
+  }
 }
 function msToTime(s) {
   let time = Math.floor(Number(Date.now() + s) / 1000)
@@ -88,10 +88,6 @@ function Zicrop(query){
     queryParts.shift();
     return queryParts.join(''); 
   } else return query
-}
-function getAvatar(user) {
-  if(!user.avatar) return `https://cdn.discordapp.com/embed/avatars/${(user.discriminator % 5)}.png`
-  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`
 }
 
 const timeToSeconds = (time) => {

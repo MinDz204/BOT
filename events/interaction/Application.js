@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { Collection } = require("discord.js");
+const { Collection, PermissionsBitField } = require("discord.js");
 const { rank } = require("./../Zibot/ZilvlSys");
 const config = require("../../config");
 module.exports = { name: "Application" }
@@ -27,7 +27,11 @@ try {  if (interaction.user.bot) return;
           //cooldows-end------------------------------------------------//
 
           if (props && props.NODMPer && !interaction?.guild) return interaction.reply({ content: `${lang?.NODMPer}`, ephemeral: true }).catch(e => { })
-          if (props && props.voiceC) {
+        if(interaction?.guild){
+          let perm = !interaction?.channel.permissionsFor(client.user).has([PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel]) || false ;
+           if (perm) return interaction.reply({ content: `${lang?.NOPer}`, ephemeral: true }).catch(e => { });
+          }
+           if (props && props.voiceC) {
             if (!interaction.member.voice.channelId) return interaction.reply({ content: `${lang?.NOvoice}`, ephemeral: true }).catch(e => { })
             const voiceCME = interaction?.guild.members.cache.get(client.user.id);
             if (voiceCME.voice.channelId && (voiceCME.voice.channelId !== interaction.member.voice.channelId))

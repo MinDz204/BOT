@@ -45,5 +45,6 @@ const language ={
     Assictance: `Đã bật tìm kiếm bài hát bằng giọng nói...\nNói **Play**/**Phát bài hát** + tên bài hát để phát nhạc\nNói **bỏ qua bài hát** để skip\nNói **volume**/**âm lượng** + âm lượng % để chỉnh âm lượng @@
     do bot hơi ngu nên hết bài hát hãy nói có gì đó có chữ **tiếp** để bot phát bài hát kế tếp hoặc ấn nút ✨ <a:dizzy:1154103980947939510>`,
     MENstion:`Bạn có thể sử dung slash command hoặc mention tui và link bài hát sau đó để phát nhạc...`,
+    NOPer: `Có vẻ như tôi thiếu quyền để nhắn tin vào kênh này... hãy liên hệ MOD cấp lại quyền cho tôi để sử dụng lệnh...`,
 }
 module.exports = language;

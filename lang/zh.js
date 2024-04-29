@@ -44,6 +44,7 @@ const language = {
     SeverUnMute: `音乐回来了！`,
     Assictance: `语音搜索歌曲已开启...\n说 **Play**/**Phát bài hát** + 歌曲名称来播放音乐\n说 **bỏ qua bài hát** 来跳过`,
     MENstion:`您可以使用斜线命令或提到我和后面的歌曲链接来播放音乐..`,
+    NOPer:`看起来我没有权限在这个频道发送消息... 请联系 MOD 授予我使用命令的权限...`,
   };
   module.exports = language;
   

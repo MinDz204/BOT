@@ -198,7 +198,7 @@ const start = async (queue, lang) => {
 
   if (queue?.currentTrack) {
     const [_embed, _button, _select] = await Promise.all([zistartEmber(queue, lang), zistartButton(queue), RelatedTracksRow(queue)])
-    return { content: ``, embeds: [_embed], components: [_select, _button.row, _button.row2, _button.row3] }
+    return { content: ``, embeds: [_embed], components: [_select, _button.row, _button.row2, _button.row3], allowedMentions: { repliedUser: false } }
   }
   const  _selecttrack = await RelatedTracksRow(queue);
   const zisearch = new ActionRowBuilder().addComponents(
@@ -214,7 +214,7 @@ const start = async (queue, lang) => {
   const revEmbed = queue?.metadata?.Zimess?.reactions?.message?.embeds || queue?.metadata?.Zimess?.embeds;
   const embess = EmbedBuilder.from(revEmbed?revEmbed[0]:null)
     .setDescription(`${lang?.queueEMty}`)
-  return { content: ``, embeds: [embess], components: [_selecttrack, zisearch] }
+  return { content: ``, embeds: [embess], components: [_selecttrack, zisearch], allowedMentions: { repliedUser: false } }
 }
 
 module.exports = {
