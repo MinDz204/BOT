@@ -14,6 +14,9 @@ module.exports = async (client) => {
       new ContextMenuCommandBuilder()
         .setName("Play Music")
         .setType(ApplicationCommandType.Message),
+      new ContextMenuCommandBuilder()
+        .setName("Translate")
+        .setType(ApplicationCommandType.Message),
     ];
 
     const allCommands = [...contextMenuCommands, ...(await client.commands)];

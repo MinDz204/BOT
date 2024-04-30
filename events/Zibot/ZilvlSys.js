@@ -1,30 +1,41 @@
 const db = require("./../../mongoDB");
-const rank = async ({ user, lvlAdd }) => {
-  let Userrrr = await db.ZiUser.findOne({ userID: user?.id });
-  let lang = require(`./../../lang/${Userrrr?.lang || "vi"}.js`);
-  let xp = Userrrr?.Xp || 0;
-  let xpALL = xp + (lvlAdd || 1);
-  let lvll = Userrrr?.lvl || 0;
-  let coin = Userrrr?.coin || 0;
-  lang.cooldowns = Userrrr?.cooldowns;
-  lang.COLOR = Userrrr?.color;
-  if (xpALL > (lvll * 50)) {
-    await db.ZiUser.updateOne({ userID: user?.id }, {
-      $set: {
-        lvl: lvll + 1,
-        coin: coin + lvll * 100,  //lvl2 => 2*100
-        Xp: xpALL - (lvll * 50 + 1),
-      }
-    }, { upsert: true })
+
+const rank = async ({ user, lvlAdd = 1 }) => {
+  const userID = user?.id;
+  if (!userID) throw new Error("Invalid user ID");
+
+  const userDoc = await db.ZiUser.findOne({ userID }, "userID lang Xp lvl coin cooldowns color");
+  if (!userDoc) throw new Error("User not found");
+
+  const xp = userDoc.Xp || 0;
+  const lvl = userDoc.lvl || 0;
+  const coin = userDoc.coin || 0;
+
+  const xpALL = xp + lvlAdd;
+  const nextLvlThreshold = lvl * 50;
+  
+  const langFilePath = `./../../lang/${userDoc.lang || "vi"}.js`;
+  const lang = require(langFilePath);
+
+  lang.cooldowns = userDoc.cooldowns;
+  lang.COLOR = userDoc.color;
+
+  const updateData = {
+    userN: user?.tag,
+    cooldowns: Date.now(),
+  };
+
+  if (xpALL > nextLvlThreshold) {
+    updateData.lvl = lvl + 1;
+    updateData.coin = coin + (lvl * 100);
+    updateData.Xp = xpALL - nextLvlThreshold - 1;
   } else {
-    await db.ZiUser.updateOne({ userID: user?.id }, {
-      $set: {
-        Xp: xpALL,
-        userN: user?.tag,
-        cooldowns: Date.now(),
-      }
-    }, { upsert: true })
+    updateData.Xp = xpALL;
   }
-  return lang
-}
-module.exports = { rank }
+
+  await db.ZiUser.updateOne({ userID }, { $set: updateData }, { upsert: true });
+
+  return lang;
+};
+
+module.exports = { rank };

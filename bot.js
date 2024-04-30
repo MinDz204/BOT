@@ -34,7 +34,7 @@ const client = new Client({
 });
 if(config.messCreate.PlayMusic && config.messCreate.ASSis){
   const { addSpeechEvent } = require("discord-speech-recognition");
-  addSpeechEvent(client, { lang: "vi" });
+  addSpeechEvent(client, { ignoreBots: true });
 }
 client.color = config.color;
 client.InviteBot = config.InviteBot;

@@ -65,21 +65,15 @@ module.exports = async (client, interaction) => {
       case "editProfilemodal": {
         let hexcolo = interaction.fields.getTextInputValue("Probcolor");
         let imga = interaction.fields.getTextInputValue("Probimage");
-        let okii = 0;
-        if (!!hexcolo && !!hextest.test(hexcolo)) {
-          okii += 1;
-          await db.ZiUser.updateOne({ userID: interaction.user.id }, {
-            $set: { color: hexcolo }
-          }, { upsert: true });
-        }
-        if (!!imga && !!validURL(imga)) {
-          okii += 2;
-          await db.ZiUser.updateOne({ userID: interaction.user.id }, {
-            $set: { image: imga }
-          }, { upsert: true });
-        }
-        let desp = okii == 0 ? `${lang?.profileErr}` : okii == 1 ? `${lang?.profilecol}` : okii == 2 ? `${lang?.profilepic}` : `${lang?.profilesuss}`
-        return interaction.reply({ content: `${desp}`, ephemeral: true }).catch(e => { });
+        let imgs = !!imga && !!validURL(imga) ? imga : "";
+        let hexxs = !!hexcolo && !!hextest.test(hexcolo) ? hexcolo : "";
+        await db.ZiUser.updateOne({ userID: interaction.user.id }, {
+          $set: { 
+            color: hexxs,
+            image: imgs 
+          }
+        }, { upsert: true });
+        return interaction.reply({ content: `${lang?.profilesuss}`, ephemeral: true }).catch(e => { });
       }
       case"ZiVCMODALrename":{
         interaction.member.voice.channel.edit({

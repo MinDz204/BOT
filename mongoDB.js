@@ -40,11 +40,12 @@ const Zibot = Schema({
   gif: String,
 })
 //-------------------------------------------//
-const Ziguild = Schema({
+const ZiguildPlay = Schema({
   GuildID: String,
-  channelID: String,
-  content: String,
-  img: String,
+  MessengerID: String,
+  Game: String,
+  data: Array,
+  indes: Number,
 })
 const voiceManager = Schema({
   userID: String,
@@ -66,7 +67,7 @@ module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
   Zibot: model("Zibot", Zibot),
-  Ziguild: model("Ziguild", Ziguild),
+  ZiguildPlay: model("ZiguildPlay", ZiguildPlay),
   voiceManager: model("voiceManager", voiceManager),
   ZiUserLock: model("ZiUserLock", ZiUserLock),
   useLyrics: model("useLyrics", useLyrics),

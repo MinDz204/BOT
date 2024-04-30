@@ -1,88 +1,109 @@
-const fs = require("fs");
-const { Collection, PermissionsBitField } = require("discord.js");
+const fs = require("fs/promises");
+const { PermissionsBitField } = require("discord.js");
 const { rank } = require("./../Zibot/ZilvlSys");
 const config = require("../../config");
-module.exports = { name: "Application" }
-module.exports = async (client, interaction) => {
-try {  if (interaction.user.bot) return;
-  fs.readdir("./commands", (err, files) => {
-    if (err) throw err;
-    files.forEach(async (f) => {
-      let props = require(`../../commands/${f}`);
-      if (interaction.commandName.toLowerCase() === props.name.toLowerCase()) {
-        if (!config.Discommands.includes(interaction?.commandName))
-        try {
-          //rank sys------------------------------------------------//
-          let lang = await rank({ user: interaction?.user });
-          //rank-end------------------------------------------------//
-          //cooldows-------------------------------------------------//
-          const defaultCooldownDuration = 3;
-          const cooldownAmount = (props.cooldown ?? defaultCooldownDuration) * 1000;
-          const expirationTime = lang?.cooldowns + cooldownAmount;
 
-          if (Date.now() < expirationTime) {
-            const expiredTimestamp = Math.round(expirationTime / 1000);
-            return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, interaction.commandName)}`, ephemeral: true });
-          }
-          //cooldows-end------------------------------------------------//
+// Load command and context files once
+let commandFiles;
+let contextFiles;
 
-          if (props && props.NODMPer && !interaction?.guild) return interaction.reply({ content: `${lang?.NODMPer}`, ephemeral: true }).catch(e => { })
-        if(interaction?.guild){
-          let perm = !interaction?.channel.permissionsFor(client.user).has([PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel]) || false ;
-           if (perm) return interaction.reply({ content: `${lang?.NOPer}`, ephemeral: true }).catch(e => { });
-          }
-           if (props && props.voiceC) {
-            if (!interaction.member.voice.channelId) return interaction.reply({ content: `${lang?.NOvoice}`, ephemeral: true }).catch(e => { })
-            const voiceCME = interaction?.guild.members.cache.get(client.user.id);
-            if (voiceCME.voice.channelId && (voiceCME.voice.channelId !== interaction.member.voice.channelId))
-              return interaction.reply({ content: `${lang?.NOvoiceChannel}`, ephemeral: true }).catch(e => { })
-          };
-          return props.run(lang, interaction);
-        } catch (e) {
-          return interaction.reply({ content: `ERROR\n\n\`\`\`${e.message}\`\`\``, ephemeral: true }).catch(e => { })
-        }
-      }
-    });
-  });
-  //context
-  fs.readdir("./context", (err, files) => {
-    if (err) throw err;
-    files.forEach(async (f) => {
-      let props = require(`../../context/${f}`);
-      if (interaction.commandName.toLowerCase() === props.name.toLowerCase()) {
-        if (!config.DisContext.includes(interaction?.commandName))
-        try {
-          //rank sys------------------------------------------------//
-          let lang = await rank({ user: interaction?.user });
-          //rank-end------------------------------------------------//
-          //cooldows-------------------------------------------------//
-          const defaultCooldownDuration = 3;
-          const cooldownAmount = (props.cooldown ?? defaultCooldownDuration) * 1000;
-          const expirationTime = lang?.cooldowns + cooldownAmount;
-
-          if (Date.now() < expirationTime) {
-            const expiredTimestamp = Math.round(expirationTime / 1000);
-            return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, interaction.commandName)}`, ephemeral: true });
-          }
-          //cooldows-end------------------------------------------------//
-
-          if (props && props.NODMPer && !interaction?.guild) return interaction.reply({ content: `${lang?.NODMPer}`, ephemeral: true }).catch(e => { })
-          if (props && props.voiceC) {
-            if (!interaction.member.voice.channelId) return interaction.reply({ content: `${lang?.NOvoice}`, ephemeral: true }).catch(e => { })
-            const voiceCME = interaction?.guild.members.cache.get(client.user.id);
-            if (voiceCME.voice.channelId && (voiceCME.voice.channelId !== interaction.member.voice.channelId))
-              return interaction.reply({ content: `${lang?.NOvoiceChannel}`, ephemeral: true }).catch(e => { })
-          };
-          return props.run(lang, interaction);
-        } catch (e) {
-          return interaction.reply({ content: `ERROR\n\n\`\`\`${e.message}\`\`\``, ephemeral: true }).catch(e => { })
-        }
-      }
-    });
-  }); 
-}catch (e) {
-  interaction.user.send({ content: `ERROR\n\n\`\`\`${e.message}\`\`\`` }).catch(e => { })
-    console.log(e)
+(async function initialize() {
+  try {
+    commandFiles = await fs.readdir("./commands");
+    contextFiles = await fs.readdir("./context");
+  } catch (error) {
+    console.error("Error loading command/context files:", error);
   }
-  
+})();
+
+module.exports = async (client, interaction) => {
+  if (interaction.user.bot || !commandFiles || !contextFiles) return;
+
+  try {
+    switch (interaction.commandType) {
+      case 1:
+        return await processFiles(client, interaction, commandFiles, "./../../commands", config.Discommands);
+
+      case 3:
+        return await processFiles(client, interaction, contextFiles, "./../../context", config.DisContext);
+
+      default:
+        return;
+    }
+  } catch (error) {
+    console.error("Error handling interaction:", error);
+    await sendErrorToUser(interaction, error);
+  }
+};
+
+async function processFiles(client, interaction, files, dir, disallowList) {
+  const commandName = interaction.commandName.toLowerCase();
+
+  for (const file of files) {
+    const props = require(`${dir}/${file}`);
+
+    if (commandName !== props.name.toLowerCase() || disallowList.includes(interaction.commandName)) {
+      continue;
+    }
+
+    const lang = await rank({ user: interaction.user });
+    if (!lang) {
+      return await sendErrorToUser(interaction, new Error("Unable to retrieve user language."));
+    }
+
+    const now = Date.now();
+
+    // Check cooldowns
+    const cooldownAmount = (props.cooldown ?? 3) * 1000;
+    if (lang.cooldowns && now < lang.cooldowns + cooldownAmount) {
+      const expiredTimestamp = Math.round((lang.cooldowns + cooldownAmount) / 1000);
+      return interaction.reply({
+        content: lang.cooldownsMESS
+          .replace("{expiredTimestamp}", expiredTimestamp)
+          .replace("{interaction.commandName}", interaction.commandName),
+        ephemeral: true,
+      });
+    }
+
+    // Permission checks
+    if (props.NODMPer && !interaction.guild) {
+      return interaction.reply({ content: lang.NODMPer, ephemeral: true });
+    }
+
+    if (interaction.guild) {
+      const hasPermission = interaction.channel.permissionsFor(client.user).has([
+        PermissionsBitField.Flags.SendMessages,
+        PermissionsBitField.Flags.ViewChannel,
+      ]);
+
+      if (!hasPermission) {
+        return interaction.reply({ content: lang.NOPer, ephemeral: true });
+      }
+    }
+
+    // Voice channel checks
+    if (props.voiceC && !interaction.member.voice.channelId) {
+      return interaction.reply({ content: lang.NOvoice, ephemeral: true });
+    }
+
+    const clientVoiceChannel = interaction?.guild?.members?.cache.get(client.user.id)?.voice?.channelId;
+    if (props.voiceC && clientVoiceChannel && clientVoiceChannel !== interaction.member?.voice.channelId) {
+      return interaction.reply({ content: lang.NOvoiceChannel, ephemeral: true });
+    }
+
+    try {
+      return await props.run(lang, interaction);
+    } catch (commandError) {
+      console.error("Error processing command:", commandError);
+      return await sendErrorToUser(interaction, commandError);
+    }
+  }
+}
+
+async function sendErrorToUser(interaction, error) {
+  try {
+    await interaction.user.send({ content: `ERROR\n\n\`\`\`${error.message}\`\`\`` });
+  } catch (sendError) {
+    console.error("Error sending error message to user:", sendError);
+  }
 }

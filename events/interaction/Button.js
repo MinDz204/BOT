@@ -36,6 +36,16 @@ module.exports = async (client, interaction) => {
       lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zivc")(interaction, lang)
     } 
+    //Zttt--------------------------------------------------------------//
+    if (interaction?.customId.includes("Zttt")){
+      lang = await rank({ user: interaction?.user });
+      return require("./../Zibot/Zittt")(interaction, lang)
+    } 
+    //Zrps--------------------------------------------------------------//
+    if (interaction?.customId.includes("Zrps")){
+      lang = await rank({ user: interaction?.user });
+      return require("./../Zibot/Zrps")(interaction, lang)
+    }
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys------------------------------------------------//
     lang = await rank({ user: interaction?.user });
@@ -69,6 +79,9 @@ module.exports = async (client, interaction) => {
             )
           )
         return interaction?.showModal(modal);
+      }
+      case "TicTacToeReroll":{
+        return require("./../../commands/game").run(lang ,interaction,"ZTTT");
       }
       case "Guills": {
         const rowC = new ActionRowBuilder().addComponents(
@@ -169,6 +182,7 @@ module.exports = async (client, interaction) => {
               new TextInputBuilder()
                 .setCustomId('Probimage')
                 .setLabel(`Image`)
+                .setValue(`${rankkk?.image}`)
                 .setPlaceholder(`${lang?.langIMG}`)
                 .setStyle(TextInputStyle.Short)
                 .setRequired(false)

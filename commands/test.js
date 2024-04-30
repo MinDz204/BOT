@@ -1,48 +1,52 @@
-module.exports = {
-    name: "test",
-    description: "test command.",
-    options: [ ],
-    cooldown: 3,
-    dm_permission: true,
-  };
-const { Font } = require("canvacord");
 const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
-const { MusicCard } = require("./../events/Zibot/musicCard");
-const { WelcomeCard } = require("./../events/Zibot/WelcomeCard");
-const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
-const client = require("../bot");
+const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 
-  
-  module.exports.run = async ( lang, interaction ) => {
-    // const card = new MusicCard()
-    // .setAuthor(`${interaction?.guild?.name}`)
-    // .setTitle(`${interaction.user.tag}`)
-    // .setImage(
-    //   interaction.user.displayAvatarURL({ dynamic: false, format: 'png' })
-    // )
-    // .setProgress(80)
-    // .setCurrentTime("02:32")
-    // .setTotalTime("02:59");
-  
- 
-    let messages = await ZifetchInteraction(interaction);   
-    Font.loadDefault();
-    const card = new WelcomeCard()
-        .setAvatar(interaction.user.displayAvatarURL({ dynamic: false, format: 'png' }))
-        .setDisplayName(interaction.user.tag)
-        .setType("welcome")
-        .setMessage("to Ziji server!");
+const symbols = { 0: "⬜", 1: "❌", 2: "⭕" };
 
-        const image = await card.build({ format: "png" });
-        const attachment = new AttachmentBuilder(image, { name: "WelcomeCard.png" });
-        
-        const embedsss = new EmbedBuilder()
-            .setDescription(
-            `Chào mừng ${interaction?.user}, nhớ ghé qua <id:customize> để lấy role nha~`
-            )
-            .setColor(client?.color)
-            .setImage(`attachment://WelcomeCard.png`)
-    return messages?.edit({ embeds:[embedsss], files: [attachment] }).catch(e => interaction?.channel?.send({ files: [attachment] }));
-
-
+function createBoard() {
+  return Array(3).fill(null).map(() => Array(3).fill(0));
 }
+
+function createActionRow(row, board) {
+  const actionRow = new ActionRowBuilder();
+  for (let col = 0; col < 3; col++) {
+    actionRow.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`Zttt${row},${col}`)
+        .setLabel(symbols[board[row][col]])
+        .setStyle(ButtonStyle.Secondary)
+    );
+  }
+  return actionRow;
+}
+
+module.exports = {
+  name: "test",
+  description: "test command.",
+  options: [],
+  cooldown: 3,
+  dm_permission: true,
+
+  run: async (lang, interaction) => {
+    const messages = await ZifetchInteraction(interaction);
+    const board = createBoard();
+
+    const actionRows = [];
+    for (let row = 0; row < 3; row++) {
+      actionRows.push(createActionRow(row, board));
+    }
+
+    const embed = {
+      title: "Tic Tac Toe",
+      description: JSON.stringify(board),
+    };
+
+    try {
+      await messages.edit({ embeds: [embed], components: actionRows });
+    } catch (e) {
+      if (interaction?.channel) {
+        await interaction.channel.send({ embeds: [embed], components: actionRows });
+      }
+    }
+  },
+};
