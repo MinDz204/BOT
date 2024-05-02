@@ -37,6 +37,10 @@ module.exports = async (client, interaction) => {
       return require("./../Zibot/Zivc")(interaction, lang)
     } 
     //Zttt--------------------------------------------------------------//
+    if (interaction?.customId.includes("ZtttR")){
+      lang = await rank({ user: interaction?.user });
+      return require("./../Zibot/ZitttR")(interaction, lang)
+    } 
     if (interaction?.customId.includes("Zttt")){
       lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zittt")(interaction, lang)
@@ -80,8 +84,14 @@ module.exports = async (client, interaction) => {
           )
         return interaction?.showModal(modal);
       }
+      case "TicTacToeRReroll":{
+        return require("./../../commands/game").run(lang ,interaction,"ZtttR");
+      }
       case "TicTacToeReroll":{
-        return require("./../../commands/game").run(lang ,interaction,"ZTTT");
+        return require("./../../commands/game").run(lang ,interaction,"Zttt");
+      }
+      case "ZcoinflipReroll":{
+        return require("./../../commands/game").run(lang ,interaction,"Zcoinflip");
       }
       case "Guills": {
         const rowC = new ActionRowBuilder().addComponents(

@@ -142,17 +142,10 @@ module.exports = async (interaction, lang) => {
     const position = interaction?.customId.replace(`Zttt`,"")
     const [x, y] = position.split(',').map(Number);
     const board = JSON.parse(interaction.message.embeds[0].description);
-    const ZiPlay = await db?.ZiguildPlay.findOne({ GuildID: interaction.guild.id, MessengerID: interaction.message.id, Game: "ZTTT" });
 
     if (board[x][y] !== 0) {
       await interaction.reply({ content: "Cell đã được đánh dấu!", ephemeral: true });
       return;
-    }
-    if (ZiPlay?.data && ZiPlay?.data?.length >= 3) {
-        // Xoá nước đi cũ của người chơi và máy tính dựa trên chỉ số
-        const LastMove = ZiPlay.data[0];
-        board[LastMove.userMove.x][LastMove.userMove.y] = 0; // Nước đi của người chơi
-        board[LastMove.botMove.x][LastMove.botMove.y] = 0; // Nước đi của máy tính
     }
 
     const actionRowreroll = new ActionRowBuilder().addComponents(
@@ -174,15 +167,6 @@ module.exports = async (interaction, lang) => {
         embeds: [],
         components: actionRows,
       });
-      await db?.ZiguildPlay.updateOne(
-        { GuildID: interaction.guild.id, MessengerID: interaction.message.id, Game: "ZTTT" },
-        {
-            $set: {
-                data: [ ]
-            }
-        },
-        { upsert: true }
-    );
       return;
     }
   
@@ -212,44 +196,9 @@ module.exports = async (interaction, lang) => {
         embeds: [],
         components: actionRows,
       });
-      await db?.ZiguildPlay.updateOne(
-        { GuildID: interaction.guild.id, MessengerID: interaction.message.id, Game: "ZTTT" },
-        {
-            $set: {
-                data: [ ]
-            }
-        },
-        { upsert: true }
-    );
-  
+    
       return;
     }
-
-    let check = [{
-      userMove:{
-        x: x,
-        y: y,
-      },
-      botMove:{
-        x: mx,
-        y: my,
-      }
-    }]
-    let dataindex = [...(ZiPlay?.data || []), ...check];
-    console.log(  dataindex )
-    if (dataindex.length > 4) {
-      dataindex = dataindex.slice(-4); // Lấy 4 phần tử cuối cùng
-    }
-
-    await db?.ZiguildPlay.updateOne(
-      { GuildID: interaction.guild.id, MessengerID: interaction.message.id, Game: "ZTTT" },
-      {
-          $set: {
-              data: dataindex
-          }
-      },
-      { upsert: true }
-  );
 
     for (let row = 0; row < 3; row++) {
       actionRows.push(createActionRow(row, board));
