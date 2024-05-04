@@ -50,6 +50,10 @@ module.exports = async (client, interaction) => {
       lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zrps")(interaction, lang)
     }
+    if (interaction?.customId.includes("Z8ball")){
+      lang = await rank({ user: interaction?.user });
+      return require("./../Zibot/Z8Ball")(interaction, lang)
+    }
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys------------------------------------------------//
     lang = await rank({ user: interaction?.user });
@@ -92,6 +96,9 @@ module.exports = async (client, interaction) => {
       }
       case "ZcoinflipReroll":{
         return require("./../../commands/game").run(lang ,interaction,"Zcoinflip");
+      }
+      case "8ballReroll": {
+        return require("./../../commands/game").run(lang ,interaction,"Z8ball");
       }
       case "Guills": {
         const rowC = new ActionRowBuilder().addComponents(
