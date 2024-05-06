@@ -10,65 +10,10 @@ const playmusic = async(lang, message, client, content) => {
 }
 module.exports = async (client, message) => {
     if ( message.author.bot ) return;
-    let content = message?.content?.toLowerCase()
-    if (content.includes("@here") || content.includes("@everyone")) return;
+    if (message?.content.includes("@here") || message?.content.includes("@everyone")) return;
+    if (!message?.content.includes(`<@${client.user.id}>`)) return;
+    let content = message?.content?.toLowerCase();
     let lang = await rank({ user: message?.author });
-    /////////// gi ??????????????????????????//////////////////////////
-    if(message?.channel?.id == "1182675589539307520"){
-        try{
-        let Gichannel =  client.channels.cache.get("1007723706379935747");
-        let Gichannel2 =  client.channels.cache.get("946303749448663040");
-        ////////////////////////////////////////////////////////////////////
-        const expirationPattern = /(\d+)h/;
-        const CODEregex = /\(([^)]+)\)/g;
-        const messageContent = message?.content || '';
-        
-        // Extract expiration hours from the input or default to 12 hours
-        const expirationMatch = messageContent.match(expirationPattern);
-        const expirationHours = expirationMatch ? parseInt(expirationMatch[1], 10) : 12;
-        
-        // Calculate expiration time in seconds
-        const expirationTime = Math.floor((Date.now() + expirationHours * 60 * 60 * 1000) / 1000);
-        
-        // Replace substrings and add expiration time
-        const modifiedMessage = messageContent.replace(
-          /(:Primogem:|:Heros_Wit:|:Mora:|:Mystic_Enhancement_Ore:)/g,
-          (match, primogem, herosWit, mora, mysticEnhancementOre) => {
-            const replacements = {
-              ':Primogem:': '<:Primogem:1182685530245312583>',
-              ':Heros_Wit:': '<:Heros_Wit:1182685523840618517>',
-              ':Mora:': '<:Mora:1182685520602611803>',
-              ':Mystic_Enhancement_Ore:': '<:Mystic_Enhancement_Ore:1182685526407528528>',
-            };
-        
-            return replacements[match] || match; // Return replacement or original match if not found
-          }
-        );
-        
-        const codeReplacedMessage = modifiedMessage.replace(
-          new RegExp(`${expirationHours}h`, 'g'),
-          ''
-        ).replace(
-          CODEregex,
-          (match) => `** [${match.replace(/\(|\)/g, '')}](https://genshin.hoyoverse.com/vi/gift?code=${match.replace(/\(|\)/g, '')}) **
-\`\`\`bash
-${match.replace(/\(|\)/g, '')}\`\`\``
-);        
-        ///////////
-        const info = new EmbedBuilder()
-        .setColor("Random")
-        .setTitle(`**New promote code found:**`)
-        .setURL(`https://genshin.hoyoverse.com/vi/gift`)
-        .setDescription(`${codeReplacedMessage}\nCode sẽ hết hạn sau <t:${expirationTime}:R>`)
-        .setTimestamp()
-        .setFooter({ text: `By Ziji`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-        .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1209448467077005332/image.png");
-        Gichannel?.send({ embeds: [info] });
-        Gichannel2?.send({ embeds: [info] });
-    }catch(e){
-        message.reply(`ERR: ${e}`);
-    }
-    }
 //////////////////////////////////////////////////////////////////////////////////
     if ( message?.reference && content.includes(`<@${client.user.id}>`) ){
     return message.channel?.messages.fetch({ message: message?.reference?.messageId, cache: false, force: true }).then( mess => {

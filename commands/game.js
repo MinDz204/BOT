@@ -150,8 +150,8 @@ module.exports = {
     }else if(gamename == "Zcoinflip" ){
 
       const result = Math.random() < 0.5 ? 'Heads' : 'Tails'; // 50-50 chance
-      let HeadsIMG = "https://cdn.discordapp.com/attachments/1064851388221358153/1235204111025180772/Gold_coin_icon.png?ex=663384f9&is=66323379&hm=a520ae473255a4d3bdf54ec9f9a2e03fe2e55c2b727f8d31607561bc88590565&";
-      let TailsIMG = "https://cdn.discordapp.com/attachments/1064851388221358153/1235213238006845542/Gold_coin_icon2.png?ex=66338d79&is=66323bf9&hm=17171d954d2fdf20655a23daeb20ff535b44e439017e0b249b42a2b06d28a22d&";
+      let HeadsIMG = "./events/Zibot/IMGs/GoldcoinHeads.png";
+      let TailsIMG = "./events/Zibot/IMGs/Goldcointail.png";
 
       const canvas = new ZCoinFlip(400, 200) // Create a new canvas
         .setAuthor( interaction?.user?.tag )

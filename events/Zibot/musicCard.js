@@ -1,5 +1,6 @@
-const { JSX, Builder, loadImage } = require("canvacord");
-
+/** @jsx JSX.createElement */
+/** @jsxFrag JSX.Fragment */
+const { Builder, JSX, Font, FontFactory, loadImage } = require("canvacord");
 class MusicCard extends Builder {
   constructor() {
     super(377, 523);
@@ -11,6 +12,7 @@ class MusicCard extends Builder {
       image: "",
       title: "",
     });
+    if (!FontFactory.size) Font.loadDefault();
   }
 
   setImage(image) {

@@ -1,5 +1,6 @@
-const { JSX, Builder, loadImage } = require("canvacord");
-
+/** @jsx JSX.createElement */
+/** @jsxFrag JSX.Fragment */
+const { JSX, Builder, loadImage, FontFactory, Font } = require("canvacord");
 class GreetingsCard extends Builder {
   constructor() {
     super(930, 280);
@@ -9,6 +10,7 @@ class GreetingsCard extends Builder {
       avatar: "",
       message: "",
     });
+    if (!FontFactory.size) Font.loadDefault();
   }
 
   setDisplayName(value) {
@@ -35,7 +37,7 @@ class GreetingsCard extends Builder {
     const { type, displayName, avatar, message } = this.options.getOptions();
 
     const image = await loadImage(avatar);
-    const imane = await loadImage("./events/Zibot/welcome.png")
+    const imane = await loadImage("./events/Zibot/IMGs/welcome.png")
     return JSX.createElement(
       "img",
       {

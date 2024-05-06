@@ -1,7 +1,6 @@
 /** @jsx JSX.createElement */
 /** @jsxFrag JSX.Fragment */
 const { Builder, JSX, Font, FontFactory, loadImage } = require("canvacord");
-// define a builder
 class Generator extends Builder {
   constructor() {
     // set the size of the image
