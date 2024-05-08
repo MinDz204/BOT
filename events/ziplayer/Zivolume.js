@@ -54,11 +54,11 @@ const handleVolumeChange = async (interaction, queue, lang) => {
         { upsert: true }
       );
   
-      collector.stop(); // stop collector explicitly
+      await collector.stop(); // stop collector explicitly
       
-      interaction.deleteReply().catch(e => { console.error('Error deleting reply:', e); });
+      await interaction.deleteReply().catch(e => { console.error('Error deleting reply:', e); });
   
-      queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { console.error('Error editing Zimess:', e); });
+      await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { console.error('Error editing Zimess:', e); });
   
       return;
     });

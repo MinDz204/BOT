@@ -180,7 +180,8 @@ if(!config.messCreate.PlayMusic) return;
       case "ZiplayerSEEKINP": {
         const { progress, current, total } = queue.node.getTimestamp();
         if (progress === 'Forever') {
-          return sendTemporaryReply(interaction, `❌ | Can't seek in a live stream.`);
+          const messagesd = await interaction.reply({ content: `❌ | Can't seek in a live stream.`, fetchReply: true });
+          deleteAfterTimeout(messagesd);
         }
     
         interaction.reply({ content: 'time <[hhmm]ss/[hh:mm]:ss> (ex: 3m20s, 1:20:55):', fetchReply: true });
@@ -190,29 +191,33 @@ if(!config.messCreate.PlayMusic) return;
     
         collector.on('collect', async (i) => {
           const str = i.content;
-          let targetTime = timeToSeconds(str) + timeToSeconds(current?.label);
+          let targetTime = timeToSeconds(str);
           targetTime = Math.max(targetTime, 0);
           const musicLength = timeToSeconds(total.label);
 
           if (targetTime >= musicLength) {
-            return sendTemporaryReply(interaction, `❌ | Target time exceeds music duration. (\`${total?.label}\`)`);
+            return sendTemporaryReply(i, `❌ | Target time exceeds music duration. (\`${total?.label}\`)`);
           }
     
           const success = queue.node.seek(targetTime * 1000);
           if (success) {
             try {
-              collector.stop(); // stop collector explicitly
+              await collector.stop(); // stop collector explicitly
+              await interaction.deleteReply().catch(e => { console.error('Error deleting reply:', e); });
               await interaction.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue));
+              return;
             } catch (e) {
-              sendTemporaryReply(interaction, '❌ | Something went wrong.');
+              sendTemporaryReply(i, '❌ | Something went wrong.');
             }
           } else {
-            sendTemporaryReply(interaction, '❌ | Something went wrong.');
+            sendTemporaryReply(i, '❌ | Something went wrong.');
           }
         });
     
-        collector.on('end', () => {
-          sendTemporaryReply(interaction, '❌ | End seek 1m.');
+        collector.on('end',async () => {
+          const messagesd = await interaction.editReply({ content: '❌ | End seek 1m.', fetchReply: true });
+          deleteAfterTimeout(messagesd);
+
         });
         return;
       }

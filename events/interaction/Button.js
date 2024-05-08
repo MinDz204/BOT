@@ -25,11 +25,6 @@ module.exports = async (client, interaction) => {
       lang = await rank({ user: interaction?.user });
       return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
     } 
-    if (interaction?.customId.includes("Zsearchref")){
-      if (!config.messCreate.GoogleSearch) return;
-      lang = await rank({ user: interaction?.user });
-      interaction?.deferUpdate()
-       return require("./../../commands/search").run(lang, interaction.message, Zicrop(interaction?.customId), true)}
     //ZiVc---------------------------------------------------------//
     if (interaction?.customId.includes("ZiVC")){
       if(!config.EnableJOINTOCREATE) return;
