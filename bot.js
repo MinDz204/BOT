@@ -32,10 +32,7 @@ const client = new Client({
   ],
   shards: 'auto',
 });
-if(config.messCreate.PlayMusic && config.messCreate.ASSis){
-  const { addSpeechEvent } = require("discord-speech-recognition");
-  addSpeechEvent(client, { ignoreBots: true });
-}
+
 client.color = config.color;
 client.InviteBot = config.InviteBot;
 //-------------------------------------------------------------//
@@ -49,7 +46,7 @@ if(config.messCreate.PlayMusic){
   });
   player.setMaxListeners(200);
   player.extractors.loadDefault()
-
+  // player.on("debug",console.log)
   fs.readdir("./events/player", (_err, files) => {
     files.forEach((file) => {
       if (!file.endsWith(".js")) return;

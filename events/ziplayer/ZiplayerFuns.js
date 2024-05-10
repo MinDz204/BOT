@@ -184,7 +184,7 @@ if(!config.messCreate.PlayMusic) return;
           deleteAfterTimeout(messagesd);
         }
     
-        interaction.reply({ content: 'time <[hhmm]ss/[hh:mm]:ss> (ex: 3m20s, 1:20:55):', fetchReply: true });
+        interaction.reply({ content: 'time (ex: 3m20s, 1:20:55):', fetchReply: true });
     
         const collectorFilter = (i) => i.author.id === interaction.user.id;
         const collector = interaction.channel.createMessageCollector({ filter: collectorFilter, time: 60000 });
