@@ -23,7 +23,6 @@ module.exports = async (client) => {
     client.Zicomand = await rest.get(
       Routes.applicationCommands(client.user.id),
     );
-    console.log( client.Zicomand)
     client.user.setStatus(config.Status);
     client.user.setActivity(`${config.botStatus} /help`);
 
