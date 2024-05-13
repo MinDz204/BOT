@@ -5,12 +5,14 @@ const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 module.exports = {
   name: "ping",
   description: "View bot ping.",
+  integration_types: [0 ,1],
+  contexts: [0, 1, 2],
   options: [],
   cooldown: 3,
   dm_permission: true,
   run: async (lang, interaction) => {
 
-    let messages = await ZifetchInteraction(interaction);
+    await ZifetchInteraction(interaction);
 
     const start = Date.now();
     await interaction?.channel?.send("Pong!").then(async Message => { Message.delete() });
@@ -26,7 +28,7 @@ module.exports = {
         ])
         .setTimestamp()
         .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
-      return messages?.edit({ embeds: [ embed ] }).catch(e => interaction?.user?.send({ embeds: [ embed ] }))
+      return interaction.editReply({ embeds: [ embed ] }).catch(e => interaction?.user?.send({ embeds: [ embed ] }))
 
   },
 };

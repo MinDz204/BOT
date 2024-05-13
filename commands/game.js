@@ -28,6 +28,8 @@ function sendOrEditMessage(zi, interaction, messages, content) {
 module.exports = {
   name: "game",
   description: "Game function.",
+  integration_types: [0],
+  contexts: [0, 1, 2],
   options: [
     {
       name: "name",

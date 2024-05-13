@@ -10,9 +10,11 @@ module.exports = {
   options: [],
   cooldown: 3,
   dm_permission: true,
+  integration_types: [0 ,1],
+  contexts: [0, 1, 2],
   run: async (lang, interaction) => {
     const userId = interaction.user.id;
-    const messages = await ZifetchInteraction(interaction);
+    await ZifetchInteraction(interaction);
 
     let userDB = await db.ZiUser.findOne({ userID: userId }).catch(() => null); // Use null as default
     const embed = new EmbedBuilder()
@@ -50,7 +52,7 @@ module.exports = {
     }
 
     try {
-      await messages.edit({ content: ` `, embeds: [embed] });
+      await interaction.editReply({ content: ` `, embeds: [embed] });
     } catch (e) {
       await interaction?.user?.send({ content: ` `, embeds: [embed] });
     }

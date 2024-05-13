@@ -1,5 +1,7 @@
 module.exports = {
   name: "Play Music",
+  integration_types: [0],
+  contexts: [0, 1, 2],
   voiceC: true,
   NODMPer: true,
   dm_permission: false,

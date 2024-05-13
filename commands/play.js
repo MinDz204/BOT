@@ -8,6 +8,8 @@ const client = require('../bot');
 module.exports = {
   name: "play",
   description: "Play or Add music and play next.",
+  integration_types: [0],
+  contexts: [0, 1, 2],
   options: [{
     name: "name",
     description: "Name Song",

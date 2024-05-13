@@ -7,6 +7,8 @@ const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 module.exports = {
   name: "profile",
   description: "View profile.",
+  integration_types: [0 ,1],
+  contexts: [0, 1, 2],
   options: [
     {
       name: "user",
@@ -18,7 +20,7 @@ module.exports = {
   dm_permission: true,
   run: async (lang, interaction, Zi) => {
     try {
-      const messages = await ZifetchInteraction(interaction);
+      await ZifetchInteraction(interaction);
       const targetUser = interaction?.options?.getUser("user") || interaction.user;
       const userr = await interaction?.guild?.members.fetch(targetUser) || interaction.user;
 
@@ -68,7 +70,7 @@ module.exports = {
       const response = { content: "", files: [attachment], components: [editProf] };
 
       if (!Zi) {
-        messages.edit(response).catch(() => {
+        interaction.editReply(response).catch(() => {
           interaction?.channel?.send(response);
         });
       } else {

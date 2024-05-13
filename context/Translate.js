@@ -6,6 +6,8 @@ const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 
 module.exports = {
     name: "Translate",
+    integration_types: [0 ,1],
+    contexts: [0, 1, 2],
     NODMPer: false,
     dm_permission: true,
     cooldown: 3,
@@ -26,11 +28,11 @@ module.exports.run = async (lang, interaction) => {
     const embed = new EmbedBuilder()
       .setColor(lang.COLOR || client.color)
       .setTitle(`Translate:`)
-      .setDescription(`${translated.text}`)
+      .setDescription(`${lang?.langdef}: ${translated.text}`)
       .setTimestamp()
       .setFooter({ text: ` ${language_name}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
 
-    return mess.edit({ content:``, embeds: [embed], components: [row] }).then( setTimeout( async() => {
+    return interaction.editReply({ content:``, embeds: [embed], components: [row] }).then( setTimeout( async() => {
           return mess.edit({ content:``, embeds: [embed], components: [] }).catch(e => { })
     }, 30000)).catch(e => { });
 

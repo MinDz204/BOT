@@ -7,6 +7,8 @@ const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 module.exports = {
   name: "language",
   description: "Change bot language.",
+  integration_types: [0 ,1],
+  contexts: [0, 1, 2],
   options: [{
     name: "name",
     description: "Name language",
@@ -23,7 +25,7 @@ module.exports = {
   cooldown: 10,
   dm_permission: true,
   run: async (langOld, interaction) => {
-    let messages = await ZifetchInteraction(interaction);
+    await ZifetchInteraction(interaction);
 
     const name = interaction.options.getString("name");
     await db.ZiUser.updateOne({ userID: interaction?.user?.id }, {
@@ -48,7 +50,7 @@ module.exports = {
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
 
-    return messages?.edit({ embeds: [embed], components: [row] })
+    return interaction.editReply({ embeds: [embed], components: [row] })
     .then(async Message => {
       setTimeout(function () {
         Message?.edit({ components: [] }).catch(console.error);

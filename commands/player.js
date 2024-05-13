@@ -25,6 +25,8 @@ async function Ziset(queue, lang, messages) {
 module.exports = {
   name: "player",
   description: "Player media control",
+  integration_types: [0],
+  contexts: [0, 1, 2],
   options: [],
   voiceC: true,
   NODMPer: true,

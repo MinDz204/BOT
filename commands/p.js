@@ -2,6 +2,8 @@ const { ApplicationCommandOptionType } = require('discord.js')
 module.exports = {
   name: "p",
   description: "Play/add music.",
+  integration_types: [0 ,1],
+  contexts: [0, 1, 2],
   options: [{
     name: "name",
     description: "Name Song",

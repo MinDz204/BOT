@@ -9,6 +9,7 @@ async function Ziset(queue, lang) {
   })
 }
 module.exports = async (client, queue) => {
+  console.log("Start song");
   let lang = await rank({ user: queue?.currentTrack?.requestby || queue?.metadata.requestby });
   if (queue) {
     if (!queue?.metadata?.Zimess) return Ziset(queue, lang)

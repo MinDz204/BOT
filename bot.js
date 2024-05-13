@@ -77,9 +77,30 @@ fs.readdir("./commands", (err, files) => {
     try {
       let props = require(`./commands/${f}`);
       client.commands.push({
+        name: props?.name,
+        description: props?.description,
+        options: props?.options,
+        dm_permission:props?.dm_permission,
+        integration_types: props?.integration_types,
+        contexts: props?.contexts
+      });
+      console.log(`Loaded command: ${props.name}`);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+});
+//context
+fs.readdir("./context", (err, files) => {
+  if (err) throw err;
+  files.forEach(async (f) => {
+    try {
+      let props = require(`./context/${f}`);
+      client.commands.push({
         name: props.name,
-        description: props.description,
-        options: props.options
+        type: 3,
+        integration_types: props.integration_types,
+        contexts: props.contexts
       });
       console.log(`Loaded command: ${props.name}`);
     } catch (err) {

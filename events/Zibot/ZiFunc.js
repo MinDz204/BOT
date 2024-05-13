@@ -30,6 +30,7 @@ function removeVietnameseTones(str) {
 const Zitrim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
 
 async function fetchR(interaction){
+  if(!interaction.guild) return interaction.deferReply({ fetchReply: true }).catch(e=> console.log );
   let messid;
   try {
     messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, allowedMentions: { repliedUser: false } })

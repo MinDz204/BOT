@@ -107,6 +107,8 @@ async function displayLyrics(messages, trackName, NOstop) {
 module.exports = {
     name: 'lyrics',
     description: 'Display synced lyrics or stop them.',
+    integration_types: [0],
+    contexts: [0, 1, 2],
     options: [{
         name: 'name',
         description: 'Song name',

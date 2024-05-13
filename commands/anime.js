@@ -1,6 +1,8 @@
 module.exports = {
   name: "anime",
   description: "Get anime infomation.",
+  integration_types: [0 ,1],
+  contexts: [0, 1, 2],
   options: [{
     name: "name",
     description: "Name anime",
@@ -20,7 +22,7 @@ const kitsu = new Kitsu();
 
 module.exports.run = async ( lang, interaction ) => {
   const name = interaction.options.getString("name");
-  let messages = await ZifetchInteraction(interaction);
+  await ZifetchInteraction(interaction);
 
   let search = encodeURI(removeVietnameseTones(name))
   const { data } = await kitsu.get('anime?filter[text]=' + search + '&page[limit]=' + 2)
@@ -44,6 +46,6 @@ module.exports.run = async ( lang, interaction ) => {
         { name: "**⏱️ Duration:**", value: `${anime?.episodeLength ? anime.episodeLength : "??"} minutes`, inline: true },
         { name: "**🏆 Rank:**", value: `${anime?.ratingRank ? anime.ratingRank : "Unknwon"}`, inline: true },
       ])
-  return messages?.edit({ content: ``, embeds: [ info ] }).catch(e => interaction?.user?.send({ embeds: [ info ] }))
+  return interaction?.editReply({ content: ``, embeds: [ info ] }).catch(e => interaction?.user?.send({ embeds: [ info ] }))
 }
 
