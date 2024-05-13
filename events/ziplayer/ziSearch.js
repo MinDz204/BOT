@@ -3,10 +3,11 @@ const client = require('../../bot');
 const { useMainPlayer, QueryType, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
 const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction } = require("../Zibot/ZiFunc");
-
+const config = require("./../../config")
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS) => {
+  if(!config.messCreate.PlayMusic) return;
   let message;
   if( interaction.type == 3 ){
     interaction.deferUpdate().catch(e => { });
@@ -28,7 +29,7 @@ module.exports = async (interaction, nameS) => {
             requestby: interaction?.user ||interaction?.author,
             embedCOLOR: userddd?.color || client.color,
             Zimess: queue?.metadata? queue?.metadata?.Zimess : message,
-            ZsyncedLyrics: { messages: null , Status: queue?.metadata?.ZsyncedLyrics?.Status || false },
+            ZsyncedLyrics: { messages: queue?.metadata?.ZsyncedLyrics?.messages, Status: queue?.metadata?.ZsyncedLyrics?.Status || false },
           },
           requestedBy: interaction?.user || interaction?.author,
           selfDeaf: false,
@@ -38,7 +39,7 @@ module.exports = async (interaction, nameS) => {
           leaveOnEmpty: true,
           leaveOnEmptyCooldown: 2000,
           leaveOnEnd: true,
-          leaveOnEndCooldown: 150000,
+          leaveOnEndCooldown: 300000,
           skipOnNoStream: true,
           selfDeaf: true,
         }

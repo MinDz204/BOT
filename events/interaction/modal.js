@@ -4,7 +4,7 @@ const { zistart } = require("./../ziplayer/ziStartTrack");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL, timeToSeconds } = require("../Zibot/ZiFunc");
 const { SEEKfunc } = require("../ziplayer/ZiSeek");
-
+const config = require("../../config");
 //test func
 var hextest = /^#[0-9A-F]{6}$/i;
 function isNumber(str) {
@@ -96,9 +96,7 @@ module.exports = async (client, interaction) => {
       default:
         console.log(interaction.customId)
     }
-//EQ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
-
   } catch (e) {
-    console.log(e)
+    return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nmodal:${e?.stack}`)
   }
 }

@@ -1,7 +1,7 @@
 const { useMainPlayer, QueryType } = require("discord-player");
 const Kitsu = require("kitsu");
 const { removeVietnameseTones, Zitrim } = require("../Zibot/ZiFunc");
-
+const config = require("./../../config")
 module.exports = async (client, interaction) => {
   try {
     switch (interaction.commandName) {
@@ -20,7 +20,7 @@ module.exports = async (client, interaction) => {
                 name: Zitrim(t.title, 100),
                 value: Zitrim(t.url, 100)
               }))
-          );
+          ).catch(e => { });
         } catch (e) {
           return interaction.respond().catch(e => { })
         }
@@ -38,7 +38,7 @@ module.exports = async (client, interaction) => {
                 name: Zitrim(t.title, 100),
                 value: Zitrim(t.title, 100)
               }))
-          );
+          ).catch(e => { })
         } catch (e) {
           return interaction.respond().catch(e => { })
         }
@@ -60,12 +60,11 @@ module.exports = async (client, interaction) => {
         
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
       default: {
-        console.log(interaction?.customId)
-        console.log('autpcomp')
-        break;
+        return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAutpcomp:${interaction?.customId}`);
       }
     }
-  } catch (e) {
-    console.log(e)
+  } catch (e) { 
+    return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAutpcomp:${e?.stack}`)
+
   }
 }

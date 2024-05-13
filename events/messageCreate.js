@@ -29,31 +29,29 @@ module.exports = async (client, message) => {
 
 //////////////////////////////////////////////////////////////////////////////////
     message.react("<a:likee:1210193685501706260>");
-    if (message?.reference &&  message?.guild) {
+    if (message?.reference && message?.guild) {
         const refMsgId = message.reference.messageId;
         return message.channel.messages.fetch(refMsgId, { cache: false, force: true })
             .then(async (mess) => {
-                let msgContent = mess.content;
-
-                if (!msgContent) {
-                    const embedData = mess.embeds[0]?.data;
-                    const hasSpecialField = embedData?.fields[0]?.name.includes("▒") || 
-                                            embedData?.fields[0]?.name.includes("█");
-
-                    if (hasSpecialField) {
-                        msgContent = embedData.author?.url;
-                    } else {
-                        const reply = await message.reply(lang?.PlayerSearchErr);
-                        setTimeout(() => {
-                            reply.delete().catch(() => {});
-                        }, 10000);
-                        return;
-                    }
+                let msgContent;
+                const embedData = mess.embeds[0]?.data;
+                const hasSpecialField = embedData?.fields[0]?.name.includes("▒") || 
+                                        embedData?.fields[0]?.name.includes("█");
+    
+                if (hasSpecialField) {
+                    msgContent = embedData.author?.url;
+                } else {
+                    msgContent = mess.content;
                 }
-
+                
                 return playMusic(lang, message, client, msgContent);
             })
-            .catch(() => {});
+            .catch(async() => {
+                const reply = await message.reply(lang?.PlayerSearchErr);
+                setTimeout(() => {
+                    reply.delete().catch(() => {});
+                }, 10000);
+            });
     }
 
     const isBotMentioned = content.match(new RegExp(`^<@!?${client.user.id}>( |)$`));

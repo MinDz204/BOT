@@ -1,5 +1,4 @@
 const { useMetadata } = require("discord-player");
-const { EmbedBuilder, Message } = require("discord.js");
 const { zistart } = require("./../ziplayer/ziStartTrack");
 const { rank } = require("../Zibot/ZilvlSys");
 async function Ziset(queue, lang) {

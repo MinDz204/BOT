@@ -1,57 +1,54 @@
 const { ModalBuilder, ActionRowBuilder, TextInputStyle, TextInputBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const db = require("./../../mongoDB");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL, Zicrop } = require("../Zibot/ZiFunc");
+const { validURL } = require("../Zibot/ZiFunc");
 const config = require("../../config");
 
 module.exports = async (client, interaction) => {
   try {
-    //SEARCH MUSIC------------------------------------------------//
-    if(config.messCreate.PlayMusic)
-    if (validURL(interaction.customId)) {
-      return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
-    }
-    if (interaction?.customId.includes("Ziselectmusix")) {
-      if( interaction?.values[0] != "cancelSEARCHTRACK" ) {
-        return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
-      }else{
-        return interaction?.message.delete();
-      }
-    }
     let lang;
-    //Zi module------------------------------------------------//
-    if (interaction?.customId.includes("Ziplayer")){
-      if(!config.messCreate.PlayMusic) return;
-      lang = await rank({ user: interaction?.user });
-      return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
-    } 
+    //SEARCH MUSIC------------------------------------------------//
+    if(config.messCreate.PlayMusic){
+      if (validURL(interaction.customId)) {
+        return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
+      }
+      if (interaction?.customId.includes("Ziselectmusix")) {
+        if( interaction?.values[0] != "cancelSEARCHTRACK" ) {
+          return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
+        }else{
+          return interaction?.message.delete();
+        }
+      }
+      //Zi module------------------------------------------------//
+      if (interaction?.customId.includes("Ziplayer")){
+        lang = await rank({ user: interaction?.user });
+        return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
+      }
+   }
     //ZiVc---------------------------------------------------------//
     if (interaction?.customId.includes("ZiVC")){
       if(!config.EnableJOINTOCREATE) return;
       lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zivc")(interaction, lang)
     } 
+    if ( !config.interactionCreate.MessageComponentInside ) return;
+    //rank sys----------------------------------------------------------//
+        lang = await rank({ user: interaction?.user });
     //Zttt--------------------------------------------------------------//
     if (interaction?.customId.includes("ZtttR")){
-      lang = await rank({ user: interaction?.user });
       return require("./../Zibot/ZitttR")(interaction, lang)
     } 
     if (interaction?.customId.includes("Zttt")){
-      lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zittt")(interaction, lang)
     } 
     //Zrps--------------------------------------------------------------//
     if (interaction?.customId.includes("Zrps")){
-      lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Zrps")(interaction, lang)
     }
     if (interaction?.customId.includes("Z8ball")){
-      lang = await rank({ user: interaction?.user });
       return require("./../Zibot/Z8Ball")(interaction, lang)
     }
-    if ( !config.interactionCreate.MessageComponentInside ) return;
-    //rank sys------------------------------------------------//
-    lang = await rank({ user: interaction?.user });
+
     //cooldows-------------------------------------------------//
     const expirationTime = lang?.cooldowns + 3 * 1000;
     if (Date.now() < expirationTime) {
@@ -227,9 +224,9 @@ module.exports = async (client, interaction) => {
         return require("./../Zibot/Zileaderboard")({ interaction: interaction, lang: lang });
       }
       default:
-        console.log(interaction.customId)
+        return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${interaction?.customId}`)
     }
   } catch (e) {
-    console.log(e)
+    return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${e?.stack}`)
   }
 }

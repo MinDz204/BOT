@@ -58,10 +58,7 @@ function validURL(str) {
     '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
   return !!pattern.test(str);
 }
-function Zilink(str){
-  const match = str.match(/(https?:\/\/[^\s]+)/g);
-  return match ? match[0] : null;
-}
+
 function shuffleArray(array) {
   for (var i = array.length - 1; i > 0; i--) { 
  
@@ -75,19 +72,13 @@ function shuffleArray(array) {
      
   return array;
 }
+function Zilink(str){
+  const match = str.match(/(https?:\/\/[^\s]+)/g);
+  return match ? match[0] : null;
+}
 function processQuery(qAuery) {
   let query = Zilink(qAuery)
-  // Regular expression to match YouTube and YouTube Music URLs
-  const youtubeRegex = new RegExp(/^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtube\.com\/playlist\?list=(.*)$/);
-  // If the query matches the YouTube regex, remove the &si= part of the URL
-  if (query.match(youtubeRegex) && query.includes('&si=')) {
-    const queryParts = query.split('&si=');
-    queryParts.pop();
-    return queryParts.join('');
-  } else {
-    // Otherwise, return the query as-is
-    return query;
-  }
+  return query ? query : qAuery;
 }
 function Zicrop(query){
   if(query.includes('Zi=')){
@@ -180,8 +171,13 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
   const embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client.color)
     .setTitle(`${lang?.PlayerSearch} ${Zitrim( nameS , 200)}`)
-    .setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${Zitrim( track?.title , 35)} | \`${Zitrim(track.author,10)}\``).join('\n')}\n <:cirowo:1007607994097344533>`)
+    .setDescription(`<:cirowo:1007607994097344533>`)
     .setTimestamp()
+    .addFields( maxTracks.map((track, i) => ({
+      name: `${i + 1}. ${Zitrim(track.title, 100)}`,
+      value: `By: \`${Zitrim(track.author, 200)}\``,
+    }))
+  )
     .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
 
   const select = new ActionRowBuilder()

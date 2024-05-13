@@ -5,7 +5,7 @@ const {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
 } = require("discord.js");
-const db = require("./../mongoDB");
+const db = require("../mongoDB.js");
 // const mongoose = require("mongoose");
 module.exports = async (client) => {
   try {
@@ -21,7 +21,7 @@ module.exports = async (client) => {
 
     const allCommands = [...contextMenuCommands, ...(await client.commands)];
     // Kết nối MongoDB
-    await require("../connectMONGO")();
+    await require("../connectMONGO.js")();
     const rest = new REST({ version: "10" }).setToken(config.Ziusr.keygen);
     // Đăng ký lệnh context menu
     if (config.rest) {

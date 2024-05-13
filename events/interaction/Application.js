@@ -32,7 +32,7 @@ module.exports = async (client, interaction) => {
     }
   } catch (error) {
     console.error("Error handling interaction:", error);
-    await sendErrorToUser(interaction, error);
+    await sendErrorToUser(interaction, error, client);
   }
 };
 
@@ -48,7 +48,7 @@ async function processFiles(client, interaction, files, dir, disallowList) {
 
     const lang = await rank({ user: interaction.user });
     if (!lang) {
-      return await sendErrorToUser(interaction, new Error("Unable to retrieve user language."));
+      return await sendErrorToUser(interaction, new Error("Unable to retrieve user language."), client);
     }
 
     const now = Date.now();
@@ -95,15 +95,17 @@ async function processFiles(client, interaction, files, dir, disallowList) {
       return await props.run(lang, interaction);
     } catch (commandError) {
       console.error("Error processing command:", commandError);
-      return await sendErrorToUser(interaction, commandError);
+      return await sendErrorToUser(interaction, commandError, client);
     }
   }
 }
 
-async function sendErrorToUser(interaction, error) {
+async function sendErrorToUser(interaction, error, client) {
   try {
     await interaction.user.send({ content: `ERROR\n\n\`\`\`${error.message}\`\`\`` });
+    return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAPP:${error?.stack}`)
   } catch (sendError) {
     console.error("Error sending error message to user:", sendError);
+    return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAPP:${sendError?.stack}`)
   }
 }

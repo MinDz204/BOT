@@ -40,10 +40,11 @@ module.exports = client;
 //-------------------------------------------------------------//
 //        discord player          //
 //-------------------------------------------------------------//
-if(config.messCreate.PlayMusic){
+
   const player = new Player(client, {
     SkipFFmpeg: false
   });
+if(config.messCreate.PlayMusic){
   player.setMaxListeners(200);
   player.extractors.loadDefault()
   // player.on("debug",console.log)
@@ -87,14 +88,22 @@ fs.readdir("./commands", (err, files) => {
   });
 });
 
-client.login(config.token).catch(e => {
+client.login(config.Ziusr.keygen).catch(e => {
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
 })
 //---------------------------------------------------------------------------------------------------------------------------------------
+// prevent crash on unhandled promise rejection
 process.on('unhandledRejection', error => {
   client.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
   console.error('Unhandled promise rejection:', error);
 });
+// prevent crash on uncaught exception
+process.on('uncaughtException', (error) => {
+  client.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
+  console.error('Uncaught exception:', error);
+});
+
+
 process.on('warning', (warning) => {
 	if (
 		warning.name !== 'ExperimentalWarning' &&
@@ -102,3 +111,4 @@ process.on('warning', (warning) => {
 		console.warn(warning);
 	}
 });
+

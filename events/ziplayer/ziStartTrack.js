@@ -126,73 +126,97 @@ const RelatedTracksRow = async (queue) => {
       );
 }
 
-const ZiPlayerlinkAvt = (query) => ({
+const animatedIcons = [
+  "1150775508045410385",
+  "1150776048263364608",
+  "1150777291417333840",
+  "1150777857761615903",
+  "1150777891102150696",
+  "1150777933045178399",
+  "1150782781144707142",
+  "1150782787394228296",
+  "1008064606075363398",
+  "1231819570281447576",
+  "1231819570281447576",
+  "1231819570281447576",
+  "1238577097363034156",
+  "1238577100101779507",
+  "1238577101787889754",
+  "1238577103025209517",
+  "1238577106066346146",
+  "1238577108503236629",
+  "1238577113548980264",
+  "1238577077368651797",
+  "1238577079122137108",
+  "1238577080858316810",
+  "1238577084389916732",
+  "1238577086810034176",
+  "1238577089335267368",
+  "1238577091406987294",
+  "1238577093332176937",
+  "1238577095488176309"
+];
+
+const defaultImage = 'https://cdn.discordapp.com/attachments/1064851388221358153/1215655934546804746/NoImage.png';
+const iconMappings = {
   youtube: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
-  youtubePlaylist: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
-  youtubeSearch: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
-  youtubeVideo: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
-
-  spotifySong: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
-  spotifyAlbum: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
-  spotifySearch: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
-  spotifyPlaylist: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
-
-  soundcloudTrack: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
-  soundcloudPlaylist: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
+  spotify: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
   soundcloud: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
-  soundcloudSearch: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
-}[query] || 'https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif');
+  default: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif',
+};
 
+const ZiPlayerlinkAvt = (query) => {
+  const key = Object.keys(iconMappings).find(k => query.toLowerCase().startsWith(k));
+  return iconMappings[key] || iconMappings.default;
+};
 
 function ZiImg(track) {
-  let id = track?.raw?.id || track?.thumbnail?.id || track?.raw?.thumbnail?.id || track?.__metadata?.id || track?.__metadata?.thumbnail?.id || track?.metadata?.id;
-  switch (track?.queryType) {
-    case `youtube`:
-    case `youtubePlaylist`:
-    case `youtubeSearch`:
-    case `youtubeVideo`:
-      return `https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`;
-    default:
-      return track?.thumbnail
+  const id = track?.raw?.id || track?.thumbnail?.id || track?.raw?.thumbnail?.id || track?.__metadata?.id || track?.__metadata?.thumbnail?.id || track?.metadata?.id;
+  if (['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType)) {
+    return `https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`;
   }
+  return track?.thumbnail || defaultImage;
 }
+
 const zistartEmber = async (queue, lang) => {
   const track = queue?.currentTrack;
-  const animeted = [
-    "1150775508045410385",
-    "1150776048263364608",
-    "1150777291417333840",
-    "1150777857761615903",
-    "1150777891102150696",
-    "1150777933045178399",
-    "1150782781144707142",
-    "1150782787394228296"]
-  let requestby = track?.requestby || queue?.metadata.requestby;
-  const avtlink = await ZiPlayerlinkAvt(track?.queryType);
-  const methods = [`${lang?.loopOFF}`, `${lang?.loopTrack}`, `${lang?.loopqueue}`, `${lang?.loopauto}`, ` `];
-  const proress = queue?.node.createProgressBar({
+  const requestby = track?.requestby || queue?.metadata?.requestby;
+  const avtlink = ZiPlayerlinkAvt(track?.queryType);
+  const methods = [`${lang?.loopOFF}`, `${lang?.loopTrack}`, `${lang?.loopqueue}`, `${lang?.loopauto}`, ' '];
+
+  const progress = queue?.node.createProgressBar({
     indicator: "",
     timecodes: true,
     leftChar: `█`,
     rightChar: `▒`,
     length: 20,
-  })
-  const imgggg = await ZiImg(track)
+  });
+
+  const imgggg = ZiImg(track);
   const timestamps = queue?.node.getTimestamp();
-  const trackDurationsymbal = timestamps?.progress == "Infinity" ? "" : "%"
-  const trackDuration = timestamps?.progress == "Infinity" ? "∞" : timestamps?.progress
-  return new EmbedBuilder()
+  const trackDurationSymbol = timestamps?.progress === "Infinity" ? "" : "%";
+  const trackDuration = timestamps?.progress === "Infinity" ? "∞" : timestamps?.progress;
+
+  const embed = new EmbedBuilder()
     .setAuthor({ name: track?.title, url: track?.url, iconURL: avtlink })
     .setColor(queue?.metadata?.embedCOLOR || client?.color)
-    .setImage(`${imgggg??`https://cdn.discordapp.com/attachments/1064851388221358153/1215655934546804746/NoImage.png`}`)
     .setTimestamp()
     .setFooter({ text: `${lang?.RequestBY} ${requestby?.tag}`, iconURL: requestby?.displayAvatarURL({ dynamic: true }) })
-    .setDescription(`${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationsymbal} <a:dance:${animeted[Math.floor(Math.random() * 8)]}>
-        ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Fillter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()} \n
-        `)
-    .addFields({ name: `${proress}`, value: ` ` })
+    .setDescription(
+      `${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationSymbol} <a:_:${animatedIcons[Math.floor(Math.random() * animatedIcons.length)]}>
+      ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Filter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()}`
+    )
+    .addFields({ name: progress, value: ' ' });
 
-}
+  const isYouTube = ['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType);
+  if (isYouTube) {
+    embed.setImage(imgggg ?? defaultImage);
+  } else {
+    embed.setThumbnail(imgggg ?? defaultImage);
+  }
+
+  return embed;
+};
 
 const start = async (queue, lang) => {
 
