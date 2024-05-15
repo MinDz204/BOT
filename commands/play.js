@@ -8,11 +8,36 @@ const client = require('../bot');
 module.exports = {
   name: "play",
   description: "Play or Add music and play next.",
+  name_localizations: {
+    "en-US": "play",
+    "vi": "phát",  // Play in Vietnamese
+    "ja": "再生", // Play in Japanese
+    "ko": "재생" // Play in Korean
+  },
+  description_localizations: {
+    "en-US": "Play or Add music and play next.",
+    "vi": "Phát hoặc Thêm nhạc và phát tiếp theo.",  // Play or Add music and play next in Vietnamese
+    "ja": "音楽を再生または追加して、次に再生します", // Play or Add music and play next in Japanese
+    "ko": "음악을 재생하거나 추가하고 다음으로 재생합니다", // Play or Add music and play next in Korean
+  },
   integration_types: [0],
   contexts: [0, 1, 2],
   options: [{
     name: "name",
     description: "Name Song",
+    name_localizations: {
+      "en-US": "name",
+      "vi": "tên",  // Name in Vietnamese
+      "ja": "名前", // Name in Japanese
+      "ko": "이름" // Name in Korean
+    },
+    description_localizations: {
+      "en-US": "Name Song",
+      "vi": "Tựa đề bài hát",  // Song title in Vietnamese (more accurate)
+      "ja": "曲名", // Song title in Japanese
+      "ko": "노래 제목" // Song title in Korean
+    },
+    
     type: 3,
     required: true,
     autocomplete: true,

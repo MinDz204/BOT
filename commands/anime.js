@@ -1,7 +1,7 @@
 module.exports = {
   name: "anime",
-  description: "Get anime infomation.",
-  integration_types: [0 ,1],
+  description: "Get anime information.",
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [{
     name: "name",
@@ -9,6 +9,18 @@ module.exports = {
     type: 3,
     required: true,
     autocomplete: true,
+    name_localizations: {
+      "en-US": "name",
+      "vi": "tên",
+      "ja": "名前",
+      "ko": "이름"
+    },
+    description_localizations: {
+      "en-US": "Name anime",
+      "vi": "Tên anime",
+      "ja": "アニメの名前",
+      "ko": "애니메 이름"
+    }
   }],
   cooldown: 3,
   dm_permission: true,

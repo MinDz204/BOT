@@ -82,7 +82,9 @@ fs.readdir("./commands", (err, files) => {
         options: props?.options,
         dm_permission:props?.dm_permission,
         integration_types: props?.integration_types,
-        contexts: props?.contexts
+        contexts: props?.contexts,
+        name_localizations: props?.name_localizations,
+        description_localizations: props?.description_localizations
       });
       console.log(`Loaded command: ${props.name}`);
     } catch (err) {
@@ -100,7 +102,8 @@ fs.readdir("./context", (err, files) => {
         name: props.name,
         type: 3,
         integration_types: props.integration_types,
-        contexts: props.contexts
+        contexts: props.contexts,
+        name_localizations: props?.name_localizations,
       });
       console.log(`Loaded command: ${props.name}`);
     } catch (err) {

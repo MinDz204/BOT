@@ -3,6 +3,18 @@ const client = require('../bot');
 module.exports = {
   name: "help",
   description: "Show bot command.",
+  name_localizations: {
+    "en-US": "help",
+    "vi": "trợ-giúp",  // Vietnamese translation for "help"
+    "ja": "ヘルプ",  // Japanese translation for "help"
+    "ko": "도움",  // Korean translation for "help"
+  },
+  description_localizations: {
+    "en-US": "Show bot command.",
+    "vi": "Hiển thị các lệnh của bot.",  // Vietnamese translation
+    "ja": "ボットのコマンドを表示します.",  // Japanese translation
+    "ko": "봇 명령을 표시합니다.",  // Korean translation
+  },
   options: [],
   cooldown: 3,
   dm_permission: true,

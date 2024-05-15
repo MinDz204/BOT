@@ -5,12 +5,58 @@ const db = require("../mongoDB");
 const { ZCoinFlip } = require("../events/Zibot/CoinFlip");
 
 const gameOptions = [
-  { name: '8 Ball', value: 'Z8ball' },
-  { name: 'Coin Flip', value: 'Zcoinflip' },
-  { name: 'Tic Tac Toe', value: 'Zttt' },
-  { name: 'Tic Tac Toe Rush', value: 'ZtttR' },
-  { name: 'Rock Paper Scissors', value: 'Zrps' },
+  {
+    name: '8 Ball',
+    value: 'Z8ball',
+    name_localizations: {
+      "en-US": "Coin Flip",
+      "vi": "Bi a 8",  // Game in Vietnamese
+      "ja": "エイトボール", // Game in Japanese
+      "ko": "8볼", // Game in Korean
+    },
+  },
+  {
+    name: 'Coin Flip',
+    value: 'Zcoinflip',
+    name_localizations: {
+      "en-US": "Coin Flip",
+      "vi": "Tung đồng xu",  // Game in Vietnamese
+      "ja": "コイン投げ", // Game in Japanese
+      "ko": "동전 던지기", // Game in Korean
+    },
+  },
+  {
+    name: 'Tic Tac Toe',
+    value: 'Zttt',
+    name_localizations: {
+      "en-US": "Tic Tac Toe",
+      "vi": "O X",  // Game in Vietnamese
+      "ja": "三目並べ", // Game in Japanese
+      "ko": "틱택토", // Game in Korean
+    },
+  },
+  {
+    name: 'Tic Tac Toe Rush',
+    value: 'ZtttR',
+    name_localizations: {
+      "en-US": "Tic Tac Toe Rush",
+      "vi": "O X mode 2",  // Game in Vietnamese (fast Tic Tac Toe)
+      "ja": "三目並べラッシュ", // Game in Japanese (rush)
+      "ko": "틱택토 러시", // Game in Korean (rush)
+    },
+  },
+  {
+    name: 'Rock Paper Scissors',
+    value: 'Zrps',
+    name_localizations: {
+      "en-US": "Rock Paper Scissors",
+      "vi": "Kéo búa bao",  // Game in Vietnamese
+      "ja": "じゃんけん", // Game in Japanese
+      "ko": "가위 바위 보", // Game in Korean
+    },
+  },
 ];
+
 
 function sendOrEditMessage(zi, interaction, messages, content) {
   const editFunc = zi ? interaction?.message : messages;
@@ -28,12 +74,36 @@ function sendOrEditMessage(zi, interaction, messages, content) {
 module.exports = {
   name: "game",
   description: "Game function.",
+  name_localizations: {
+    "en-US": "game",
+    "vi": "trò-chơi",  // Game in Vietnamese
+    "ja": "ゲーム", // Game in Japanese
+    "ko": "게임" // Game in Korean
+  },
+  description_localization: {
+    "en-US": "Game function.",
+    "vi": "Chức năng trò chơi", // Game function in Vietnamese
+    "ja": "ゲーム機能", // Game function in Japanese
+    "ko": "게임 기능" // Game function in Korean
+  },  
   integration_types: [0],
   contexts: [0, 1, 2],
   options: [
     {
       name: "name",
-      description: "Name Game.",
+      description: "Game Name.",
+      name_localizations: {
+        "en-US": "name",
+        "vi": "tên",
+        "ja": "名前",
+        "ko": "이름"
+      },
+      description_localizations: {
+        "en-US": "Game Name.",
+        "vi": "Tên trò chơi ", // Name Game in Vietnamese
+        "ja": "ネームゲーム", // Name Game in Japanese
+        "ko": "이름 게임", // Name Game in Korean
+      },
       type: 3,
       required: true,
       choices: gameOptions,

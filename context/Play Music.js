@@ -1,5 +1,11 @@
 module.exports = {
   name: "Play Music",
+  name_localizations: {
+    "en-US": "Play/add music.",
+    "vi": "Phát/Thêm nhạc.",  // Play/Add music in Vietnamese
+    "ja": "音楽を再生/追加します", // Play/Add music in Japanese
+    "ko": "음악 재생/추가합니다", // Play/Add music in Korean
+  },
   integration_types: [0],
   contexts: [0, 1, 2],
   voiceC: true,

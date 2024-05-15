@@ -7,6 +7,18 @@ const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 module.exports = {
     name: "translate",
     description: "Translate any language into user language.",
+    name_localizations: {
+      "en-US": "translate",
+      "vi": "dịch",
+      "ja": "翻訳",
+      "ko": "번역"
+    },
+    description_localizations: {
+      "en-US": "Translate any language into user language.",
+      "vi": "Dịch bất kỳ ngôn ngữ nào sang ngôn ngữ của người dùng.",
+      "ja": "あらゆる言語をユーザーの言語に翻訳します", // Translate any language to user's language in Japanese
+      "ko": "모든 언어를 사용자 언어로 번역합니다", // Translate any language to user's language in Korean
+    },
     integration_types: [0 ,1],
     contexts: [0, 1, 2],
     options: [{
