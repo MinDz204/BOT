@@ -25,10 +25,11 @@ npm install
 
 ```bash
 npm start
-Usage
-Custom Commands: Add new commands by modifying the commands directory.
-Event Handling: Customize event responses in the events directory.
 ```
+4. Usage
+ > * Custom Commands: Add new commands by modifying the commands directory.
+ > * Event Handling: Customize event responses in the events directory.
+
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request.
 
