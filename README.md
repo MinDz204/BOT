@@ -27,8 +27,8 @@ npm install
 npm start
 ```
 4. Usage
- > * Custom Commands: Add new commands by modifying the commands directory.
- > * Event Handling: Customize event responses in the events directory.
+   * Custom Commands: Add new commands by modifying the commands directory.
+   * Event Handling: Customize event responses in the events directory.
 
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request.
