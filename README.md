@@ -1,4 +1,4 @@
-# Zibot
+# [<img src="https://raw.githubusercontent.com/zijipia/zijipia/main/Assets/ZijiAvt.gif" width="15"/>](./) Zibot 
 Zibot is a Discord bot developed by [zijipia](https://github.com/zijipia) to enhance your Discord server with various functionalities.
 
 ## Features
