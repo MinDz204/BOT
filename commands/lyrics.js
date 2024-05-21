@@ -37,7 +37,7 @@ async function setSyncedLyrics(queue, messages, syncedLyrics, status = true) {
     });
 }
 // Displays lyrics or stops synced lyrics based on NOstop parameter
-async function displayLyrics(messages, trackName, NOstop) {
+async function displayLyrics(messages, trackName, NOstop, interaction) {
     const queue = useQueue(messages?.guild?.id || "1150638980803592262" );
 
     if (!NOstop && queue?.metadata?.ZsyncedLyrics?.Status && messages?.guild && !trackName ) {
@@ -59,6 +59,10 @@ async function displayLyrics(messages, trackName, NOstop) {
       lyrics = results[0];
       // If still no lyrics, inform the user and delete the message after a timeout
       if (!lyrics?.plainLyrics) {
+        if (!interaction.guild) return interaction.editReply({
+           content: '❌| There are **no** lyrics for this track',
+            ephemeral: true
+          }).catch(console.log);
           await messages.edit({
               content: '❌| There are **no** lyrics for this track',
               ephemeral: true,
@@ -74,6 +78,7 @@ async function displayLyrics(messages, trackName, NOstop) {
   
     if (!lyrics.syncedLyrics || !queue) { 
       embed.setDescription(Zitrim(lyrics.plainLyrics, 1997));
+      if (!interaction.guild) return interaction.editReply({ content: ' ', embeds: [embed] }).catch(console.log);
       await messages.edit({ content: ' ', embeds: [embed] });
       return;
     }
@@ -119,7 +124,7 @@ module.exports = {
       "ja": "同期歌詞を表示または停止します", // Display or stop synced lyrics in Japanese
       "ko": "동기화된 가사 표시 또는 중지", // Display or stop synced lyrics in Korean
     },
-    integration_types: [0],
+    integration_types: [0, 1],
     contexts: [0, 1, 2],
     options: [{
         name: 'name',
@@ -130,8 +135,9 @@ module.exports = {
     cooldown: 3,
     dm_permission: true,
     run: async (lang, interaction, NOstop) => {
+      console.log(interaction.channel);
       const messages = await ZifetchInteraction(interaction);
       const trackName = interaction?.options?.getString('name');
-      return displayLyrics(messages, trackName, NOstop);
+      return displayLyrics(messages, trackName, NOstop, interaction);
     },
   };
