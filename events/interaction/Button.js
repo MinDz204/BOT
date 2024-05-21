@@ -34,19 +34,21 @@ module.exports = async (client, interaction) => {
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys----------------------------------------------------------//
         lang = await rank({ user: interaction?.user });
-    //Zttt--------------------------------------------------------------//
+    //game--------------------------------------------------------------//
     if (interaction?.customId.includes("ZtttR")){
-      return require("./../Zibot/ZitttR")(interaction, lang)
+      return require("../Zibot/game/ZitttR")(interaction, lang)
     } 
     if (interaction?.customId.includes("Zttt")){
-      return require("./../Zibot/Zittt")(interaction, lang)
+      return require("../Zibot/game/Zittt")(interaction, lang)
     } 
-    //Zrps--------------------------------------------------------------//
     if (interaction?.customId.includes("Zrps")){
-      return require("./../Zibot/Zrps")(interaction, lang)
+      return require("../Zibot/game/Zrps")(interaction, lang)
     }
     if (interaction?.customId.includes("Z8ball")){
-      return require("./../Zibot/Z8Ball")(interaction, lang)
+      return require("../Zibot/game/Z8Ball")(interaction, lang)
+    }
+    if (interaction?.customId.includes("Zblackjack")){
+      return require("../Zibot/game/ZblackJack")(interaction, lang)
     }
 
     //cooldows-------------------------------------------------//

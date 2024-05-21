@@ -1,7 +1,7 @@
 
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
-const db = require("./../../mongoDB");
-const client = require("../../bot");
+const db = require("../../../mongoDB");
+const client = require("../../../bot");
 
 // Biểu tượng Tic Tac Toe
 const symbols = { 0: '⬜', 1: '❌', 2: '⭕' };

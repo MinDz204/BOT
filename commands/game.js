@@ -2,7 +2,7 @@ const { client } = require("../bot");
 const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const db = require("../mongoDB");
-const { ZCoinFlip } = require("../events/Zibot/CoinFlip");
+const { ZCoinFlip } = require("../events/Zibot/game/CoinFlip");
 
 const gameOptions = [
   {
@@ -236,6 +236,24 @@ module.exports = {
       );
 
       const content = { content: ` `, files: [attachment], components: [actionRowReroll] };
+      sendOrEditMessage(zi, interaction, messages, content);
+      return;
+    }
+
+    if (gamename === "Zblackjack"){
+
+      const embed = new EmbedBuilder()
+      .setTitle("Blackjack")
+      .setColor(lang?.COLOR || client.color)
+      .setDescription("Start Black Jack")
+
+      const actionRow = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+        .setCustomId("ZblackjackStart")
+        .setLabel("Start Black Jack")
+        .setStyle(ButtonStyle.Secondary)
+      )
+      const content = { content: ` `, embeds: [embed], components: [actionRow] };
       sendOrEditMessage(zi, interaction, messages, content);
       return;
     }

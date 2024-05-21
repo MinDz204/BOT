@@ -1,5 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-const client = require('../../bot');
+const client = require('../../../bot');
 
 
 const ROWS = 8;
