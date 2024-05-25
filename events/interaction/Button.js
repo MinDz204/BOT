@@ -13,11 +13,11 @@ module.exports = async (client, interaction) => {
         return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
       }
       if (interaction?.customId.includes("Ziselectmusix")) {
-        if( interaction?.values[0] != "cancelSEARCHTRACK" ) {
-          return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
-        }else{
-          return interaction?.message.delete();
-        }
+        return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
+      }
+      if (interaction?.customId.includes("Zsearch")) {
+        interaction.deferUpdate().catch(e=> console.log);
+        return require("./../ziplayer/ziSearch")(interaction.message, interaction.message.embeds[0].description.replace(`*`, ""), interaction?.customId.replace(`Zsearch`, ""));
       }
       //Zi module------------------------------------------------//
       if (interaction?.customId.includes("Ziplayer")){

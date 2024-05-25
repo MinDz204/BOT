@@ -153,12 +153,11 @@ const timeToSeconds = (time) => {
 const tracsrowslecs = async(res, lang, nameS, interaction) => {
   res = res?.tracks || res;
   const client = require("../../bot");
-  const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js");
+  const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
   const maxTracks = res.filter(t => t?.url.length < 100).slice(0, 20);
-
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
-      .setLabel(`${index + 1} - ${ track?.duration }`)
+      .setLabel(`${index + 1} - ${ track?.queryType }: ${ track?.duration }`)
       .setDescription(` ${Zitrim( track?.title , 50)} `)
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
@@ -171,12 +170,12 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
   
   const embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client.color)
-    .setTitle(`${lang?.PlayerSearch} ${Zitrim( nameS , 200)}`)
-    .setDescription(`<:cirowo:1007607994097344533>`)
+    .setTitle(`${lang?.PlayerSearch}`)
+    .setDescription(`** ${Zitrim( nameS , 200)} **`)
     .setTimestamp()
     .addFields( maxTracks.map((track, i) => ({
       name: `${i + 1}. ${Zitrim(track.title, 100)}`,
-      value: `By: \`${Zitrim(track.author, 200)}\``,
+      value: `${ track?.queryType }: \`${Zitrim(track.author, 150)}\``,
     }))
   )
     .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
@@ -187,12 +186,28 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
         .setCustomId('Ziselectmusix')
         .setMinValues(1)
         .setMaxValues(1)
-        .setPlaceholder('Make a selection!')
+        .setPlaceholder('▶️ | Pick the track u want to add to queue.')
         .addOptions( track_creator )
-        .addOptions( cancel )
       );
-
-  return { content:``, embeds: [embed], components: [ select ] }
+  const butt = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+    .setCustomId('Zsearchyoutube')
+    .setEmoji('<a:youtube:1243683781320380426>')
+    .setStyle(2),
+    new ButtonBuilder()
+    .setCustomId('Zsearchsoundcloud')
+    .setEmoji('<a:SOUNDCLOUD:1243684515646541936>')
+    .setStyle(2),
+    new ButtonBuilder()
+    .setCustomId('ZsearchspotifySearch')
+    .setEmoji('<a:spotify:1243684999182422097>')
+    .setStyle(2),
+    new ButtonBuilder()
+    .setCustomId('cancel')
+    .setLabel('❌')
+    .setStyle(2)
+  )
+  return { content:``, embeds: [embed], components: [butt, select ] }
 }
 
 module.exports = {

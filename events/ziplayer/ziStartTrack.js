@@ -89,12 +89,12 @@ const RelatedTracks = async (queue) => {
   return tracks;
 }
 const RelatedTracksRow = async (queue) => {
-  let resu = await RelatedTracks(queue)
+  let resu = await RelatedTracks(queue);
   const maxTracks = resu.filter(t => t?.url.length < 100).slice(0, 20);
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${ track?.duration }`)
-      .setDescription(` ${Zitrim( track?.title , 50)} `)
+      .setDescription(`${Zitrim( track?.cleanTitle ?? track?.title , 50)}`)
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })
@@ -159,9 +159,9 @@ const animatedIcons = [
 
 const defaultImage = 'https://cdn.discordapp.com/attachments/1064851388221358153/1215655934546804746/NoImage.png';
 const iconMappings = {
-  youtube: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091796615389511803/ok2.gif',
-  spotify: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091797876692230274/spoty.gif',
-  soundcloud: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091716901463412757/ezgif.com-crop.gif',
+  youtube: 'https://cdn.discordapp.com/attachments/1064851388221358153/1243685364502102066/youtube.gif',
+  spotify: 'https://cdn.discordapp.com/attachments/1064851388221358153/1243684923626356846/spotify.gif',
+  soundcloud: 'https://cdn.discordapp.com/attachments/1064851388221358153/1243684572672037027/SOUNDCLOUD.gif',
   default: 'https://cdn.discordapp.com/attachments/1064851388221358153/1091717240669348010/ezgif.com-crop_1.gif',
 };
 
@@ -206,7 +206,10 @@ const zistartEmber = async (queue, lang) => {
       `${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationSymbol} <a:_:${animatedIcons[Math.floor(Math.random() * animatedIcons.length)]}>
       ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Filter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()}`
     )
-    .addFields({ name: progress, value: ' ' });
+    .addFields(
+      { name:` ${queue?.currentTrack?.cleanTitle}`, value: ' ' },
+      { name: ` ${progress}`, value: ' ' }
+    );
 
   const isYouTube = ['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType);
   if (isYouTube) {

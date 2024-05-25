@@ -4,22 +4,6 @@ const db = require("./../mongoDB");
 const { ZifetchInteraction, Zitrim } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
 const client = require('../bot');
-function extractSongTitle(title, artist = "") {
-  const normalizedArtist = artist.toLowerCase().trim() || "A";
-  
-  const segments = title.split( /-|\||\[|\]|\(|\)| ft/i );
-
-  for (const segment of segments) {
-    const trimmedSegment = segment.trim().toLowerCase(); // Normalize case and trim whitespace
-
-    // Check if the segment does not contain "music", "lyrics", or the normalized artist name
-    if (trimmedSegment && !trimmedSegment.includes("music") && !trimmedSegment.includes("lyrics") && !trimmedSegment.includes(normalizedArtist)) {
-      return segment.trim(); // Return the original segment (not normalized) with leading/trailing whitespace removed
-    }
-  }
-
-  return title;
-}
 
 // Sets or updates metadata for synced lyrics in the queue
 async function setSyncedLyrics(queue, messages, syncedLyrics, status = true) {
@@ -49,13 +33,13 @@ async function displayLyrics(messages, trackName, NOstop, interaction) {
       await messages.delete().catch(console.log);
       return;
     }
-    const songtile = trackName ?? queue?.currentTrack?.title.toString()  ?? "11506389808035922621150638980803592262";
+    const songtile = trackName ?? queue?.currentTrack?.cleanTitle ?? queue?.currentTrack?.title.toString()  ?? "11506389808035922621150638980803592262";
     let results = await player.lyrics.search({ q: songtile }).catch(console.log);
     let lyrics = results[0];
 
     // If no lyrics are found, try again with a modified song title
     if (!lyrics?.plainLyrics) {
-      results = await player.lyrics.search({ q: extractSongTitle(songtile, queue?.currentTrack?.author.toString()), artistName: queue?.currentTrack?.author.toString() }).catch(console.log);
+      results = await player.lyrics.search({ q: songtile, artistName: queue?.currentTrack?.author.toString() }).catch(console.log);
       lyrics = results[0];
       // If still no lyrics, inform the user and delete the message after a timeout
       if (!lyrics?.plainLyrics) {

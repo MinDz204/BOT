@@ -47,7 +47,7 @@ const handleVolumeChange = async (interaction, queue, lang) => {
       const newVolume = volume > 100 ? 100 : volume;
   
       queue?.node?.setVolume(newVolume);
-  
+      i.react("<a:likee:1210193685501706260>").catch(e=> console.log);
       await db.ZiUser.updateOne(
         { userID: interaction.user.id },
         { $set: { vol: newVolume } },

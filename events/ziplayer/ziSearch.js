@@ -1,19 +1,19 @@
 const db = require("./../../mongoDB");
 const client = require('../../bot');
-const { useMainPlayer, QueryType, useQueue } = require("discord-player");
+const { useMainPlayer, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
 const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction } = require("../Zibot/ZiFunc");
 const config = require("./../../config")
 const player = useMainPlayer();
 
-module.exports = async (interaction, nameS) => {
+module.exports = async (interaction, nameS, SearchEngine = 'auto' ) => {
   if(!config.messCreate.PlayMusic) return;
   let message;
   if( interaction.type == 3 ){
     interaction.deferUpdate().catch(e => { });
     await interaction?.message.edit({ content: `<a:loading:1151184304676819085> Loading...`})
     message = await interaction.channel?.messages.fetch({ message: interaction?.message?.id , cache: false, force: true })
-  }else{
+  }else {
     message = await ZifetchInteraction(interaction);
   }
   const queue = useQueue(interaction.guild.id);
@@ -53,14 +53,17 @@ module.exports = async (interaction, nameS) => {
         setTimeout(function() {
           message?.delete().catch(e => { });
         }, 10000)
-      )
+      ).catch(e => { })
     }
   }
   let lang = await rank({ user: interaction?.user || interaction?.author });
   let res = await player.search(nameS, {
-    fallbackSearchEngine: QueryType.YOUTUBE,
+    fallbackSearchEngine: SearchEngine,
     requestedBy: interaction?.user || interaction?.author,
   });
  let embed = await tracsrowslecs(res, lang, nameS, interaction);
-  return message?.edit( embed ).catch(  e => interaction?.user?.send( e?.message ))
+  if (SearchEngine != 'auto'){
+    message.delete().catch(e => console.log);
+    return interaction.edit( embed ).catch(  e => interaction?.user?.send( e?.message ));}
+  return message?.edit( embed ).catch(  e => interaction?.user?.send( e?.message ));
 }
