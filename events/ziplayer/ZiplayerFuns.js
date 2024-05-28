@@ -1,21 +1,21 @@
-const { useQueue, QueueRepeatMode, useHistory } = require("discord-player");
+const { useQueue, QueueRepeatMode, useHistory, Util } = require("discord-player");
 const { zistart } = require("./ziStartTrack");
 const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder  } = require("discord.js");
 const { SEEKfunc } = require("./ZiSeek");
 const { handleVolumeChange } = require("./Zivolume");
 const db = require("./../../mongoDB");
-const { ZiPlayerFillter, ZiPlayerFillterRow } = require("./Zifillter");
+const { ZiPlayerFillter } = require("./Zifillter");
 const config = require("../../config");
 const { timeToSeconds } = require("../Zibot/ZiFunc");
 const client = require("../../bot");
 
 const deleteAfterTimeout = (message, timeout = 10000) => {
   setTimeout(() => {
-    message.delete().catch(e => { /* Handle error if needed */ });
+    message?.delete().catch(e => { /* Handle error if needed */ });
   }, timeout);
 };
 const sendTemporaryReply = async (interaction, content) => {
-  const message = await interaction.reply({ content, fetchReply: true });
+  const message = await interaction?.reply({ content, fetchReply: true });
   deleteAfterTimeout(message);
 };
 
@@ -70,11 +70,13 @@ if(!config.messCreate.PlayMusic) return;
           )
         return interaction.showModal(modal);
     }
-//::::::::::::::::::::::::lock::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+//#region Lock
     let ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
     let requestby = ZiUserLock?.userID || queue?.metadata.requestby?.id;
     if (!!ZiUserLock?.status && requestby !== interaction.user?.id) return  interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
-    switch (interaction.customId) {
+//#end Lock
+//#region func
+      switch (interaction.customId) {
       case 'ZiplayerControll':{
         if (!!requestby && requestby !== interaction.user?.id) return  interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
         await db.ZiUserLock.updateOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }, {
@@ -118,24 +120,12 @@ if(!config.messCreate.PlayMusic) return;
           function() {
             interaction?.message.delete().catch(e => { });
           }, 10000)).catch(e => { });
-      //:::::::::::::::::::::::::::: Fillter ::::::::::::::::::::::::::::::::::::::::::::::::::::://
       case "ZiplayerFillter":
         await interaction?.reply(await ZiPlayerFillter(interaction?.user, queue, lang))
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
-      case "Ziplayerfillteroff":
-        await queue?.filters?.ffmpeg?.setFilters(false);
-        await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
-        return interaction?.message?.delete().catch(e => { })
-      case "Ziplayersilenceremove":
-      case "Ziplayerlofi":
-      case "Ziplayernightcore":
-      case "Ziplayerkaraoke":
-        await interaction?.deferUpdate().catch(e => { })
-        await queue?.filters.ffmpeg.toggle(`${interaction.customId.substring(8).toLowerCase()}`);
-        await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
-        return interaction?.message.edit({ components: [await ZiPlayerFillterRow(queue)] }).catch(e => { });
     }
-    //--------------------------------------------------------------------------------------------------//
+//#region PLAYER
+    if( !queue ) return;
     let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();
     if (!ZiisPlaying) return interaction?.reply({ content: `${lang?.NoPlaying}`, ephemeral: true })
 
@@ -166,7 +156,8 @@ if(!config.messCreate.PlayMusic) return;
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
-    //::::::::::::::::::::::::::::::::::::::: SEEK ::::::::::::::::::::::::::::::::::::::::::::::::::::://
+//#end PLAYER
+//#region SEEK
       case "ZiplayerSEEK0":
         return Ziseek(interaction, queue, lang, "BEGIN");
       case "ZiplayerSEEKP30":
@@ -202,8 +193,10 @@ if(!config.messCreate.PlayMusic) return;
           const success = queue.node.seek(targetTime * 1000);
           if (success) {
             try {
+              await i.react("<a:likee:1210193685501706260>");
               await collector.stop(); // stop collector explicitly
               await interaction.deleteReply().catch(e => { console.error('Error deleting reply:', e); });
+              await Util.wait(500);
               await interaction.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue));
               return;
             } catch (e) {
@@ -215,14 +208,14 @@ if(!config.messCreate.PlayMusic) return;
         });
     
         collector.on('end',async () => {
-          const messagesd = await interaction.editReply({ content: '❌ | End seek 1m.', fetchReply: true });
+          const messagesd = await interaction.editReply({ content: '❌ | End seek 1m.', fetchReply: true }).catch(e => { });
           deleteAfterTimeout(messagesd);
 
         });
         return;
       }
     }
-
+//#end SEEK
   } catch (e) {
     console.log(e)
   }

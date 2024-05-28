@@ -207,8 +207,8 @@ const zistartEmber = async (queue, lang) => {
       ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Filter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()}`
     )
     .addFields(
+      { name: ` ${progress}`, value: ' ' },
       { name:` ${queue?.currentTrack?.cleanTitle}`, value: ' ' },
-      { name: ` ${progress}`, value: ' ' }
     );
 
   const isYouTube = ['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType);

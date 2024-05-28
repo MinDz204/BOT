@@ -24,7 +24,13 @@ module.exports = async (client, interaction) => {
         lang = await rank({ user: interaction?.user });
         return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
       }
+      //ZiFillter ------------------------------------------------//
+      if (interaction?.customId.includes("ZiFillter")){
+        lang = await rank({ user: interaction?.user });
+        return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
+      }
    }
+
     //ZiVc---------------------------------------------------------//
     if (interaction?.customId.includes("ZiVC")){
       if(!config.EnableJOINTOCREATE) return;
