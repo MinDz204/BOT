@@ -7,7 +7,8 @@ const config = require("../../config");
 module.exports = async (client, interaction) => {
   try {
     let lang;
-    //SEARCH MUSIC------------------------------------------------//
+    //#region SEARCH MUSIC
+    //------------------------------------------------//
     if(config.messCreate.PlayMusic){
       if (validURL(interaction.customId)) {
         return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
@@ -30,7 +31,8 @@ module.exports = async (client, interaction) => {
         return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
       }
    }
-
+//#endregion
+    
     //ZiVc---------------------------------------------------------//
     if (interaction?.customId.includes("ZiVC")){
       if(!config.EnableJOINTOCREATE) return;
@@ -40,6 +42,7 @@ module.exports = async (client, interaction) => {
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys----------------------------------------------------------//
         lang = await rank({ user: interaction?.user });
+    //#region Game
     //game--------------------------------------------------------------//
     if (interaction?.customId.includes("ZtttR")){
       return require("../Zibot/game/ZitttR")(interaction, lang)
@@ -56,14 +59,14 @@ module.exports = async (client, interaction) => {
     if (interaction?.customId.includes("Zblackjack")){
       return require("../Zibot/game/ZblackJack")(interaction, lang)
     }
-
+//#endregion
     //cooldows-------------------------------------------------//
     const expirationTime = lang?.cooldowns + 3 * 1000;
     if (Date.now() < expirationTime) {
       const expiredTimestamp = Math.round(expirationTime / 1000);
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
-
+    //#region Button Func
     switch (interaction.customId) {
       case "cancel":
         return interaction?.message.delete();
@@ -234,6 +237,7 @@ module.exports = async (client, interaction) => {
       default:
         return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${interaction?.customId}`)
     }
+//#endregion
   } catch (e) {
     return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${e?.stack}`)
   }

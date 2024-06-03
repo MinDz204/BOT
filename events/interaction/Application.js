@@ -23,7 +23,7 @@ module.exports = async (client, interaction) => {
     switch (interaction.commandType) {
       case 1:
         return await processFiles(client, interaction, commandFiles, "./../../commands", config.Discommands);
-
+      case 2:
       case 3:
         return await processFiles(client, interaction, contextFiles, "./../../context", config.DisContext);
 

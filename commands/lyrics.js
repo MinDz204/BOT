@@ -54,20 +54,22 @@ async function displayLyrics(messages, trackName, NOstop, interaction) {
           return;
       }
     }
-    
+    const currentMessages = queue?.metadata?.ZsyncedLyrics?.Status ? queue.metadata.ZsyncedLyrics.messages ?? messages : messages;
     const embed = new EmbedBuilder()
       .setTitle(lyrics.trackName)
       .setAuthor({ name: lyrics.artistName })
       .setColor('Random');
   
-    if (!lyrics.syncedLyrics || !queue) { 
+    if (!lyrics.syncedLyrics) { 
+      if (queue) await setSyncedLyrics(queue, currentMessages, syncedLyrics);
       embed.setDescription(Zitrim(lyrics.plainLyrics, 1997));
       if (!interaction.guild) return interaction.editReply({ content: ' ', embeds: [embed] }).catch(console.log);
-      await messages.edit({ content: ' ', embeds: [embed] });
+
+      await currentMessages.edit({ content: ' ', embeds: [embed] });
       return;
     }
     const syncedLyrics = queue?.syncedLyrics(lyrics);
-    const currentMessages = queue?.metadata?.ZsyncedLyrics?.Status ? queue.metadata.ZsyncedLyrics.messages ?? messages : messages;
+
     await setSyncedLyrics(queue, currentMessages, syncedLyrics);
     let previousLyrics = '';
 
@@ -119,7 +121,6 @@ module.exports = {
     cooldown: 3,
     dm_permission: true,
     run: async (lang, interaction, NOstop) => {
-      console.log(interaction.channel);
       const messages = await ZifetchInteraction(interaction);
       const trackName = interaction?.options?.getString('name');
       return displayLyrics(messages, trackName, NOstop, interaction);

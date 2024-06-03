@@ -100,7 +100,7 @@ fs.readdir("./context", (err, files) => {
       let props = require(`./context/${f}`);
       client.commands.push({
         name: props.name,
-        type: 3,
+        type: props?.type || 3,
         integration_types: props.integration_types,
         contexts: props.contexts,
         name_localizations: props?.name_localizations,

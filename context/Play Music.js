@@ -14,24 +14,19 @@ module.exports = {
   cooldown: 3,};
 
 module.exports.run = async (lang, interaction) => {
-    // console.log(interaction);
-    let name = interaction.targetMessage?.content;
-    if (!name){
-        const targetMessage = interaction.targetMessage?.embeds[0]?.data ?? {};
-        const targetMessageName = targetMessage.fields?.[0]?.name ?? "";
-        if( !targetMessageName ){ return interaction?.reply(`${lang?.PlayerSearchErr}`).then( async messs => {
-          setTimeout(function() {
-            messs?.delete().catch(e => { });
-          }, 10000)
-      })};
-        if (targetMessageName.includes("▒") || targetMessageName.includes("█")) {
-            name = targetMessage.author?.url;
-        }
-        else return  interaction?.reply(`${lang?.PlayerSearchErr}`).then( async messs => {
-            setTimeout(function() {
-              messs?.delete().catch(e => { });
-            }, 10000)
-        })
-    }
-    return require("../events/ziplayer/ziSearch")(interaction, name);
+let name = interaction.targetMessage?.content; // get the name of the song
+
+if (!name) {
+  const embedData = interaction.targetMessage?.embeds[0]?.data ?? {};
+  
+  try {
+    const firstFieldName = embedData?.fields[0]?.name;
+    const hasSpecialField = firstFieldName.includes("▒") || firstFieldName.includes("█");
+
+    name = hasSpecialField ? embedData.author?.url : embedData.description;
+  } catch (e) {
+    name = embedData.description;
+  }
+}
+return require("../events/ziplayer/ziSearch")(interaction, name);
 }
