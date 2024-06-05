@@ -125,6 +125,9 @@ if(!config.messCreate.PlayMusic) return;
           function() {
             interaction?.message.delete().catch(e => { });
           }, 10000)).catch(e => { });
+      case "ZiplayerQueueF5":
+        await require("./Ziqueue")(interaction, queue, lang, true);
+        return;
       case "ZiplayerFillter":
         await interaction?.reply(await ZiPlayerFillter(interaction?.user, queue, lang))
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });

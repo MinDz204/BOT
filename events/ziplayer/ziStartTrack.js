@@ -94,7 +94,7 @@ const RelatedTracksRow = async (queue) => {
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${ track?.duration }`)
-      .setDescription(`${Zitrim( track?.cleanTitle ?? track?.title , 50) ?? "no name"}`)
+      .setDescription(`- ${Zitrim( track?.cleanTitle || track?.title , 50) || "no name"}`)
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })

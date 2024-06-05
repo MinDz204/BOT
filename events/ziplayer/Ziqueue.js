@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Message } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require('../../bot');
 
@@ -32,7 +32,11 @@ module.exports = async (interaction, queue, lang, NOnextpage) => {
       .setStyle(ButtonStyle.Secondary)
       .setCustomId("QueueCancel"),
     new ButtonBuilder()
-      .setLabel("Clear")
+      .setLabel("↻")
+      .setStyle(ButtonStyle.Secondary)
+      .setCustomId("ZiplayerQueueF5"),
+    new ButtonBuilder()
+      .setLabel("Clear All")
       .setStyle(ButtonStyle.Secondary)
       .setCustomId("ZiplayerQueueClear"),
     new ButtonBuilder()
