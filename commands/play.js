@@ -67,8 +67,9 @@ module.exports = {
       maxSize: 200,
       maxHistorySize: 20,
       leaveOnEmpty: true,
-      leaveOnEmptyCooldown: 300000,
-      leaveOnEnd: false,
+      leaveOnEmptyCooldown: 2000,
+      leaveOnEnd: true,
+      leaveOnEndCooldown: 300000,
       skipOnNoStream: true,
       selfDeaf: true,
     });

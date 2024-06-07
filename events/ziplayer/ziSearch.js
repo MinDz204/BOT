@@ -11,7 +11,7 @@ module.exports = async (interaction, nameS, SearchEngine = 'auto' ) => {
   let message;
   if( interaction.type == 3 ){
     interaction.deferUpdate().catch(e => { });
-    await interaction?.message.edit({ content: `<a:loading:1151184304676819085> Loading...`})
+    // await interaction?.message.edit({ content: `<a:loading:1151184304676819085> Loading...`})
     message = await interaction.channel?.messages.fetch({ message: interaction?.message?.id , cache: false, force: true })
   }else {
     message = await ZifetchInteraction(interaction);
