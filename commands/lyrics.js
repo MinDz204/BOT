@@ -3,7 +3,7 @@ const db = require("./../mongoDB");
 const { ZifetchInteraction, Zitrim } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
 const client = require('../bot');
-
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 // Sets or updates metadata for synced lyrics in the queue
 async function setSyncedLyrics(queue, messages, syncedLyrics, status = true) {
   const guildId = queue?.guild?.id;
