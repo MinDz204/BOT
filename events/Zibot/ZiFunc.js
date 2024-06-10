@@ -73,14 +73,25 @@ function shuffleArray(array) {
      
   return array;
 }
-function Zilink(str){
-  const match = str.match(/(https?:\/\/[^\s]+)/g);
+function Zilink(str) {
+  // Tìm tất cả các URL trong chuỗi đầu vào
+  const match = str.match(/https?:\/\/[^\s)\\]+/g);
+  // Trả về URL đầu tiên tìm thấy hoặc null nếu không tìm thấy
   return match ? match[0] : null;
 }
-function processQuery(qAuery) {
-  let query = Zilink(qAuery)
-  return query ? query : qAuery;
+
+function processQuery(query) {
+  // Tìm URL trong chuỗi đầu vào
+  let url = Zilink(query);
+  // Nếu tìm thấy URL, loại bỏ các ký tự không mong muốn
+  if (url) {
+    url = url.replace(/[()\\]/g, ""); // Loại bỏ các ký tự '(', ')', '\\'
+    return url;
+  }
+  // Nếu không tìm thấy URL, trả về chuỗi đầu vào ban đầu
+  return query;
 }
+
 function Zicrop(query){
   if(query.includes('Zi=')){
     const queryParts = query.split('Zi=');

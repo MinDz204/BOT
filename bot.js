@@ -30,7 +30,11 @@ const client = new Client({
     GatewayIntentBits.DirectMessageTyping, // for dm message typinh
     GatewayIntentBits.MessageContent, // enable if you need message content things
   ],
-  shards: 'auto',
+  allowedMentions:{
+    parse: ['users', 'roles'],
+    repliedUser: false,
+  },
+
 });
 
 client.color = config.color;

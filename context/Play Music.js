@@ -1,3 +1,5 @@
+const { Message } = require("discord.js");
+
 module.exports = {
   name: "Play Music",
   name_localizations: {
@@ -14,18 +16,20 @@ module.exports = {
   cooldown: 3,};
 
 module.exports.run = async (lang, interaction) => {
-let name = interaction.targetMessage?.content; // get the name of the song
-
+let name = interaction.targetMessage?.content;
 if (!name) {
-  const embedData = interaction.targetMessage?.embeds[0]?.data ?? {};
-  
-  try {
-    const firstFieldName = embedData?.fields[0]?.name;
-    const hasSpecialField = firstFieldName.includes("▒") || firstFieldName.includes("█");
-
-    name = hasSpecialField ? embedData.author?.url : embedData.description;
-  } catch (e) {
-    name = embedData.description;
+  const embedData = interaction.targetMessage?.embeds[0]?.data;
+  if(embedData){
+    const firstFieldName = embedData?.fields?.[0]?.name;
+    const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
+    name = hasSpecialField ? embedData.author?.url :  embedData.description;
+  }else{
+      const attachments = interaction.targetMessage.attachments;
+      if(attachments)
+        for (let attachment of attachments.values()) {
+          name = attachment.url;
+          break;
+        }
   }
 }
 return require("../events/ziplayer/ziSearch")(interaction, name);

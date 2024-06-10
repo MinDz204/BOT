@@ -30,9 +30,6 @@ module.exports = async (client, oldState, newState) => {
           let randomID = members[Math.floor(Math.random() * members.length)];
           let randomMember = oldState?.guild.members.cache.get(randomID);
           return Ziset(queue, randomMember.user);
-          // console.log(randomMember?.user);
-          // console.log("-------------------");
-          // console.log(queue?.metadata?.requestby)
         }
       }
     }

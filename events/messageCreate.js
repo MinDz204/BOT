@@ -19,21 +19,29 @@ const playMusic = async (lang, message, client, content) => {
 };
 
 const fetchMessageContent = async (message, refMsgId) => {
-    try {
-        const mess = await message.channel.messages.fetch(refMsgId, { cache: false, force: true });
-        const embedData = mess.embeds[0]?.data;
-        const hasSpecialField = embedData?.fields?.[0]?.name.includes("▒") || embedData?.fields?.[0]?.name.includes("█");
-        let msgContent = hasSpecialField ? embedData?.author?.url : mess.content;
-
-        return msgContent || embedData?.description;
-    } catch (e) {
-        console.error(e);
-        const reply = await message.reply(lang?.PlayerSearchErr);
-        setTimeout(() => {
-            reply.delete().catch(() => {});
-        }, 10000);
-        return null;
-    }
+    const mess = await message.channel.messages.fetch(refMsgId, { cache: false, force: true });
+    let name = mess.content;
+    if (!name) {
+        const embedData = mess?.embeds[0]?.data;
+        if(embedData){
+          const firstFieldName = embedData?.fields?.[0]?.name;
+          const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
+          name = hasSpecialField ? embedData.author?.url :  embedData.description;
+        }else{
+            const attachments = mess?.attachments;
+            if(attachments)
+              for (let attachment of attachments.values()) {
+                name = attachment.url;
+                break;
+              }
+        }
+      }
+    if (name) return name;
+    const reply = await message.reply(lang?.PlayerSearchErr);
+    setTimeout(() => {
+        reply.delete().catch(() => {});
+    }, 10000);
+    return null;
 };
 
 const handleBotMention = async (message, client, lang, content) => {
@@ -69,7 +77,7 @@ module.exports = async (client, message) => {
         return;
     }
 
-    if (botMentionRegex.test(content)) {
+    if (botMentionRegex.test(content) && !message.reference) {
         return handleBotMention(message, client, lang, content);
     }
 
