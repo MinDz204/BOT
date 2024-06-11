@@ -17,8 +17,7 @@ module.exports = async (client, interaction) => {
         return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
       }
       if (interaction?.customId.includes("Zsearch")) {
-        interaction.deferUpdate().catch(e=> console.log);
-        return require("./../ziplayer/ziSearch")(interaction.message, interaction.message.embeds[0].description.replace(`*`, ""), interaction?.customId.replace(`Zsearch`, ""));
+        return require("./../ziplayer/ziSearch")(interaction, interaction.message.embeds[0].description.replaceAll("*", "").replace(/ + /g, " "), interaction?.customId.replace(`Zsearch`, ""));
       }
       //Zi module------------------------------------------------//
       if (interaction?.customId.includes("Ziplayer")){

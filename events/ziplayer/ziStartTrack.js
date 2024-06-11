@@ -94,7 +94,7 @@ const RelatedTracksRow = async (queue) => {
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${ track?.duration }`)
-      .setDescription(`- ${Zitrim( track?.cleanTitle || track?.title , 50) || "no name"}`)
+      .setDescription(`. ${Zitrim(track?.title , 90) || "no name"}`)
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })
@@ -203,13 +203,21 @@ const zistartEmber = async (queue, lang) => {
     .setTimestamp()
     .setFooter({ text: `${lang?.RequestBY} ${requestby?.tag}`, iconURL: requestby?.displayAvatarURL({ dynamic: true }) })
     .setDescription(
-      `${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationSymbol} <a:_:${animatedIcons[Math.floor(Math.random() * animatedIcons.length)]}>
-      ${lang?.LoopMode}: **${methods[queue.repeatMode]}** - Filter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()}`
+      `${lang?.Volume}: **${queue?.node.volume}**% - ${lang?.Playing}: **${trackDuration}**${trackDurationSymbol} <a:_:${animatedIcons[Math.floor(Math.random() * animatedIcons.length)]}>`
     )
     .addFields(
-      { name: ` ${progress}`, value: ' ' },
-      { name:` ${queue?.currentTrack?.cleanTitle}`, value: ' ' },
+      { name: ` ${progress}`, value: ' ' }
     );
+    if(queue?.filters?.ffmpeg?.toArray().length !== 0){
+      embed.addFields(
+        { name: ` `, value: Zitrim(`**Filter: ${queue?.filters?.ffmpeg?.getFiltersEnabled()}**`,1020), inline: false }
+      );
+    }
+    if(queue.repeatMode !== 0){
+      embed.addFields(
+        { name: ` `, value: `**${lang?.LoopMode}: ${methods[queue.repeatMode]}**`, inline: false }
+      );
+    }
 
   const isYouTube = ['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType);
   if (isYouTube) {

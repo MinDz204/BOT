@@ -68,7 +68,7 @@ module.exports = async (client, message) => {
 
     message.react("<a:likee:1210193685501706260>");
 
-    if (message.reference && message.guild && config.messCreate.PlayMusic) {
+    if (message.reference && message.guild && config.ZiFuncs.PlayMusic) {
         const refMsgId = message.reference.messageId;
         const msgContent = await fetchMessageContent(message, refMsgId);
         if (msgContent) {
@@ -81,7 +81,7 @@ module.exports = async (client, message) => {
         return handleBotMention(message, client, lang, content);
     }
 
-    if (config.messCreate.PlayMusic && message.guild) {
+    if (config.ZiFuncs.PlayMusic && message.guild) {
         const playContent = message.content.replace(`<@${client.user.id}>`, "").trim();
         return playMusic(lang, message, client, playContent);
     }

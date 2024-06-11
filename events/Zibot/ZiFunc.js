@@ -169,7 +169,7 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${ track?.queryType }: ${ track?.duration }`)
-      .setDescription(` ${Zitrim( track?.title , 50)} `)
+      .setDescription(` ${Zitrim( track?.title , 90)}`)
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })

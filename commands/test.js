@@ -1,4 +1,3 @@
-const { useMainPlayer } = require("discord-player");
 const client = require("../bot");
 const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 const { EmbedBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");

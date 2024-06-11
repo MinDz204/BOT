@@ -6,7 +6,7 @@ const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction } = req
 const config = require("./../../config")
 const player = useMainPlayer();
 
-module.exports = async (interaction, nameS, SearchEngine = 'auto' ) => {
+module.exports = async (interaction, nameS, SearchEngine = 'youtube' ) => {
   if(!config.ZiFuncs.PlayMusic) return;
   let message;
   if( interaction.type == 3 ){
@@ -62,8 +62,5 @@ module.exports = async (interaction, nameS, SearchEngine = 'auto' ) => {
     requestedBy: interaction?.user || interaction?.author,
   });
  let embed = await tracsrowslecs(res, lang, nameS, interaction);
-  if (SearchEngine != 'auto'){
-    message.delete().catch(e => console.log);
-    return interaction.edit( embed ).catch(  e => interaction?.user?.send( e?.message ));}
   return message?.edit( embed ).catch(  e => interaction?.user?.send( e?.message ));
 }
