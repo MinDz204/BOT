@@ -11,9 +11,6 @@ const ZiUser = Schema({
   vol: Number,
   cooldowns: Number,
   claimcheck: Number,
-  GIUID: Number,
-  GIdata:Array,
-  GIrow: Array,
   EQband: Array,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
@@ -52,16 +49,7 @@ const voiceManager = Schema({
   textChannel: String,
   voiceChannel: String,
 })
-const useLyrics = Schema({
-  guildID: String,
-  channelID: String,
-  userID: String,
-  messageID: String,
-  liveLyricsID: String,
-  status: Boolean,
-  ms1:Number,
-  ms2:Number,
-})
+
 //-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
@@ -70,5 +58,4 @@ module.exports = {
   ZiguildPlay: model("ZiguildPlay", ZiguildPlay),
   voiceManager: model("voiceManager", voiceManager),
   ZiUserLock: model("ZiUserLock", ZiUserLock),
-  useLyrics: model("useLyrics", useLyrics),
 }

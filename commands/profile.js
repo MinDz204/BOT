@@ -10,14 +10,14 @@ module.exports = {
   name_localizations: {
     "en-US": "profile",
     "vi": "thông-tin",
-    "ja": "プロフィール", // Profile in Japanese
-    "ko": "프로필", // Profile in Korean
+    "ja": "プロフィール",
+    "ko": "프로필",
   },
   description_localizations: {
     "en-US": "View profile.",
     "vi": "Xem thông tin hồ sơ của bạn.",
-    "ja": "プロフィールを見る", // View profile in Japanese
-    "ko": "프로필 보기", // View profile in Korean
+    "ja": "プロフィールを見る",
+    "ko": "프로필 보기",
   },
   integration_types: [0 ,1],
   contexts: [0, 1, 2],

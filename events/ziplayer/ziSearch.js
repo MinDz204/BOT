@@ -7,7 +7,7 @@ const config = require("./../../config")
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS, SearchEngine = 'auto' ) => {
-  if(!config.messCreate.PlayMusic) return;
+  if(!config.ZiFuncs.PlayMusic) return;
   let message;
   if( interaction.type == 3 ){
     interaction.deferUpdate().catch(e => { });

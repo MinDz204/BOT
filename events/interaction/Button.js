@@ -9,7 +9,7 @@ module.exports = async (client, interaction) => {
     let lang;
     //#region SEARCH MUSIC
     //------------------------------------------------//
-    if(config.messCreate.PlayMusic){
+    if(config.ZiFuncs.PlayMusic){
       if (validURL(interaction.customId)) {
         return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
       }
@@ -210,22 +210,6 @@ module.exports = async (client, interaction) => {
           )
 
         return interaction?.showModal(modal);
-      }
-      case "GIUIDProfile": {
-        return interaction?.showModal(
-          new ModalBuilder()
-          .setCustomId('GIUIDProfilemodal')
-          .setTitle(`Edit GI UID ${interaction.user.tag} `)
-          .addComponents(
-            new ActionRowBuilder().addComponents(
-              new TextInputBuilder()
-                .setCustomId('uid')
-                .setLabel(`uid`)
-                .setPlaceholder(`UID`)
-                .setStyle(TextInputStyle.Short)
-                .setRequired(true)
-          )
-        ));
       }
       case "refProfile": {
         let props = require(`../../commands/profile`);

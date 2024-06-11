@@ -10,15 +10,15 @@ module.exports = {
   description: "Play or Add music and play next.",
   name_localizations: {
     "en-US": "play",
-    "vi": "phát",  // Play in Vietnamese
-    "ja": "再生", // Play in Japanese
-    "ko": "재생" // Play in Korean
+    "vi": "phát",
+    "ja": "再生",
+    "ko": "재생"
   },
   description_localizations: {
     "en-US": "Play or Add music and play next.",
-    "vi": "Phát hoặc Thêm nhạc và phát tiếp theo.",  // Play or Add music and play next in Vietnamese
-    "ja": "音楽を再生または追加して、次に再生します", // Play or Add music and play next in Japanese
-    "ko": "음악을 재생하거나 추가하고 다음으로 재생합니다", // Play or Add music and play next in Korean
+    "vi": "Phát hoặc Thêm nhạc và phát tiếp theo.",
+    "ja": "音楽を再生または追加して、次に再生します",
+    "ko": "음악을 재생하거나 추가하고 다음으로 재생합니다",
   },
   integration_types: [0],
   contexts: [0, 1, 2],

@@ -48,7 +48,7 @@ module.exports = client;
   const player = new Player(client, {
     SkipFFmpeg: false
   });
-if(config.messCreate.PlayMusic){
+if(config.ZiFuncs.PlayMusic){
   player.setMaxListeners(200);
   player.extractors.loadDefault()
   // player.on("debug",console.log)
