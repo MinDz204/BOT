@@ -4,12 +4,25 @@ const {
   Routes,
 } = require("discord.js");
 const db = require("../mongoDB.js");
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
+
 module.exports = async (client) => {
   try {
     // Kết nối MongoDB
-    await require("../connectMONGO.js")();
-    const rest = new REST({ version: "10" }).setToken(config.Ziusr.keygen);
+    await mongoose.connect(config.MOGOURL || process.env.MONGO, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }).then(async () => {
+      setTimeout(async () => {
+        await db.Ziqueue.deleteOne();
+      }, 5000)
+    }).catch((err) => {
+      return console.log("\nMongoDB Error: \n" + err)
+    })
+    console.log(`Connected MongoDB`)
+
+
+    const rest = new REST({ version: "10" }).setToken(config.TOKEN || process.env.TOKEN);
     // Đăng ký lệnh
     if (config.rest) {
       await rest.put(Routes.applicationCommands(client.user.id), {
@@ -17,14 +30,14 @@ module.exports = async (client) => {
       });
       console.log("Successfully loaded application [/] commands.");
     }
-    const errorChannelId = config.Ziusr?.channelID;
-    client.errorLog = client.channels.cache.get(errorChannelId);
+
+    client.errorLog = client.channels.cache.get(config.ZiErrChannel);
 
     client.Zicomand = await rest.get(
       Routes.applicationCommands(client.user.id),
     );
     client.user.setStatus(config.Status);
-    client.user.setActivity(`${config.botStatus} /help`);
+    client.user.setActivity(`${config.botStatus}`);
 
     console.log(`${client.user.tag} Bot Online!`);
   } catch (e) {

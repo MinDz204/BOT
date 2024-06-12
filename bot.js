@@ -116,7 +116,7 @@ fs.readdir("./context", (err, files) => {
   });
 });
 
-client.login(config.Ziusr.keygen).catch(e => {
+client.login(config.TOKEN || process.env.TOKEN).catch(e => {
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
 })
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -129,14 +129,5 @@ process.on('unhandledRejection', error => {
 process.on('uncaughtException', (error) => {
   client.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
   console.error('Uncaught exception:', error);
-});
-
-
-process.on('warning', (warning) => {
-	if (
-		warning.name !== 'ExperimentalWarning' &&
-		warning.message !== 'The Fetch API is an experimental feature. This feature could change at any time' ){
-		console.warn(warning);
-	}
 });
 

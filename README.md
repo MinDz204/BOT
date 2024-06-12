@@ -24,7 +24,7 @@ cd Zibot
 npm install
 
 ```
-3. Set up your environment variables (e.g., DISCORD_TOKEN, MONGO_URI).
+3. Set up your environment variables (e.g., TOKEN, MONGO), config.
 
 4. Start the bot:
 
@@ -32,7 +32,6 @@ npm install
 npm start
 ```
 4. Usage
-   * Custom Commands: Add new commands by modifying the commands directory.
    * Event Handling: Customize event responses in the events directory.
 
 ## Contributing
