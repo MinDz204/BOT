@@ -3,13 +3,7 @@ const db = require("./../../mongoDB");
 const client = require('../../bot');
 
 
-module.exports = async (interaction, queue, lang, NOnextpage) => {
-  interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, ephemeral: true }).then(async Message => {
-    setTimeout(function() {
-      Message?.delete().catch(e => { });
-    }, 10000)
-  }).catch(e => { console.log(e) })
-
+module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) => {
   const tracl = [];
   queue?.tracks?.map(async (track, i) => {
     tracl.push({
@@ -19,12 +13,21 @@ module.exports = async (interaction, queue, lang, NOnextpage) => {
       duration: track.duration
     })
   })
-  let ziQueue = await db?.Ziqueue?.findOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(e => { });
-  let page = ziQueue?.page || 0
-  let a = tracl.length / 20
-  let b = `${a + 1}`
-  let toplam = b.charAt(0)
-  page = !!NOnextpage ? page : (page + 1) > toplam ? 1 : (page + 1);
+  let ziQueue = await db?.Ziqueue?.findOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(() => {});
+  let page = ziQueue?.page || 0;
+  const totalPages = Math.ceil(tracl.length / 20);
+  
+  if (!NOnextpage) {
+    if (PageNext) {
+      page = (page % totalPages) + 1;
+    } else {
+      page -= 1;
+      if (page < 1) {
+        page = totalPages;
+      }
+    }
+  }
+
   let currentIndex = (page - 1) * 20;
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -32,9 +35,9 @@ module.exports = async (interaction, queue, lang, NOnextpage) => {
       .setStyle(ButtonStyle.Secondary)
       .setCustomId("QueueCancel"),
     new ButtonBuilder()
-      .setLabel("↻")
+      .setLabel("⤮")
       .setStyle(ButtonStyle.Secondary)
-      .setCustomId("ZiplayerQueueF5"),
+      .setCustomId("ZiplayerQueueShuffl"),
     new ButtonBuilder()
       .setLabel("Clear All")
       .setStyle(ButtonStyle.Secondary)
@@ -44,6 +47,26 @@ module.exports = async (interaction, queue, lang, NOnextpage) => {
       .setCustomId("DelTrack")
       .setStyle(ButtonStyle.Secondary)
   )
+  const rowpage = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setLabel("Page: ")
+      .setCustomId("QueuePage")
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(true),
+    new ButtonBuilder()
+      .setLabel("←")
+      .setCustomId("ZiplayerQueuereRev")
+      .setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setLabel("↻")
+      .setStyle(ButtonStyle.Secondary)
+      .setCustomId("ZiplayerQueueF5"),
+    new ButtonBuilder()
+      .setLabel("→")
+      .setCustomId("ZiplayerQueueNext")
+      .setStyle(ButtonStyle.Secondary),
+  )
+
   const embed = async (start) => {
     let nowww = page === 1 ? 1 : page * 20 - 20;
     const current = tracl.slice(start, start + 20)
@@ -52,19 +75,19 @@ module.exports = async (interaction, queue, lang, NOnextpage) => {
       .setColor(lang?.COLOR || client.color)
       .setTitle(`<:queue:1150639849901133894> ${lang?.Queue}: ${interaction?.guild?.name}`)
       .setDescription(`${current.map(data =>
-        `\n${nowww++} | [${data.title.substr(0, 25) + "..."}](${data.url}) | ${data.author.substr(0, 15) + "..."}`)}
+        `\n${nowww++} | [${data.title.substr(0, 25).replace(/\[|\]|\(|\)/g, '') + "..."}](${data.url}) | ${data.author.substr(0, 15) + "..."}`)}
             `)
-      .setFooter({ text: `${page}/${toplam}` })
+      .setFooter({ text: `${page}/${totalPages}` })
       .setTimestamp()
   }
   //send messenger::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   if (!ziQueue) {
-    await interaction.channel.send({ embeds: [await embed(currentIndex)], components: [row] }).then(async Message => {
+    await interaction.channel.send({ embeds: [await embed(currentIndex)], components: [row,rowpage] }).then(async Message => {
       await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }, {
         $set: {
           messageID: Message.id,
           page: page,
-          toplam: toplam
+          totalPages: totalPages
         }
       }, { upsert: true }).catch(e => { })
     }).catch(e => { })
@@ -72,17 +95,17 @@ module.exports = async (interaction, queue, lang, NOnextpage) => {
     await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }, {
       $set: {
         page: page,
-        toplam: toplam
+        totalPages: totalPages
       }
     }, { upsert: true }).catch(e => { })
     await interaction.channel?.messages.fetch({ message: ziQueue?.messageID, cache: false, force: true })
       .then(async msg => msg.edit({ embeds: [await embed(currentIndex)] })).catch(async e => {
-        await interaction.channel.send({ embeds: [await embed(currentIndex)], components: [row] }).then(async Message => {
+        await interaction.channel.send({ embeds: [await embed(currentIndex)], components: [row,rowpage] }).then(async Message => {
           await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }, {
             $set: {
               messageID: Message.id,
               page: page,
-              toplam: toplam
+              totalPages: totalPages
             }
           }, { upsert: true }).catch(e => { })
         }).catch(e => { })

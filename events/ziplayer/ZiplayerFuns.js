@@ -126,6 +126,7 @@ if(!config.ZiFuncs.PlayMusic) return;
             interaction?.message.delete().catch(e => { });
           }, 10000)).catch(e => { });
       case "ZiplayerQueueF5":
+        await interaction?.deferUpdate().catch(e => { });
         await require("./Ziqueue")(interaction, queue, lang, true);
         return;
       case "ZiplayerFillter":
@@ -146,6 +147,7 @@ if(!config.ZiFuncs.PlayMusic) return;
       case "ZiplayerSeek":
         return interaction.reply(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue))
       case "ZiplayerQueuE":
+        await interaction?.deferUpdate().catch(e => { });
         await require("./Ziqueue")(interaction, queue, lang, false);
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
       case "ZiplayerVol":
@@ -164,6 +166,16 @@ if(!config.ZiFuncs.PlayMusic) return;
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
+      case "ZiplayerQueueShuffl":
+        queue.tracks.shuffle();
+        await interaction?.deferUpdate().catch(e => { });
+        return require("./Ziqueue")(interaction, queue, lang, true);
+      case "ZiplayerQueuereRev":
+        await interaction?.deferUpdate().catch(e => { });
+        return require("./Ziqueue")(interaction, queue, lang, false, false);
+      case "ZiplayerQueueNext":
+        await interaction?.deferUpdate().catch(e => { });
+        return require("./Ziqueue")(interaction, queue, lang, false, true);
 //#endregion
 //#region SEEK
       case "ZiplayerSEEK0":

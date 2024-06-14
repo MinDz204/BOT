@@ -96,7 +96,7 @@ module.exports = {
     } finally {
       queue.tasksQueue.release();
     }
-    if(queues?.metadata)  return messages.delete().catch(e => {});
+    if(queues?.metadata)  return messages?.delete().catch(e => {});
     return;
   },
 };

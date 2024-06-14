@@ -62,7 +62,7 @@ const Controll = createButton({ emoji: controllEmoji, customId: 'ZiplayerControl
 
 const queuE = createButton({
   customId: 'ZiplayerQueuE',
-  label: ziQueue ? `${ziQueue.page}/${ziQueue.toplam}` : null,
+  label: ziQueue ? `${ziQueue.page}/${ziQueue.totalPages}` : null,
   emoji: !ziQueue ? `<:queue:1150639849901133894>` : null,
   disabled: queue.isEmpty(),
 });

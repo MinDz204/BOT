@@ -11,7 +11,6 @@ const ZiUser = Schema({
   vol: Number,
   cooldowns: Number,
   claimcheck: Number,
-  EQband: Array,
   lvl: { type: Number, default: 1 },
   coin: { type: Number, default: 0 },
 })
@@ -29,12 +28,7 @@ const Ziqueue = Schema({
   channelID: String,
   messageID: String,
   page: Number,
-  toplam: Number,
-})
-const Zibot = Schema({
-  keygen: String,
-  channelID: String,
-  gif: String,
+  totalPages: Number,
 })
 //-------------------------------------------//
 const ZiguildPlay = Schema({
@@ -49,12 +43,10 @@ const voiceManager = Schema({
   textChannel: String,
   voiceChannel: String,
 })
-
 //-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
-  Zibot: model("Zibot", Zibot),
   ZiguildPlay: model("ZiguildPlay", ZiguildPlay),
   voiceManager: model("voiceManager", voiceManager),
   ZiUserLock: model("ZiUserLock", ZiUserLock),
