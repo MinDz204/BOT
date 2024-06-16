@@ -2,7 +2,7 @@ const db = require("./../../mongoDB");
 const client = require('../../bot');
 const { useMainPlayer, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction } = require("../Zibot/ZiFunc");
+const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction, extractId } = require("../Zibot/ZiFunc");
 const config = require("./../../config")
 const player = useMainPlayer();
 
@@ -57,6 +57,7 @@ module.exports = async (interaction, nameS, SearchEngine = 'youtube' ) => {
     }
   }
   let lang = await rank({ user: interaction?.user || interaction?.author });
+  if(extractId(nameS?.replace(`<@${client.user.id}>`, "").trim())) return require("./ZiPlaylist")({interaction, message, nameS, player, queue, lang});
   let res = await player.search(nameS, {
     fallbackSearchEngine: SearchEngine,
     requestedBy: interaction?.user || interaction?.author,

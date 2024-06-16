@@ -2,9 +2,11 @@ const { useQueue } = require("discord-player");
 const db = require("./../../mongoDB");
 const { zistart } = require("./../ziplayer/ziStartTrack");
 const { rank } = require("../Zibot/ZilvlSys");
-const { validURL, timeToSeconds } = require("../Zibot/ZiFunc");
+const { validURL, timeToSeconds, Zitrim, ZifetchInteraction } = require("../Zibot/ZiFunc");
 const { SEEKfunc } = require("../ziplayer/ZiSeek");
 const config = require("../../config");
+const { EmbedBuilder, ActionRowBuilder, ButtonStyle, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
+const { Deltrack } = require("../../lang/vi");
 //test func
 var hextest = /^#[0-9A-F]{6}$/i;
 function isNumber(str) {
@@ -81,10 +83,41 @@ module.exports = async (client, interaction) => {
         })
        	return interaction.deferUpdate().catch(e => { });
       }
+      case "DelPlaylistmodal":{
+        const listname = interaction.fields.getTextInputValue("listname");
+        const playlist = await db.playlist.findOne({ userID: interaction.user.id, listname}).catch(e=> console.error);
+        if (!playlist) return interaction.reply({ content: `${lang.NoPlaylist.replace("{USER}",`${interaction.user.id}`)}`, ephemeral: true }).catch(e => { });
+        const message = await ZifetchInteraction(interaction);
+        await message.edit({
+          content:"",
+          embeds:[
+            new EmbedBuilder()
+              .setColor(lang?.COLOR || client.color)
+              .setDescription(`**Playlist:**${Zitrim(playlist?.Song?.map((song, index)=>{ return `\n${index}.${Zitrim(song?.title,30)}`},4000))}`)
+              .setTimestamp()
+              .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
+              .setImage(lang?.banner)
+          ],
+          components: [
+            new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setCustomId(`ZiDelPlaylist_${listname}_${interaction.user.id}`)
+                .setLabel("DELETE")
+                .setStyle(ButtonStyle.Danger),
+              new ButtonBuilder()
+                .setCustomId("cancel")
+                .setLabel("❌")
+                .setStyle(ButtonStyle.Secondary),
+            )
+          ]
+        })
+        return;
+      }
       default:
         console.log(interaction.customId)
     }
   } catch (e) {
+    console.log(e)
     return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nmodal:${e?.stack}`)
   }
 }

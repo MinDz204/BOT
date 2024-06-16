@@ -27,7 +27,7 @@ function removeVietnameseTones(str) {
   return str;
 }
 
-const Zitrim = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
+const Zitrim = (str, max) => (str?.length > max ? `${str?.slice(0, max - 3)}...` : str);
 
 async function fetchR(interaction){
   if(!interaction.guild) return interaction.deferReply({ fetchReply: true }).catch(e=> console.log );
@@ -58,6 +58,17 @@ function validURL(str) {
     '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
     '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
   return !!pattern.test(str);
+}
+
+function extractId(tag) {
+  const regex = /<@(\d+)>/; // Tạo một regular expression để tìm kiếm số ID
+  const match = tag.match(regex); // Sử dụng match để tìm kiếm theo regex
+
+  if (match) {
+    return match[1]; // Trả về ID (phần trong dấu ngoặc)
+  } else {
+    return null; // Trả về null nếu không tìm thấy
+  }
 }
 
 function shuffleArray(array) {
@@ -232,5 +243,6 @@ Zicrop,
 shuffleArray,
 Zitrim,
 timeToSeconds,
-tracsrowslecs
+tracsrowslecs,
+extractId
 }

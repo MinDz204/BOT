@@ -43,6 +43,13 @@ const voiceManager = Schema({
   textChannel: String,
   voiceChannel: String,
 })
+const playlist = Schema({
+  userID: String,
+  userN: String,
+  private: Boolean,
+  listname: String,
+  Song: Array,
+})
 //-------------------------------------------//
 module.exports = {
   Ziqueue: model("Ziqueue", Ziqueue),
@@ -50,4 +57,5 @@ module.exports = {
   ZiguildPlay: model("ZiguildPlay", ZiguildPlay),
   voiceManager: model("voiceManager", voiceManager),
   ZiUserLock: model("ZiUserLock", ZiUserLock),
+  playlist: model("playlist", playlist),
 }

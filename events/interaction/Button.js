@@ -30,6 +30,9 @@ module.exports = async (client, interaction) => {
         return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
       }
    }
+      if (interaction?.customId.includes("ZiDelPlaylist")){
+        return require("./../ziplayer/ZiDelPlaylist")(interaction, lang)
+      } 
 //#endregion
     
     //ZiVc---------------------------------------------------------//
@@ -68,7 +71,7 @@ module.exports = async (client, interaction) => {
     //#region Button Func
     switch (interaction.customId) {
       case "cancel":
-        return interaction?.message.delete();
+        return interaction?.message?.delete();
       case "cancelXcancel":
         return interaction?.message.edit({components: [ ]})
       case "QueueCancel":
@@ -216,6 +219,21 @@ module.exports = async (client, interaction) => {
       }
       case "refLeaderboard": {
         return require("./../Zibot/Zileaderboard")({ interaction: interaction, lang: lang });
+      }
+      case "DelPlaylist":{
+        const modal = new ModalBuilder()
+        .setCustomId('DelPlaylistmodal')
+        .setTitle(`Delete playlist ${interaction.user.tag} `)
+        .addComponents(
+          new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+              .setCustomId('listname')
+              .setLabel(`Playlist name:`)
+              .setStyle(TextInputStyle.Short)
+              .setRequired(true)
+          )
+        )
+      return interaction?.showModal(modal);
       }
       default:
         return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${interaction?.customId}`)
