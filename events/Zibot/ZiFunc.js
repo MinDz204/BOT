@@ -33,9 +33,9 @@ async function fetchR(interaction){
   if(!interaction.guild) return interaction.deferReply({ fetchReply: true }).catch(e=> console.log );
   let messid;
   try {
-    messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, allowedMentions: { repliedUser: false } })
+    messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, fetchReply: true, allowedMentions: { repliedUser: false } })
   }catch(e){
-    messid = await interaction?.channel?.send({ content: `<a:loading:1151184304676819085> Loading...`, allowedMentions: { repliedUser: false } })
+    messid = await interaction?.channel?.send({ content: `<a:loading:1151184304676819085> Loading...`, fetchReply: true, allowedMentions: { repliedUser: false } })
   }
   await interaction.channel?.sendTyping();
   try{

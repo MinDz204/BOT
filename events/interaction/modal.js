@@ -113,6 +113,9 @@ module.exports = async (client, interaction) => {
         })
         return;
       }
+      case "saVetrackmodal": {
+        return require("./../../commands/save").run(lang, interaction)
+      }
       default:
         console.log(interaction.customId)
     }

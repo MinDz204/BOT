@@ -6,7 +6,7 @@ const { handleVolumeChange } = require("./Zivolume");
 const db = require("./../../mongoDB");
 const { ZiPlayerFillter } = require("./Zifillter");
 const config = require("../../config");
-const { timeToSeconds } = require("../Zibot/ZiFunc");
+const { timeToSeconds, Zitrim } = require("../Zibot/ZiFunc");
 const client = require("../../bot");
 //#region Funcs
 const deleteAfterTimeout = (message, timeout = 10000) => {
@@ -235,8 +235,25 @@ if(!config.ZiFuncs.PlayMusic) return;
         });
         return;
       }
+      //#endregion
+      case "ZiplayersaVetrack":{
+        const modal = new ModalBuilder()
+          .setCustomId('saVetrackmodal')
+          .setTitle(`Save track ${Zitrim(queue?.currentTrack?.title,29)} to:`)
+          .addComponents(
+            new ActionRowBuilder().addComponents(
+              new TextInputBuilder()
+                .setCustomId('listname')
+                .setLabel(`Playlist name:`)
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+            )
+          )
+      return interaction?.showModal(modal);
+      }
+      default:
+        return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${interaction?.customId}`)
     }
-//#endregion
   } catch (e) {
     console.log(e)
   }

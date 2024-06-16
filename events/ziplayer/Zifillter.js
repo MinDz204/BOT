@@ -56,7 +56,7 @@ const FillterRow = async (queue) => {
         .setCustomId('ZiFillter')
         .setMinValues(1)
         .setMaxValues(1)
-        .setPlaceholder('▶️ | Pick the fillter u want to add to player.')
+        .setPlaceholder('▶️ | Pick the audio effect.')
         .addOptions( buttons )
       );
 };
@@ -66,7 +66,7 @@ const Fillter = async (user, queue, lang) => {
   let embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client?.color)
     .setTimestamp()
-    .setTitle(`Music Filter`)
+    .setTitle(`Audio Effect Control Panel`)
     .setDescription(`**${
       queue?.filters?.ffmpeg?.getFiltersEnabled().map(item => `* ${item.trim()}`).join('\n') 
       }**

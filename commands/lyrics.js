@@ -20,7 +20,7 @@ async function setSyncedLyrics(queue, messages, syncedLyrics, status = true) {
   });
 }
 // Displays lyrics or stops synced lyrics based on NOstop parameter
-async function displayLyrics(messages, trackName, NOstop, interaction) {
+async function displayLyrics({messages, trackName, NOstop, interaction, synced = true}) {
   const queue = useQueue(messages?.guild?.id || "1150638980803592262" );
 
   if (!NOstop && queue?.metadata?.ZsyncedLyrics?.Status && messages?.guild && !trackName ) {
@@ -60,7 +60,7 @@ async function displayLyrics(messages, trackName, NOstop, interaction) {
     .setAuthor({ name: lyrics.artistName })
     .setColor('Random');
 
-  if (!lyrics.syncedLyrics) { 
+  if (!lyrics.syncedLyrics || !synced) { 
     if (queue) await setSyncedLyrics(queue, currentMessages, syncedLyrics);
     embed.setDescription(Zitrim(lyrics.plainLyrics, 1997));
     if (!interaction.guild) return interaction.editReply({ content: ' ', embeds: [embed] }).catch(console.log);
@@ -117,12 +117,17 @@ module.exports = {
       description: 'Song name',
       type: 3,
       autocomplete: true
+  },{
+    name: 'synced',
+    description: 'Synced Lyrics',
+    type: 5,
   }],
   cooldown: 3,
   dm_permission: true,
   run: async (lang, interaction, NOstop) => {
     const messages = await ZifetchInteraction(interaction);
     const trackName = interaction?.options?.getString('name');
-    return displayLyrics(messages, trackName, NOstop, interaction);
+    const synced = interaction?.options?.getBoolean('synced');
+    return displayLyrics({messages, trackName, NOstop, interaction, synced});
   },
 };
