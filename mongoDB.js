@@ -23,13 +23,6 @@ const ZiUserLock = Schema({
   status: Boolean,
 })
 
-const Ziqueue = Schema({
-  guildID: String,
-  channelID: String,
-  messageID: String,
-  page: Number,
-  totalPages: Number,
-})
 //-------------------------------------------//
 const ZiguildPlay = Schema({
   GuildID: String,
@@ -52,7 +45,6 @@ const playlist = Schema({
 })
 //-------------------------------------------//
 module.exports = {
-  Ziqueue: model("Ziqueue", Ziqueue),
   ZiUser: model("ZiUser", ZiUser),
   ZiguildPlay: model("ZiguildPlay", ZiguildPlay),
   voiceManager: model("voiceManager", voiceManager),

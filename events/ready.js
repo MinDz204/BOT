@@ -12,15 +12,9 @@ module.exports = async (client) => {
     await mongoose.connect(config.MOGOURL || process.env.MONGO, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    }).then(async () => {
-      setTimeout(async () => {
-        await db.Ziqueue.deleteOne();
-      }, 5000)
-    }).catch((err) => {
+    }).then(() => console.log(`Connected MongoDB`)).catch((err) => {
       return console.log("\nMongoDB Error: \n" + err)
     })
-    console.log(`Connected MongoDB`)
-
 
     const rest = new REST({ version: "10" }).setToken(config.TOKEN || process.env.TOKEN);
     // Đăng ký lệnh
@@ -43,4 +37,4 @@ module.exports = async (client) => {
   } catch (e) {
     console.log("Failed to load application [/] commands. " + e);
   }
-};
+}

@@ -1,9 +1,12 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require('../../bot');
+const { Zitrim } = require("../Zibot/ZiFunc");
 
 
 module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) => {
+  const firstFieldName = interaction?.message?.embeds[0]?.data?.fields?.[0]?.name;
+  const firstFielddata = firstFieldName?.replace("Page: ", "").trim().split('/');
   const tracl = [];
   queue?.tracks?.map(async (track, i) => {
     tracl.push({
@@ -13,8 +16,8 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
       duration: track.duration
     })
   })
-  let ziQueue = await db?.Ziqueue?.findOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(() => {});
-  let page = ziQueue?.page || 0;
+  if(! tracl?.length > 0) return interaction?.message?.delete();
+  let page = firstFielddata?.[0] || 1;
   const totalPages = Math.ceil(tracl.length / 20);
   
   if (!NOnextpage) {
@@ -33,7 +36,7 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
     new ButtonBuilder()
       .setEmoji("❌")
       .setStyle(ButtonStyle.Secondary)
-      .setCustomId("QueueCancel"),
+      .setCustomId("cancel"),
     new ButtonBuilder()
       .setLabel("⤮")
       .setStyle(ButtonStyle.Secondary)
@@ -70,46 +73,21 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
   const embed = async (start) => {
     let nowww = page === 1 ? 1 : page * 20 - 20;
     const current = tracl.slice(start, start + 20)
-    if (!current || !current?.length > 0) return interaction?.channel.send({ content: ` `, ephemeral: true }).catch(e => { });
+    if (!current || !current?.length > 0) return;
     return new EmbedBuilder()
       .setColor(lang?.COLOR || client.color)
       .setTitle(`<:queue:1150639849901133894> ${lang?.Queue}: ${interaction?.guild?.name}`)
       .setDescription(`${current.map(data =>
-        `\n${nowww++} | [${data.title.substr(0, 25).replace(/\[|\]|\(|\)/g, '') + "..."}](${data.url}) | ${data.author.substr(0, 15) + "..."}`)}
-            `)
-      .setFooter({ text: `${page}/${totalPages}` })
+        `\n${nowww++} | [${Zitrim(data.title.replace(/\[|\]|\(|\)/g, ''), 25)}](${data.url}) | ${Zitrim(data.author,15)}`)}`)
+      .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) })
+      .addFields(
+        { name: `Page: ${page}/${totalPages}`, value: ' ' }
+      )
       .setTimestamp()
   }
   //send messenger::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  if (!ziQueue) {
-    await interaction.channel.send({ embeds: [await embed(currentIndex)], components: [row,rowpage] }).then(async Message => {
-      await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }, {
-        $set: {
-          messageID: Message.id,
-          page: page,
-          totalPages: totalPages
-        }
-      }, { upsert: true }).catch(e => { })
-    }).catch(e => { })
-  } else {
-    await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }, {
-      $set: {
-        page: page,
-        totalPages: totalPages
-      }
-    }, { upsert: true }).catch(e => { })
-    await interaction.channel?.messages.fetch({ message: ziQueue?.messageID, cache: false, force: true })
-      .then(async msg => msg.edit({ embeds: [await embed(currentIndex)] })).catch(async e => {
-        await interaction.channel.send({ embeds: [await embed(currentIndex)], components: [row,rowpage] }).then(async Message => {
-          await db.Ziqueue.updateOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }, {
-            $set: {
-              messageID: Message.id,
-              page: page,
-              totalPages: totalPages
-            }
-          }, { upsert: true }).catch(e => { })
-        }).catch(e => { })
-      })
+  if(firstFieldName?.includes("Page: ")){
+    return interaction?.message.edit({content: ``, embeds: [await embed(currentIndex)], components: [row,rowpage] })
   }
-  return;
+  return  interaction?.edit({content: ``, embeds: [await embed(currentIndex)], components: [row,rowpage] })
 }

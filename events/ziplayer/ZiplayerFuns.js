@@ -6,7 +6,7 @@ const { handleVolumeChange } = require("./Zivolume");
 const db = require("./../../mongoDB");
 const { ZiPlayerFillter } = require("./Zifillter");
 const config = require("../../config");
-const { timeToSeconds, Zitrim } = require("../Zibot/ZiFunc");
+const { timeToSeconds, Zitrim, ZifetchInteraction } = require("../Zibot/ZiFunc");
 const client = require("../../bot");
 //#region Funcs
 const deleteAfterTimeout = (message, timeout = 10000) => {
@@ -118,7 +118,6 @@ if(!config.ZiFuncs.PlayMusic) return;
         interaction.deferUpdate();
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
       case "ZiplayerQueueClear":
-        await db.Ziqueue.deleteOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(e => { });
         queue?.tracks?.clear();
         await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
         return interaction?.message.edit({ content: `${lang?.queueclear} `, embeds: [], components: [] }).then(setTimeout(
@@ -146,10 +145,6 @@ if(!config.ZiFuncs.PlayMusic) return;
         return interaction?.deferUpdate().catch(e => { });
       case "ZiplayerSeek":
         return interaction.reply(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue))
-      case "ZiplayerQueuE":
-        await interaction?.deferUpdate().catch(e => { });
-        await require("./Ziqueue")(interaction, queue, lang, false);
-        return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
       case "ZiplayerVol":
         return handleVolumeChange(interaction,queue,lang);
       case "ZiplayerAutoPlay":
@@ -166,6 +161,10 @@ if(!config.ZiFuncs.PlayMusic) return;
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
+//#endregion
+//#region QUEUE
+      case "ZiplayerQueuE":
+        return require("./Ziqueue")(await ZifetchInteraction(interaction), queue, lang, true);
       case "ZiplayerQueueShuffl":
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });

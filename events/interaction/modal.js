@@ -6,11 +6,20 @@ const { validURL, timeToSeconds, Zitrim, ZifetchInteraction } = require("../Zibo
 const { SEEKfunc } = require("../ziplayer/ZiSeek");
 const config = require("../../config");
 const { EmbedBuilder, ActionRowBuilder, ButtonStyle, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
-const { Deltrack } = require("../../lang/vi");
 //test func
 var hextest = /^#[0-9A-F]{6}$/i;
+
 function isNumber(str) {
   return /^[0-9]+$/.test(str);
+}
+
+function removeDuplicates(array) {
+  const seen = new Set();
+  return array.filter(item => {
+    const erritem = seen.has(item) || !isNumber(item);
+    seen.add(item);
+    return !erritem;
+  });
 }
 
 module.exports = async (client, interaction) => {
@@ -45,14 +54,11 @@ module.exports = async (client, interaction) => {
         const input = interaction.fields.getTextInputValue("number");
         const queue = useQueue(interaction?.guildId);
         
-        // Sử dụng biểu thức chính quy để tách các chỉ số bài hát
-        const trackIndices = input.split(/[\s,;]+/); // phân cách bằng khoảng trắng, dấu phẩy, hoặc dấu chấm phẩy
-        const invalidInput = trackIndices.some(index => !isNumber(index));
-        
-        if (invalidInput) {
+        const trackIndices = removeDuplicates( input.split(/[\s,;.+-]+/)); // phân cách bằng khoảng trắng, dấu phẩy, hoặc dấu chấm phẩy
+        if (!trackIndices?.length > 0 || !queue || queue?.isEmpty()) {
             return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
         }
-        
+        let tracldel =  [];
         // Chuyển đổi các giá trị thành số và loại bỏ các bài hát trong hàng chờ
         const validIndices = trackIndices
             .map(index => Math.abs(Number(index)) - 1)
@@ -60,8 +66,28 @@ module.exports = async (client, interaction) => {
         
         validIndices
             .sort((a, b) => b - a) // xóa từ cuối về đầu để tránh lỗi khi xóa liên tiếp
-            .forEach(index => queue.removeTrack(index));
-        
+            .forEach(index =>{
+              tracldel.push(queue?.tracks.toArray()[index].title);
+              queue.removeTrack(index)
+            });
+        await interaction.reply({ 
+          embeds: [
+            new EmbedBuilder()
+              .setColor(lang?.COLOR || client.color)
+              .setAuthor({ name: "Deleted track:" , iconURL: client.user.displayAvatarURL({ size: 1024 }) })
+              .setDescription(` ${Zitrim(tracldel.map(t =>`\n* ${Zitrim(t,50)}`),2000)}`)
+              .setTimestamp()
+              .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
+              .setImage(lang?.banner)
+          ], 
+          components:[
+            new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setCustomId("cancel")
+                .setLabel("❌")
+                .setStyle(ButtonStyle.Secondary)
+            )
+          ]})
         return require("./../ziplayer/Ziqueue")(interaction, queue, lang, true);        
       }
       case "editProfilemodal": {

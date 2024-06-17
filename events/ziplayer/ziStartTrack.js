@@ -8,10 +8,7 @@ const zistartButton = async (queue) => {
   const guildID = queue?.guild?.id;
   const channelID = queue?.metadata?.channel?.id;
   // Fetch ZiQueue and ZiUserLock objects asynchronously, handling exceptions gracefully
-  const [ziQueue, ZiUserLock] = await Promise.all([
-    db.Ziqueue.findOne({ guildID, channelID }).catch(() => null),
-    db.ZiUserLock.findOne({ guildID, channelID }).catch(() => null),
-  ]);
+  const ZiUserLock = await  db.ZiUserLock.findOne({ guildID, channelID }).catch(() => null);
   // If ZiUserLock is null, set the status and userID, then update the database
   if (!ZiUserLock) {
     const requestby = queue?.metadata?.requestby?.id; // Get requestor ID
@@ -59,13 +56,7 @@ const shuffl = createButton({ label: '⇩', customId: 'ZiplayersaVetrack' });
 const loopA = createButton({ label: '↻', customId: 'ZiplayerLoopA' });
 const Stop = createButton({ emoji: '⬜', customId: 'ZiplayerStop', style: ButtonStyle.Danger });
 const Controll = createButton({ emoji: controllEmoji, customId: 'ZiplayerControll', style: controllStyle });
-
-const queuE = createButton({
-  customId: 'ZiplayerQueuE',
-  label: ziQueue ? `${ziQueue.page}/${ziQueue.totalPages}` : null,
-  emoji: !ziQueue ? `<:queue:1150639849901133894>` : null,
-  disabled: queue.isEmpty(),
-});
+const queuE = createButton({ emoji:`<:queue:1150639849901133894>`, customId: 'ZiplayerQueuE', disabled: queue.isEmpty() });
 const lyrics = createButton({ emoji: '<:lyric:1150770291941851187>', customId: 'ZiplayerLyrics'});
 const AutoPlay = createButton({ label: 'Auto', customId: 'ZiplayerAutoPlay' });
 const Fillter = createButton({ label: 'Fx', customId: 'ZiplayerFillter' });

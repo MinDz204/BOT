@@ -74,9 +74,6 @@ module.exports = async (client, interaction) => {
         return interaction?.message?.delete();
       case "cancelXcancel":
         return interaction?.message.edit({components: [ ]})
-      case "QueueCancel":
-        await db.Ziqueue.deleteOne({ guildID: interaction?.guild?.id, channelID: interaction?.channel?.id }).catch(e => { });
-        return interaction?.message.delete();
       case "DelTrack": {
         const modal = new ModalBuilder()
           .setCustomId('DelTrackmodal')
