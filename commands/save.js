@@ -55,7 +55,7 @@ module.exports = {
                            interaction.user.tag || "Unknown";
 
       const queue = useQueue(interaction.guild.id);
-      if (!queue || !queue.node.isPlaying() || queue.isEmpty()) {
+      if (!queue || !queue.node.isPlaying() && queue.isEmpty()) {
         await messages.edit(`${lang?.NoPlaying}`);
         return;
       }

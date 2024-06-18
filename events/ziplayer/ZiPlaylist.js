@@ -1,38 +1,12 @@
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder,ButtonStyle } = require("discord.js");
 const db = require("./../../mongoDB");
 const client = require('../../bot');
-const { extractId, Zitrim } = require("../Zibot/ZiFunc");
+const { extractId, ZiplayerOption } = require("../Zibot/ZiFunc");
 const { deserialize } = require("discord-player");
 async function PlayMusics({ interaction, message, queue, track, player }) {
   try {
-    const userId = interaction?.user?.id || interaction?.author?.id;
-    const user = await db.ZiUser.findOne({ userID: userId }).catch(e => { });
-    const queueMetadata = queue?.metadata || {};
-
-    const queueOptions = {
-      metadata: {
-        channel: interaction.channel,
-        requestby: interaction?.user || interaction?.author,
-        embedCOLOR: user?.color || client.color,
-        Zimess: queueMetadata.Zimess || message,
-        ZsyncedLyrics: {
-          messages: queueMetadata.ZsyncedLyrics?.messages,
-          Status: queueMetadata.ZsyncedLyrics?.Status || false
-        }
-      },
-      requestedBy: interaction?.user || interaction?.author,
-      selfDeaf: true,
-      volume: user?.vol || 50,
-      maxSize: 200,
-      maxHistorySize: 20,
-      leaveOnEmpty: true,
-      leaveOnEmptyCooldown: 2000,
-      leaveOnEnd: true,
-      leaveOnEndCooldown: 300000,
-      skipOnNoStream: true
-    };
-
-    const queuez = player?.nodes?.create(interaction.guild, queueOptions);
+    const user = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { });
+    const queuez = player?.nodes?.create(interaction.guild, ZiplayerOption({ interaction, message, queue, user }));
 
     if (!queuez.connection) {
       try {

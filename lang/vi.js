@@ -17,7 +17,7 @@ const language ={
     SearchTrack:`Tìm kiếm nhạc`,
     SearchTrackDEs:"Nhập tên hoặc liên kết đến bài hát",
     volume:`Âm lượng`,
-    volumedes:`Nhập âm lượng từ 0 -> 99`,
+    volumedes:`Nhập âm lượng từ 0 -> 100`,
     volumeErr: `❌ | Giá trị âm lượng không hợp lệ`,
     NoPlaying:`❌ | Hiện không có bài hát nào đang phát`,
     profileErr:`❌ | Cập nhật không thành công`,

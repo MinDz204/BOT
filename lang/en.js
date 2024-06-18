@@ -17,7 +17,7 @@ const language = {
     SearchTrack: "Search for music",
     SearchTrackDEs: "Enter the name or link to the song",
     volume: "Volume",
-    volumedes: "Enter a volume from 0 -> 99",
+    volumedes: "Enter a volume from 0 -> 100",
     volumeErr: "Invalid volume value ❌",
     NoPlaying: "No songs are currently playing",
     profileErr: "Update failed ❌",
@@ -45,5 +45,8 @@ const language = {
     Assictance: `Voice search for songs is on...\nSay **Play**/**Phát bài hát** + song name to play music\n Say **bỏ qua bài hát** to skip`,
     MENstion: `You can use slash commands or mention me and the song link to play music...`,
     NOPer:`It seems like I don't have permission to message in this channel... please contact a MOD to grant me permission to use commands...`,
-  };
+    NoPlaylist: `❌ | No playlists found for <@{USER}>.`,
+    privatePlaylist: `❌ | This playlist is private.`,
+    savedPlaylist: `✅ | Playlist saved successfully.`,
+    };
   module.exports = language;

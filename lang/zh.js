@@ -17,7 +17,7 @@ const language = {
     SearchTrack: "搜索音乐",
     SearchTrackDEs: "输入歌曲的名称或链接",
     volume: "音量",
-    volumedes: "输入从 0 到 99 的音量。",
+    volumedes: "输入从 0 到 100 的音量。",
     volumeErr: "无效的音量值 ❌",
     NoPlaying: "当前没有歌曲在播放",
     profileErr: "更新失败 ❌",
@@ -45,6 +45,9 @@ const language = {
     Assictance: `语音搜索歌曲已开启...\n说 **Play**/**Phát bài hát** + 歌曲名称来播放音乐\n说 **bỏ qua bài hát** 来跳过`,
     MENstion:`您可以使用斜线命令或提到我和后面的歌曲链接来播放音乐..`,
     NOPer:`看起来我没有权限在这个频道发送消息... 请联系 MOD 授予我使用命令的权限...`,
+    NoPlaylist: `❌ | 未找到 <@{USER}> 的播放列表。`,
+    privatePlaylist: `❌ | 此播放列表为私有。`,
+    savedPlaylist: `✅ | 播放列表已成功保存。`,
   };
   module.exports = language;
   

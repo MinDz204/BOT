@@ -17,7 +17,7 @@ const language = {
     SearchTrack: "音楽を検索する",
     SearchTrackDEs: "曲の名前またはリンクを入力してください",
     volume: "音量",
-    volumedes: "0 から 99 の音量を入力してください。",
+    volumedes: "0 から 100 の音量を入力してください。",
     volumeErr: "無効な音量値 ❌",
     NoPlaying: "現在再生中の曲はありません",
     profileErr: "更新に失敗しました ❌",
@@ -45,5 +45,8 @@ const language = {
     Assictance: `音声検索がオンになりました...\n曲名を含めて **Play**/**Phát bài hát**と言うと音楽が再生されます\n**bỏ qua bài hát** と言うとスキップします`,
     MENstion:`斜線コマンドまたは私をメンションして、その後の曲のリンクを使用して音楽を再生できます...`,
     NOPer:`このチャンネルにメッセージを送信する権限がないようです... コマンドを使用するには、MOD に権限を要求してください...`,
+    NoPlaylist: `❌ | <@{USER}> のプレイリストが見つかりません。`,
+    privatePlaylist: `❌ | このプレイリストは非公開です。`,
+    savedPlaylist: `✅ | プレイリストが正常に保存されました。`,
   };
   module.exports = language;

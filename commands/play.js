@@ -1,7 +1,7 @@
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const db = require("./../mongoDB");
-const { processQuery, ZifetchInteraction } = require('../events/Zibot/ZiFunc');
+const { processQuery, ZifetchInteraction, ZiplayerOption } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
 const client = require('../bot');
 
@@ -48,31 +48,12 @@ module.exports = {
   dm_permission: false,
   run: async (lang, interaction) => {
 
-    let messages = await ZifetchInteraction(interaction);
+    let message = await ZifetchInteraction(interaction);
     const queues = useQueue(interaction.guild.id);
     const nameS = interaction.options.getString("name");
-    let userddd = await db.ZiUser.findOne({ userID: interaction.user.id }).catch(e => { })
     let res;
-
-    let queue = player?.nodes?.create(interaction.guild, {
-      metadata: {
-        channel: interaction.channel,
-        requestby: interaction.user,
-        embedCOLOR: userddd?.color || client.color,
-        Zimess: queues?.metadata ? queues?.metadata?.Zimess : messages,
-        ZsyncedLyrics: { messages: queues?.metadata?.ZsyncedLyrics?.messages , Status: queues?.metadata?.ZsyncedLyrics?.Status || false },
-      },
-      requestedBy: interaction.user,
-      volume: userddd?.vol || 50,
-      maxSize: 200,
-      maxHistorySize: 20,
-      leaveOnEmpty: true,
-      leaveOnEmptyCooldown: 2000,
-      leaveOnEnd: true,
-      leaveOnEndCooldown: 300000,
-      skipOnNoStream: true,
-      selfDeaf: true,
-    });
+    const user = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { });
+    let queue = player?.nodes?.create(interaction.guild, ZiplayerOption({ interaction, message, queues, user }));
 
     try {
       res = await player.search(await processQuery(nameS), {
@@ -96,7 +77,7 @@ module.exports = {
     } finally {
       queue.tasksQueue.release();
     }
-    if(queues?.metadata)  return messages?.delete().catch(e => {});
+    if(queues?.metadata)  return message?.delete().catch(e => {});
     return;
   },
 };

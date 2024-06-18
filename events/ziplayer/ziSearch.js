@@ -2,7 +2,7 @@ const db = require("./../../mongoDB");
 const client = require('../../bot');
 const { useMainPlayer, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
-const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction, extractId } = require("../Zibot/ZiFunc");
+const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction, extractId, ZiplayerOption} = require("../Zibot/ZiFunc");
 const config = require("./../../config")
 const player = useMainPlayer();
 
@@ -20,29 +20,10 @@ module.exports = async (interaction, nameS, SearchEngine = 'youtube' ) => {
   if (!nameS) return;
   if (validURL(nameS) || Zilink(nameS)) {
     try {
-      let userddd = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { })
       const nameSearch = await processQuery(nameS);
+      const user = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { });
       await player.play(interaction?.member.voice.channelId, nameSearch, {
-        nodeOptions: {
-          metadata: {
-            channel: interaction.channel,
-            requestby: interaction?.user ||interaction?.author,
-            embedCOLOR: userddd?.color || client.color,
-            Zimess: queue?.metadata? queue?.metadata?.Zimess : message,
-            ZsyncedLyrics: { messages: queue?.metadata?.ZsyncedLyrics?.messages, Status: queue?.metadata?.ZsyncedLyrics?.Status || false },
-          },
-          requestedBy: interaction?.user || interaction?.author,
-          selfDeaf: false,
-          volume: userddd?.vol || 50,
-          maxSize: 200,
-          maxHistorySize: 20,
-          leaveOnEmpty: true,
-          leaveOnEmptyCooldown: 2000,
-          leaveOnEnd: true,
-          leaveOnEndCooldown: 300000,
-          skipOnNoStream: true,
-          selfDeaf: true,
-        }
+        nodeOptions: ZiplayerOption({ interaction,message, queue, user })
       });
       if(queue?.metadata && ( queue?.metadata?.Zimess.id != message.id ) ) message?.delete();
       return;

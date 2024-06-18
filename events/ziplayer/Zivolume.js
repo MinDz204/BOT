@@ -21,7 +21,7 @@ const editReplyWithTimeout = async (interaction, content, timeout = 1000) => {
 
 const resetAfterTimeout = (message, lang, timeout = 10000) => {
     setTimeout(() => {
-      message.edit({ content: `${lang?.volumedes} ex: 1 - 100:` }).catch(e => { console.error(e); });
+      message.edit({ content: `${lang?.volumedes} ex: 0 - 100:` }).catch(e => { console.error(e); });
     }, timeout);
   };
 const editReplyWithNOTimeout = async (interaction, content, lang, timeout = 1000) => {

@@ -17,7 +17,7 @@ const language = {
     SearchTrack: "음악 검색",
     SearchTrackDEs: "곡 이름 또는 링크를 입력하세요",
     volume: "볼륨",
-    volumedes: "0 ~ 99 사이의 볼륨을 입력하세요",
+    volumedes: "0 ~ 100 사이의 볼륨을 입력하세요",
     volumeErr: "잘못된 볼륨 값입니다❌",
     NoPlaying: "현재 재생 중인 노래가 없습니다",
     profileErr: "업데이트 실패❌",
@@ -45,6 +45,9 @@ const language = {
     Assictance: `음성 검색이 켜졌습니다...\n노래 이름을 포함하여 **Play**/**Phát bài hát**이라고 말하면 음악이 재생됩니다\n**bỏ qua bài hát**라고 말하면 건너뜁니다`,
     MENstion:`슬래시 명령어 또는 나를 언급하고 그 후에 노래 링크를 사용하여 음악을 재생할 수 있습니다...`,
     NOPer:`이 채널에 메시지를 보낼 권한이 없는 것 같습니다... 명령을 사용하려면 MOD에게 권한을 요청하십시오...`,
+    NoPlaylist: `❌ | <@{USER}>의 플레이리스트를 찾을 수 없습니다.`,
+    privatePlaylist: `❌ | 이 플레이리스트는 비공개입니다.`,
+    savedPlaylist: `✅ | 플레이리스트가 성공적으로 저장되었습니다.`,
   };
   module.exports = language;
   

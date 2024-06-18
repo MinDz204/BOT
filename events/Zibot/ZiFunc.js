@@ -1,3 +1,5 @@
+const client = require("../../bot");
+
 function removeVietnameseTones(str) {
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
   str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -231,7 +233,31 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
   )
   return { content:``, embeds: [embed], components: [butt, select ] }
 }
-
+function ZiplayerOption({ interaction, message, queue, user }){
+  const queueMetadata = queue?.metadata || {};
+  return {
+    metadata: {
+      channel: interaction?.channel || message?.channel,
+      requestby: interaction?.user || interaction?.author,
+      embedCOLOR: user?.color || client.color,
+      Zimess: queueMetadata?.Zimess || message || interaction?.message || interaction,
+      ZsyncedLyrics: {
+        messages: queueMetadata?.ZsyncedLyrics?.messages,
+        Status: queueMetadata?.ZsyncedLyrics?.Status || false
+      }
+    },
+    requestedBy: interaction?.user || interaction?.author,
+    selfDeaf: true,
+    volume: user?.vol || 50,
+    maxSize: 200,
+    maxHistorySize: 20,
+    leaveOnEmpty: true,
+    leaveOnEmptyCooldown: 2000,
+    leaveOnEnd: true,
+    leaveOnEndCooldown: 300000,
+    skipOnNoStream: true
+  };
+}
 module.exports = {
 ZifetchInteraction :fetchR,
 removeVietnameseTones,
@@ -244,5 +270,6 @@ shuffleArray,
 Zitrim,
 timeToSeconds,
 tracsrowslecs,
-extractId
+extractId,
+ZiplayerOption
 }
