@@ -179,6 +179,7 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
   const client = require("../../bot");
   const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
   const maxTracks = res.filter(t => t?.url.length < 100).slice(0, 20);
+  if (!maxTracks.length > 0) return console.error("search err");
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${ track?.queryType }: ${ track?.duration }`)
@@ -213,7 +214,11 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
         .setPlaceholder('▶️ | Pick the track u want to add to queue.')
         .addOptions( track_creator )
       );
-  const butt = new ActionRowBuilder().addComponents(
+  const buttSearch = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+    .setCustomId('cancel')
+    .setLabel('❌')
+    .setStyle(2),
     new ButtonBuilder()
     .setCustomId('Zsearchyoutube')
     .setEmoji('<a:youtube:1243683781320380426>')
@@ -226,12 +231,8 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
     .setCustomId('ZsearchspotifySearch')
     .setEmoji('<a:spotify:1243684999182422097>')
     .setStyle(2),
-    new ButtonBuilder()
-    .setCustomId('cancel')
-    .setLabel('❌')
-    .setStyle(2)
   )
-  return { content:``, embeds: [embed], components: [butt, select ] }
+  return { content:``, embeds: [embed], components: [buttSearch, select ] }
 }
 function ZiplayerOption({ interaction, message, queue, user }){
   const queueMetadata = queue?.metadata || {};
@@ -259,7 +260,7 @@ function ZiplayerOption({ interaction, message, queue, user }){
   };
 }
 module.exports = {
-ZifetchInteraction :fetchR,
+ZifetchInteraction: fetchR,
 removeVietnameseTones,
 msToTime,
 validURL,

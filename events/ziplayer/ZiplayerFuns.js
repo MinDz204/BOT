@@ -164,7 +164,9 @@ if(!config.ZiFuncs.PlayMusic) return;
 //#endregion
 //#region QUEUE
       case "ZiplayerQueuE":
-        return require("./Ziqueue")(await ZifetchInteraction(interaction), queue, lang, true);
+        const messss = await ZifetchInteraction(interaction)
+        messss.user = interaction.user;
+        return require("./Ziqueue")(messss, queue, lang, true);
       case "ZiplayerQueueShuffl":
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });

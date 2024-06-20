@@ -40,7 +40,8 @@ module.exports = async (interaction, nameS, SearchEngine = 'youtube' ) => {
   let lang = await rank({ user: interaction?.user || interaction?.author });
   if(extractId(nameS?.replace(`<@${client.user.id}>`, "").trim())) return require("./ZiPlaylist")({interaction, message, nameS, player, queue, lang});
   let res = await player.search(nameS, {
-    fallbackSearchEngine: SearchEngine,
+    // fallbackSearchEngine: "youtube",// SearchEngine,
+    searchEngine: SearchEngine,
     requestedBy: interaction?.user || interaction?.author,
   });
  let embed = await tracsrowslecs(res, lang, nameS, interaction);

@@ -17,7 +17,7 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
     })
   })
   if(! tracl?.length > 0) return interaction?.message?.delete();
-  let page = firstFielddata?.[0] || 1;
+  let page = eval(firstFielddata?.[0] || 1);
   const totalPages = Math.ceil(tracl.length / 20);
   
   if (!NOnextpage) {
@@ -71,7 +71,7 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
   )
 
   const embed = async (start) => {
-    let nowww = page === 1 ? 1 : page * 20 - 20;
+    let nowww = page == 1 ? 1 : page * 20 - 20;
     const current = tracl.slice(start, start + 20)
     if (!current || !current?.length > 0) return;
     return new EmbedBuilder()
