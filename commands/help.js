@@ -28,7 +28,6 @@ module.exports.run = async (lang, interaction) => {
       .setColor(lang.COLOR || client.color)
       .setTitle("Zi bot helps:")
       .setURL(`${client.InviteBot}`)
-      .setThumbnail('https://cdn.discordapp.com/attachments/1064851388221358153/1155459269458665542/Untitled-1.png')
       .setDescription(`${commands.map(x => `</${x?.name}:${x?.id}> | ${x?.description} `).join('\n')}\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n**Music Player:**`)
       .addFields([
         { name: "◁", value: `Previous Track`, inline: true },

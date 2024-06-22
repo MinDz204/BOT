@@ -1,7 +1,8 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { rank } = require("./Zibot/ZilvlSys");
 const config = require("../config");
 const ziSearch = require("./ziplayer/ziSearch");
+const { animatedIcons } = require("./Zibot/ZiFunc");
 
 const playMusic = async (lang, message, client, content) => {
     const member = message.member;
@@ -48,13 +49,22 @@ const handleBotMention = async (message, client, lang, content) => {
     const embed = new EmbedBuilder()
         .setColor(lang?.COLOR || client.color)
         .setTitle("Yo... Ziji desu :3")
-        .setDescription(`${lang?.MENstion}\n${config?.Zmodule} ✅`)
+        .setDescription(`${lang?.MENstion} <a:_:${animatedIcons[Math.floor(Math.random() * animatedIcons.length)]}> \n${config?.Zmodule} ✅`)
         .setURL(`${client?.InviteBot}`)
         .setTimestamp()
         .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
         .setImage(lang?.banner);
-
-    return message.reply({ embeds: [embed] });
+    const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId("cancel")
+            .setLabel("❌")
+            .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId("buttHelp")
+            .setLabel("/HELP")
+            .setStyle(ButtonStyle.Secondary)
+    )
+    return message.reply({ embeds: [embed], components: [row] });
 };
 
 module.exports = async (client, message) => {

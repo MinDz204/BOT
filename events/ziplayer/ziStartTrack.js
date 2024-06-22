@@ -3,7 +3,7 @@ const client = require('../../bot');
 
 // const { rank } = require("../Zibot/ZilvlSys"); 
 const db = require("./../../mongoDB");
-const { Zitrim } = require("../Zibot/ZiFunc");
+const { Zitrim, animatedIcons } = require("../Zibot/ZiFunc");
 const zistartButton = async (queue) => {
   const guildID = queue?.guild?.id;
   const channelID = queue?.metadata?.channel?.id;
@@ -117,37 +117,6 @@ const RelatedTracksRow = async (queue) => {
       );
 }
 
-const animatedIcons = [
-  "1150775508045410385",
-  "1150776048263364608",
-  "1150777291417333840",
-  "1150777857761615903",
-  "1150777891102150696",
-  "1150777933045178399",
-  "1150782781144707142",
-  "1150782787394228296",
-  "1008064606075363398",
-  "1231819570281447576",
-  "1231819570281447576",
-  "1231819570281447576",
-  "1238577097363034156",
-  "1238577100101779507",
-  "1238577101787889754",
-  "1238577103025209517",
-  "1238577106066346146",
-  "1238577108503236629",
-  "1238577113548980264",
-  "1238577077368651797",
-  "1238577079122137108",
-  "1238577080858316810",
-  "1238577084389916732",
-  "1238577086810034176",
-  "1238577089335267368",
-  "1238577091406987294",
-  "1238577093332176937",
-  "1238577095488176309"
-];
-
 const defaultImage = 'https://cdn.discordapp.com/attachments/1064851388221358153/1215655934546804746/NoImage.png';
 const iconMappings = {
   youtube: 'https://cdn.discordapp.com/attachments/1064851388221358153/1243685364502102066/youtube.gif',
@@ -245,5 +214,6 @@ const start = async (queue, lang) => {
 
 module.exports = {
   zistart: start,
-  ZiPlayerlinkAvt
+  ZiPlayerlinkAvt,
+  RelatedTracksRow
 }

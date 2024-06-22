@@ -36,7 +36,7 @@ const createButton = (index, label, description, customId) => {
   return new StringSelectMenuOptionBuilder()
     .setLabel(`${index + 1} - ${label}`)
     .setDescription(`${description}`)
-    .setEmoji('🔴')
+    .setEmoji('<a:noo:1254117362085658634>')
     .setValue(`${ customId }`)
 };
 
@@ -45,7 +45,7 @@ const FillterRow = async (queue) => {
     const button = createButton(index, config.label, config.description, config.id);
     if (config.id == 'OFF' )  return button.setEmoji('❌');
     if (queue.filters.ffmpeg?.isEnabled(config.id)) {
-      button.setEmoji('🟢');
+      button.setEmoji('<a:yess:1254117363532562515>');
     }
     return button;
   });
