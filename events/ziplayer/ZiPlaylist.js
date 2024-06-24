@@ -62,8 +62,14 @@ module.exports = async ({ interaction, message, nameS, player, queue, lang }) =>
               }
               const tracks = playlist.Song.map(song => deserialize(player, song));
               if (tracks) {
-                  await PlayMusics({ interaction, message: message || interaction, queue, track: tracks, player });
-                  return;
+                const userr = await interaction?.guild?.members.fetch(userId) || interaction.user;
+                tracks[0].playlist = {
+                  title: listName,
+                  url: client?.InviteBot
+                }
+                tracks.thumbnail = userr.displayAvatarURL({ size: 1024 })
+                await PlayMusics({ interaction, message: message || interaction, queue, track: tracks, player });
+                return;
               }
           }
       }

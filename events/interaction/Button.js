@@ -7,7 +7,7 @@ const config = require("../../config");
 module.exports = async (client, interaction) => {
   try {
     let lang;
-    //#region SEARCH MUSIC
+//#region SEARCH MUSIC
     //------------------------------------------------//
     if(config.ZiFuncs.PlayMusic){
       if (validURL(interaction.customId)) {
@@ -29,12 +29,12 @@ module.exports = async (client, interaction) => {
         lang = await rank({ user: interaction?.user });
         return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
       }
-   }
-      if (interaction?.customId.includes("ZiDelPlaylist")){
-        return require("./../ziplayer/ZiDelPlaylist")(interaction, lang)
+      if (interaction?.customId.includes("ZiPlaylistDel")){
+        lang = await rank({ user: interaction?.user });
+        return require("./../ziplayer/ZiPlaylistDel")(interaction, lang)
       } 
+   }
 //#endregion
-    
     //ZiVc---------------------------------------------------------//
     if (interaction?.customId.includes("ZiVC")){
       if(!config.EnableJOINTOCREATE) return;
@@ -44,7 +44,7 @@ module.exports = async (client, interaction) => {
     if ( !config.interactionCreate.MessageComponentInside ) return;
     //rank sys----------------------------------------------------------//
         lang = await rank({ user: interaction?.user });
-    //#region Game
+//#region Game
     //game--------------------------------------------------------------//
     if (interaction?.customId.includes("ZtttR")){
       return require("../Zibot/game/ZitttR")(interaction, lang)
@@ -68,7 +68,7 @@ module.exports = async (client, interaction) => {
       const expiredTimestamp = Math.round(expirationTime / 1000);
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
-    //#region Button Func
+//#region Button Func
     switch (interaction.customId) {
       case "cancel":
         return interaction?.message?.delete();

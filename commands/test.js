@@ -4,7 +4,7 @@ const { EmbedBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 
 
 module.exports = {
-  name: "test",
+  name: "tests",
   description: "test command.",
   integration_types: [0 ,1],
   contexts: [0, 1, 2],
@@ -13,7 +13,6 @@ module.exports = {
   dm_permission: true,
 
   run: async (lang, interaction) => {
-    const player = useMainPlayer();
-    console.log(player.scanDeps())
+    console.log(interaction.member.displayAvatarURL())
   },
 };

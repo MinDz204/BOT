@@ -39,7 +39,7 @@ if(suss){
           .setLabel("❌")
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-          .setCustomId("DelPlaylist")
+          .setCustomId("ZiPlaylistDel")
           .setEmoji("<:trash:1151572367961764000>")
           .setStyle(ButtonStyle.Secondary),
       )

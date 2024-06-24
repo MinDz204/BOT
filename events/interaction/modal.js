@@ -127,7 +127,7 @@ module.exports = async (client, interaction) => {
           components: [
             new ActionRowBuilder().addComponents(
               new ButtonBuilder()
-                .setCustomId(`ZiDelPlaylist_${listname}_${interaction.user.id}`)
+                .setCustomId(`ZiPlaylistDel_${listname}_${interaction.user.id}`)
                 .setLabel("DELETE")
                 .setStyle(ButtonStyle.Danger),
               new ButtonBuilder()
