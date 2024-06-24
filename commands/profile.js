@@ -92,7 +92,7 @@ module.exports = {
       const attachment = new AttachmentBuilder(rankCardBuffer, { name: "RankCard.png" });
 
       const response = { content: "", files: [attachment], components: [editProf] };
-
+      if(!interaction.guild) response.components = []
       if (!Zi) {
         interaction.editReply(response).catch(() => {
           interaction?.channel?.send(response);

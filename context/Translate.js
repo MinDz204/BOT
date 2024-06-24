@@ -20,26 +20,5 @@ module.exports = {
 };
   
 module.exports.run = async (lang, interaction) => {
-    let mess = await ZifetchInteraction(interaction);
-    let args = interaction.targetMessage?.content;
-    const translated = await translate(args, { to: lang?.langdef || "vi" });
-    let language_name = ISO6391.getName(`${translated.from.language.iso}`);
-
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setLabel('❌')
-        .setCustomId('cancel')
-        .setStyle(ButtonStyle.Secondary));
-
-    const embed = new EmbedBuilder()
-      .setColor(lang.COLOR || client.color)
-      .setTitle(`Translate:`)
-      .setDescription(`${lang?.langdef}: ${translated.text}`)
-      .setTimestamp()
-      .setFooter({ text: ` ${language_name}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-
-    return interaction.editReply({ content:``, embeds: [embed], components: [row] }).then( setTimeout( async() => {
-          return mess.edit({ content:``, embeds: [embed], components: [] }).catch(e => { })
-    }, 30000)).catch(e => { });
-
+    return require("./../commands/translate").run(lang, interaction);
   }

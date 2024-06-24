@@ -34,7 +34,7 @@ module.exports = {
 
 module.exports.run = async (lang, interaction) => {
     let mess = await ZifetchInteraction(interaction);
-      const args = interaction.options.getString('transtext');
+      const args = interaction?.options?.getString('transtext') || interaction?.targetMessage?.content;
       const translated = await translate(args, { to: lang?.langdef || "vi" });
       let language_name = ISO6391.getName(`${translated.from.language.iso}`);
 
@@ -47,10 +47,10 @@ module.exports.run = async (lang, interaction) => {
       const embed = new EmbedBuilder()
         .setColor(lang.COLOR || client.color)
         .setTitle(`Translate:`)
-        .setDescription(`${lang?.langdef}: ${translated.text}`)
+        .setDescription(`**${language_name} -> ${lang?.langdef}:**\n> ${translated.text}`)
         .setTimestamp()
-        .setFooter({ text: ` ${language_name}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-
+        .setFooter({ text: `${language_name} -> ${lang?.langdef}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+      if(!interaction.guild) return interaction.editReply({ content:``, embeds: [embed] });
       return interaction.editReply({ content:``, embeds: [embed], components: [row] }).then( setTimeout( async() => {
             return mess.edit({ content:``, embeds: [embed], components: [] }).catch(e => { })
       }, 30000)).catch(e => { });

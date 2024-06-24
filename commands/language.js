@@ -61,7 +61,7 @@ module.exports = {
       .setDescription(`${lang?.ChangeLanguage}`)
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-
+    if(!interaction.guild) return interaction.editReply({ embeds: [embed] });
     return interaction.editReply({ embeds: [embed], components: [row] })
     .then(async Message => {
       setTimeout(function () {

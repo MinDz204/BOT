@@ -51,6 +51,7 @@ module.exports.run = async (lang, interaction) => {
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
       .setImage(lang?.banner);
     //
+    if(!interaction.guild) return interaction.reply({ embeds: [embed], ephemeral: true  });
     return interaction.reply({ embeds: [embed], components: [
       new ActionRowBuilder().addComponents(
         new ButtonBuilder()
