@@ -51,10 +51,10 @@ module.exports = async ({ interaction, message, nameS, player, queue, lang }) =>
   try {
       const userId = extractId(nameS?.replace(`<@${client.user.id}>`, "").trim());
       const listName = nameS?.replace(`<@${client.user.id}>`, "").replace(`<@${userId}>`, "").trim();
-
+      const userr = await interaction?.guild?.members.fetch(userId) || interaction.user;
+      if(!userr) return;
       if (listName) {
           const playlist = await db?.playlist?.findOne({ userID: userId, listname: listName }).catch(() => { });
-
           if (playlist) {
               const user = interaction?.user || interaction?.author;
               if (playlist.private && userId !== user.id) {
@@ -62,7 +62,6 @@ module.exports = async ({ interaction, message, nameS, player, queue, lang }) =>
               }
               const tracks = playlist.Song.map(song => deserialize(player, song));
               if (tracks) {
-                const userr = await interaction?.guild?.members.fetch(userId) || interaction.user;
                 tracks[0].playlist = {
                   title: listName,
                   url: client?.InviteBot
@@ -107,6 +106,7 @@ module.exports = async ({ interaction, message, nameS, player, queue, lang }) =>
                   .setTimestamp()
                   .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
                   .setImage(lang?.banner)
+                  .setThumbnail(userr.displayAvatarURL({ size: 1024 }))
           ],
           components: [
               new ActionRowBuilder().addComponents(
