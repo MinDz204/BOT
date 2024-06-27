@@ -16,10 +16,10 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
       duration: track.duration
     })
   })
-  if(! tracl?.length > 0) return interaction?.message?.delete();
+  if (!tracl?.length > 0) return interaction?.message?.delete();
   let page = eval(firstFielddata?.[0] || 1);
   const totalPages = Math.ceil(tracl.length / 20);
-  
+
   if (!NOnextpage) {
     if (PageNext) {
       page = (page % totalPages) + 1;
@@ -78,7 +78,7 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
       .setColor(lang?.COLOR || client.color)
       .setTitle(`<:queue:1150639849901133894> ${lang?.Queue}: ${interaction?.guild?.name}`)
       .setDescription(`${current.map(data =>
-        `\n${nowww++} | [${Zitrim(data.title.replace(/\[|\]|\(|\)/g, ''), 25)}](${data.url}) | ${Zitrim(data.author,15)}`)}`)
+        `\n${nowww++} | [${Zitrim(data.title.replace(/\[|\]|\(|\)/g, ''), 25)}](${data.url}) | ${Zitrim(data.author, 15)}`)}`)
       .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) })
       .addFields(
         { name: `Page: ${page}/${totalPages}`, value: ' ' }
@@ -86,8 +86,8 @@ module.exports = async (interaction, queue, lang, NOnextpage, PageNext = true) =
       .setTimestamp()
   }
   //send messenger::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  if(firstFieldName?.includes("Page: ")){
-    return interaction?.message.edit({content: ``, embeds: [await embed(currentIndex)], components: [row,rowpage] })
+  if (firstFieldName?.includes("Page: ")) {
+    return interaction?.message.edit({ content: ``, embeds: [await embed(currentIndex)], components: [row, rowpage] })
   }
-  return  interaction?.edit({content: ``, embeds: [await embed(currentIndex)], components: [row,rowpage] })
+  return interaction?.edit({ content: ``, embeds: [await embed(currentIndex)], components: [row, rowpage] })
 }

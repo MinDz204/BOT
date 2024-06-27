@@ -13,7 +13,7 @@ module.exports = async (client, queue) => {
   if (queue) {
     if (!queue?.metadata?.Zimess) return Ziset(queue, lang)
   }
-  if(queue?.metadata?.ZsyncedLyrics?.Status) require("./../../commands/lyrics").run(lang, queue?.metadata?.Zimess, true);
+  if (queue?.metadata?.ZsyncedLyrics?.Status) require("./../../commands/lyrics").run(lang, queue?.metadata?.Zimess, true);
   return queue?.metadata?.Zimess?.edit(await zistart(queue, lang)).catch(e => {
     return Ziset(queue, lang);
   })

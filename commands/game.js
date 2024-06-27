@@ -61,7 +61,7 @@ const gameOptions = [
 function sendOrEditMessage(zi, interaction, messages, content) {
   const editFunc = zi ? interaction?.message : messages;
   const sendFunc = interaction?.channel;
-  
+
   editFunc.edit(content).catch(() => {
     sendFunc.send(content);
   });
@@ -85,7 +85,7 @@ module.exports = {
     "vi": "Chức năng trò chơi", // Game function in Vietnamese
     "ja": "ゲーム機能", // Game function in Japanese
     "ko": "게임 기능" // Game function in Korean
-  },  
+  },
   integration_types: [0],
   contexts: [0, 1, 2],
   options: [
@@ -240,18 +240,18 @@ module.exports = {
       return;
     }
 
-    if (gamename === "Zblackjack"){
+    if (gamename === "Zblackjack") {
 
       const embed = new EmbedBuilder()
-      .setTitle("Blackjack")
-      .setColor(lang?.COLOR || client.color)
-      .setDescription("Start Black Jack")
+        .setTitle("Blackjack")
+        .setColor(lang?.COLOR || client.color)
+        .setDescription("Start Black Jack")
 
       const actionRow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-        .setCustomId("ZblackjackStart")
-        .setLabel("Start Black Jack")
-        .setStyle(ButtonStyle.Secondary)
+          .setCustomId("ZblackjackStart")
+          .setLabel("Start Black Jack")
+          .setStyle(ButtonStyle.Secondary)
       )
       const content = { content: ` `, embeds: [embed], components: [actionRow] };
       sendOrEditMessage(zi, interaction, messages, content);

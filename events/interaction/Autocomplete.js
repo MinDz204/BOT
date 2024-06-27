@@ -16,10 +16,10 @@ module.exports = async (client, interaction) => {
           });
           const tracks = results.tracks.filter(t => t?.url.length > 1).slice(0, 10);
           return interaction.respond(
-              tracks.map((t) => ({
-                name: Zitrim(t.title, 100),
-                value: Zitrim(interaction.commandName == "lyrics"? t.title : t.url, 100)
-              }))
+            tracks.map((t) => ({
+              name: Zitrim(t.title, 100),
+              value: Zitrim(interaction.commandName == "lyrics" ? t.title : t.url, 100)
+            }))
           ).catch(e => { });
         } catch (e) {
           return interaction.respond().catch(e => { })
@@ -37,15 +37,15 @@ module.exports = async (client, interaction) => {
             }))
           ).catch(e => { console.log(e) });
         } catch (e) {
-          return interaction?.respond().catch(e => {  });
+          return interaction?.respond().catch(e => { });
         }
-        
+
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
       default: {
         return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAutpcomp:${interaction?.customId}`);
       }
     }
-  } catch (e) { 
+  } catch (e) {
     return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAutpcomp:${e?.stack}`)
   }
 }

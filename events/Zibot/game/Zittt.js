@@ -35,11 +35,11 @@ const evaluate = (board) => {
     if (board.map(row => row[i]).every(cell => cell === 2)) return -10;
   }
   if ((board[0][0] === 1 && board[1][1] === 1 && board[2][2] === 1) ||
-      (board[0][2] === 1 && board[1][1] === 1 && board[2][0] === 1)) {
+    (board[0][2] === 1 && board[1][1] === 1 && board[2][0] === 1)) {
     return 10;
   }
   if ((board[0][0] === 2 && board[1][1] === 2 && board[2][2] === 2) ||
-      (board[0][2] === 2 && board[1][1] === 2 && board[2][0] === 2)) {
+    (board[0][2] === 2 && board[1][1] === 2 && board[2][0] === 2)) {
     return -10;
   }
   return 0; // Không có người thắng
@@ -125,94 +125,94 @@ const getBestMove = (board) => {
 };
 
 
-function createActionRow(row, board, Disables = false ) {
-    const actionRow = new ActionRowBuilder();
-    for (let col = 0; col < 3; col++) {
-      actionRow.addComponents(
-        new ButtonBuilder()
-          .setCustomId(`Zttt${row},${col}`)
-          .setLabel(symbols[board[row][col]])
-          .setStyle(ButtonStyle.Secondary)
-          .setDisabled(Disables)
-      );
-    }
-    return actionRow;
-  }
-module.exports = async (interaction, lang) => {
-    const position = interaction?.customId.replace(`Zttt`,"")
-    const [x, y] = position.split(',').map(Number);
-    const board = JSON.parse(interaction.message.embeds[0].description);
-
-    if (board[x][y] !== 0) {
-      await interaction.reply({ content: "Cell đã được đánh dấu!", ephemeral: true });
-      return;
-    }
-
-    const actionRowreroll = new ActionRowBuilder().addComponents(
+function createActionRow(row, board, Disables = false) {
+  const actionRow = new ActionRowBuilder();
+  for (let col = 0; col < 3; col++) {
+    actionRow.addComponents(
       new ButtonBuilder()
+        .setCustomId(`Zttt${row},${col}`)
+        .setLabel(symbols[board[row][col]])
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(Disables)
+    );
+  }
+  return actionRow;
+}
+module.exports = async (interaction, lang) => {
+  const position = interaction?.customId.replace(`Zttt`, "")
+  const [x, y] = position.split(',').map(Number);
+  const board = JSON.parse(interaction.message.embeds[0].description);
+
+  if (board[x][y] !== 0) {
+    await interaction.reply({ content: "Cell đã được đánh dấu!", ephemeral: true });
+    return;
+  }
+
+  const actionRowreroll = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
       .setCustomId(`TicTacToeReroll`)
       .setLabel('↻')
       .setStyle(ButtonStyle.Secondary)
-    )
-    const actionRows = [];
-    board[x][y] = 1; // Người chơi
+  )
+  const actionRows = [];
+  board[x][y] = 1; // Người chơi
 
-    if (checkWin(board, 1)) {
-      for (let row = 0; row < 3; row++) {
-        actionRows.push(createActionRow(row, board, true));
-      }
-      actionRows.push(actionRowreroll);
-      await interaction.update({
-        content: "Bạn đã thắng!",
-        embeds: [],
-        components: actionRows,
-      });
-      return;
-    }
-  
-    if (checkDraw(board)) {
-      for (let row = 0; row < 3; row++) {
-        actionRows.push(createActionRow(row, board, true));
-      }
-      actionRows.push(actionRowreroll);
-      await interaction.update({
-        content: "Trò chơi hòa!",
-        embeds: [],
-        components: actionRows,
-      });
-      return;
-    }
-  
-    const [mx, my] = getBestMove(board); // Máy tính
-    board[mx][my] = 2;
-  
-    if (checkWin(board, 2)) {
-      for (let row = 0; row < 3; row++) {
-        actionRows.push(createActionRow(row, board, true));
-      }
-      actionRows.push(actionRowreroll);
-      await interaction.update({
-        content: "Zi Bot đã thắng!",
-        embeds: [],
-        components: actionRows,
-      });
-    
-      return;
-    }
-
+  if (checkWin(board, 1)) {
     for (let row = 0; row < 3; row++) {
-      actionRows.push(createActionRow(row, board));
+      actionRows.push(createActionRow(row, board, true));
     }
-  
-    const embed = new EmbedBuilder()
-      .setTitle("Tic Tac Toe")
-      .setDescription(JSON.stringify(board))
-      .setColor(lang?.COLOR || client.color)
-      ;
-
-  
+    actionRows.push(actionRowreroll);
     await interaction.update({
-      embeds: [embed],
+      content: "Bạn đã thắng!",
+      embeds: [],
       components: actionRows,
     });
+    return;
+  }
+
+  if (checkDraw(board)) {
+    for (let row = 0; row < 3; row++) {
+      actionRows.push(createActionRow(row, board, true));
+    }
+    actionRows.push(actionRowreroll);
+    await interaction.update({
+      content: "Trò chơi hòa!",
+      embeds: [],
+      components: actionRows,
+    });
+    return;
+  }
+
+  const [mx, my] = getBestMove(board); // Máy tính
+  board[mx][my] = 2;
+
+  if (checkWin(board, 2)) {
+    for (let row = 0; row < 3; row++) {
+      actionRows.push(createActionRow(row, board, true));
+    }
+    actionRows.push(actionRowreroll);
+    await interaction.update({
+      content: "Zi Bot đã thắng!",
+      embeds: [],
+      components: actionRows,
+    });
+
+    return;
+  }
+
+  for (let row = 0; row < 3; row++) {
+    actionRows.push(createActionRow(row, board));
+  }
+
+  const embed = new EmbedBuilder()
+    .setTitle("Tic Tac Toe")
+    .setDescription(JSON.stringify(board))
+    .setColor(lang?.COLOR || client.color)
+    ;
+
+
+  await interaction.update({
+    embeds: [embed],
+    components: actionRows,
+  });
 }

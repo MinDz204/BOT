@@ -11,7 +11,7 @@ const rank = async ({ user, lvlAdd = 1 }) => {
 
   const xpALL = xp + lvlAdd;
   const nextLvlThreshold = lvl * 50;
-  
+
   const langFilePath = `./../../lang/${userDoc?.lang || "vi"}.js`;
   const lang = require(langFilePath);
 

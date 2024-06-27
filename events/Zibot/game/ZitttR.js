@@ -122,56 +122,56 @@ const getBestMove = (board) => {
 };
 
 
-function createActionRow(row, board, Disables = false ) {
-    const actionRow = new ActionRowBuilder();
-    for (let col = 0; col < 3; col++) {
-      actionRow.addComponents(
-        new ButtonBuilder()
-          .setCustomId(`ZtttR${row},${col}`)
-          .setLabel(symbols[board[row][col]])
-          .setStyle(ButtonStyle.Secondary)
-          .setDisabled(Disables)
-      );
-    }
-    return actionRow;
-  }
-
-  // Hàm hỗ trợ
-  function createActionRows(board, actionRowReroll) {
-    const actionRows = [];
-    for (let row = 0; row < 3; row++) {
-      actionRows.push(createActionRow(row, board,!!actionRowReroll));
-    }
-    if(actionRowReroll)
-    actionRows.push(actionRowReroll);
-    return actionRows;
-  }
-  
-  async function updateInteraction(interaction, content, actionRows, embeds = []) {
-    await interaction.update({
-      content,
-      components: actionRows,
-      embeds
-    });
-  }
-  
-  async function updateGameData(interaction, data) {
-    await db?.ZiguildPlay.updateOne(
-      {
-        GuildID: interaction.guild.id,
-        MessengerID: interaction.message.id,
-        Game: 'ZTTT'
-      },
-      {
-        $set: {
-          data
-        }
-      },
-      {
-        upsert: true
-      }
+function createActionRow(row, board, Disables = false) {
+  const actionRow = new ActionRowBuilder();
+  for (let col = 0; col < 3; col++) {
+    actionRow.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`ZtttR${row},${col}`)
+        .setLabel(symbols[board[row][col]])
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(Disables)
     );
   }
+  return actionRow;
+}
+
+// Hàm hỗ trợ
+function createActionRows(board, actionRowReroll) {
+  const actionRows = [];
+  for (let row = 0; row < 3; row++) {
+    actionRows.push(createActionRow(row, board, !!actionRowReroll));
+  }
+  if (actionRowReroll)
+    actionRows.push(actionRowReroll);
+  return actionRows;
+}
+
+async function updateInteraction(interaction, content, actionRows, embeds = []) {
+  await interaction.update({
+    content,
+    components: actionRows,
+    embeds
+  });
+}
+
+async function updateGameData(interaction, data) {
+  await db?.ZiguildPlay.updateOne(
+    {
+      GuildID: interaction.guild.id,
+      MessengerID: interaction.message.id,
+      Game: 'ZTTT'
+    },
+    {
+      $set: {
+        data
+      }
+    },
+    {
+      upsert: true
+    }
+  );
+}
 
 
 //==================================================================================//
@@ -184,14 +184,14 @@ module.exports = async (interaction, lang) => {
     MessengerID: interaction.message.id,
     Game: 'ZTTT'
   });
-  
+
   const actionRowReroll = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId('TicTacToeRReroll')
       .setLabel('↻')
       .setStyle(ButtonStyle.Secondary)
   );
-  
+
   // Kiểm tra nếu ô đã được đánh dấu
   if (board[x][y] !== 0) {
     await interaction.reply({
@@ -200,26 +200,26 @@ module.exports = async (interaction, lang) => {
     });
     return;
   }
-  
+
   // Người chơi thực hiện nước đi
   board[x][y] = 1;
-  
+
   // Kiểm tra kết quả
   if (checkWin(board, 1)) {
-    await updateInteraction(interaction, 'Bạn đã thắng!',  createActionRows(board, actionRowReroll), []);
+    await updateInteraction(interaction, 'Bạn đã thắng!', createActionRows(board, actionRowReroll), []);
     await updateGameData(interaction, []);
     return;
   }
-  
+
   if (checkDraw(board)) {
-    await updateInteraction(interaction, 'Trò chơi hòa!',  createActionRows(board, actionRowReroll), []);
+    await updateInteraction(interaction, 'Trò chơi hòa!', createActionRows(board, actionRowReroll), []);
     return;
   }
-  
+
   // Máy tính thực hiện nước đi
   const [mx, my] = getBestMove(board);
   board[mx][my] = 2;
-  
+
   if (checkWin(board, 2)) {
     await updateInteraction(interaction, 'Zi Bot đã thắng!', createActionRows(board, actionRowReroll), []);
     await updateGameData(interaction, []);
@@ -238,7 +238,7 @@ module.exports = async (interaction, lang) => {
     dataIndex = dataIndex.slice(-3); // Lấy 4 phần tử cuối cùng
   }
   await updateGameData(interaction, dataIndex);
-  
+
   await updateInteraction(
     interaction,
     'Tic Tac Toe',

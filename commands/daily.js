@@ -22,7 +22,7 @@ module.exports = {
   options: [],
   cooldown: 3,
   dm_permission: true,
-  integration_types: [0 ,1],
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   run: async (lang, interaction) => {
     const userId = interaction.user.id;
@@ -46,7 +46,7 @@ module.exports = {
     } else {
       // User can claim daily
       embed.setColor(lang?.COLOR || client.color);
-      
+
       // Add level and update database in one operation
       await rank({ user: interaction.user, lvlAdd: 49 });
       await db.ZiUser.updateOne(

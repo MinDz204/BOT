@@ -5,7 +5,7 @@ module.exports = async (client, queue, track) => {
     .setThumbnail(track?.thumbnail)
     .setColor(client.color)
   return queue?.metadata.channel?.send({ embeds: [embed] }).then(async Message => {
-    setTimeout(function() {
+    setTimeout(function () {
       Message.delete();
     }, 10000)
   }).catch(e => { console.log(e) })

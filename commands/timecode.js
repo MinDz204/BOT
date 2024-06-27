@@ -6,27 +6,27 @@ const { EmbedBuilder, ButtonStyle, ActionRowBuilder, ButtonBuilder } = require("
 module.exports = {
   name: "timecode",
   description: "export timecode",
-  integration_types: [0 ,1],
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [{
-        name: "time",
-        description: "time mm:ss",
-        type: 3,
-        required: false,
-    }],
+    name: "time",
+    description: "time mm:ss",
+    type: 3,
+    required: false,
+  }],
   cooldown: 3,
   dm_permission: true,
 
   run: async (lang, interaction) => {
-    const timeInput  = interaction.options.getString("time") || 0;
+    const timeInput = interaction.options.getString("time") || 0;
     await ZifetchInteraction(interaction);
     const timecode = Math.round((Date.now() + timeToSeconds(timeInput) * 1000) / 1000)
     const embed = new EmbedBuilder()
-    .setTitle("Timecode")
-    .setColor(lang?.COLOR || client.color)
-    .setTimestamp()
-    .setFooter({ text: `${lang?.RequestBY} ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-    .setDescription(
+      .setTitle("Timecode")
+      .setColor(lang?.COLOR || client.color)
+      .setTimestamp()
+      .setFooter({ text: `${lang?.RequestBY} ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+      .setDescription(
         `* <t:${timecode}:t>\n\`\`\`<t:${timecode}:t>\`\`\`\n` +
         `* <t:${timecode}:T>\n\`\`\`<t:${timecode}:T>\`\`\`\n` +
         `* <t:${timecode}:d>\n\`\`\`<t:${timecode}:d>\`\`\`\n` +
@@ -36,12 +36,12 @@ module.exports = {
         `* <t:${timecode}:R>\n\`\`\`<t:${timecode}:R>\`\`\`\n`
       )
     const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-            .setCustomId("cancel")
-            .setLabel("❌")
-            .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId("cancel")
+        .setLabel("❌")
+        .setStyle(ButtonStyle.Secondary),
     )
-    if(!interaction.guild) return interaction.editReply({ content:"", embeds: [ embed ] });
-    return interaction.editReply({ content:"", embeds:[ embed ], components:[ row ] })
+    if (!interaction.guild) return interaction.editReply({ content: "", embeds: [embed] });
+    return interaction.editReply({ content: "", embeds: [embed], components: [row] })
   },
 };

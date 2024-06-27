@@ -6,7 +6,7 @@ const { EmbedBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 module.exports = {
   name: "tests",
   description: "test command.",
-  integration_types: [0 ,1],
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [],
   cooldown: 3,

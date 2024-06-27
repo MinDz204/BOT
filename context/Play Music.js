@@ -17,22 +17,22 @@ module.exports = {
 };
 
 module.exports.run = async (lang, interaction) => {
-let name = interaction.targetMessage?.content;
-if (!name) {
-  const embedData = interaction.targetMessage?.embeds[0]?.data;
-  if(embedData){
-    const firstFieldName = embedData?.fields?.[0]?.name;
-    const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
-    name = hasSpecialField ? embedData.author?.url :  embedData.description;
-  }else{
+  let name = interaction.targetMessage?.content;
+  if (!name) {
+    const embedData = interaction.targetMessage?.embeds[0]?.data;
+    if (embedData) {
+      const firstFieldName = embedData?.fields?.[0]?.name;
+      const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
+      name = hasSpecialField ? embedData.author?.url : embedData.description;
+    } else {
       const attachments = interaction.targetMessage.attachments;
-      if(attachments)
+      if (attachments)
         for (let attachment of attachments.values()) {
           name = attachment.url;
           break;
         }
+    }
   }
-}
-if (!name) return;
-return require("../events/ziplayer/ziSearch")(interaction, name);
+  if (!name) return;
+  return require("../events/ziplayer/ziSearch")(interaction, name);
 }

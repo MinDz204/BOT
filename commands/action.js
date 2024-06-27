@@ -17,7 +17,7 @@ module.exports = {
     "ja": "アクションを使用します。",
     "ko": "행동을 사용하세요."
   },
-  integration_types: [0 ,1],
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [
     {
@@ -38,9 +38,9 @@ module.exports = {
       type: 3,
       required: true,
       choices: [
-        { 
-          name: "triggered", 
-          value: "triggered", 
+        {
+          name: "triggered",
+          value: "triggered",
           name_localizations: {
             "en-US": "triggered",
             "vi": "kích hoạt",
@@ -48,9 +48,9 @@ module.exports = {
             "ko": "트리거됨"
           }
         },
-        { 
-          name: "fused", 
-          value: "fused", 
+        {
+          name: "fused",
+          value: "fused",
           name_localizations: {
             "en-US": "fused",
             "vi": "hợp nhất",
@@ -58,9 +58,9 @@ module.exports = {
             "ko": "융합됨"
           }
         },
-        { 
-          name: "kissed", 
-          value: "kissed", 
+        {
+          name: "kissed",
+          value: "kissed",
           name_localizations: {
             "en-US": "kissed",
             "vi": "hôn",
@@ -68,9 +68,9 @@ module.exports = {
             "ko": "키스됨"
           }
         },
-        { 
-          name: "spanked", 
-          value: "spanked", 
+        {
+          name: "spanked",
+          value: "spanked",
           name_localizations: {
             "en-US": "spanked",
             "vi": "bị đánh",
@@ -78,9 +78,9 @@ module.exports = {
             "ko": "스팽킹됨"
           }
         },
-        { 
-          name: "slapped", 
-          value: "slapped", 
+        {
+          name: "slapped",
+          value: "slapped",
           name_localizations: {
             "en-US": "slapped",
             "vi": "bị tát",
@@ -88,9 +88,9 @@ module.exports = {
             "ko": "따귀맞음"
           }
         },
-        { 
-          name: "beautiful", 
-          value: "beautiful", 
+        {
+          name: "beautiful",
+          value: "beautiful",
           name_localizations: {
             "en-US": "beautiful",
             "vi": "đẹp",
@@ -98,9 +98,9 @@ module.exports = {
             "ko": "아름다운"
           }
         },
-        { 
-          name: "facepalm", 
-          value: "facepalm", 
+        {
+          name: "facepalm",
+          value: "facepalm",
           name_localizations: {
             "en-US": "facepalm",
             "vi": "chán nản",
@@ -108,9 +108,9 @@ module.exports = {
             "ko": "페이스팔"
           }
         },
-        { 
-          name: "rainbow", 
-          value: "rainbow", 
+        {
+          name: "rainbow",
+          value: "rainbow",
           name_localizations: {
             "en-US": "rainbow",
             "vi": "cầu vồng",
@@ -118,9 +118,9 @@ module.exports = {
             "ko": "무지개"
           }
         },
-        { 
-          name: "rip", 
-          value: "rip", 
+        {
+          name: "rip",
+          value: "rip",
           name_localizations: {
             "en-US": "rip",
             "vi": "r.i.p",
@@ -128,9 +128,9 @@ module.exports = {
             "ko": "R.I.P."
           }
         },
-        { 
-          name: "trash", 
-          value: "trash", 
+        {
+          name: "trash",
+          value: "trash",
           name_localizations: {
             "en-US": "trash",
             "vi": "rác",
@@ -138,9 +138,9 @@ module.exports = {
             "ko": "쓰레기"
           }
         },
-        { 
-          name: "hitler", 
-          value: "hitler", 
+        {
+          name: "hitler",
+          value: "hitler",
           name_localizations: {
             "en-US": "hitler",
             "vi": "hitler",
@@ -148,7 +148,7 @@ module.exports = {
             "ko": "히틀러"
           }
         }
-      ]      
+      ]
     },
     {
       name: "user",

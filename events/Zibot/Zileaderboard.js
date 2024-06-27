@@ -17,8 +17,8 @@ module.exports = async ({ interaction, lang }) => {
             return b.Xp - a.Xp; // If levels are the same, sort by XP
         }
     })
-    .filter(user => client.users.cache.has(user.userID)) // Filter users present in the cache
-    .slice(0, 10); // Keep only the top 10 users
+        .filter(user => client.users.cache.has(user.userID)) // Filter users present in the cache
+        .slice(0, 10); // Keep only the top 10 users
 
     // Leaderboard name and entry array
     const name = "Ziji Leaderboard";
@@ -42,30 +42,30 @@ module.exports = async ({ interaction, lang }) => {
 
     const totalMembers = await client.shard.broadcastEval(c =>
         c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
-      ).then(results => results.reduce((acc, memberCount) => acc + memberCount, 0));
-     Font.loadDefault();
+    ).then(results => results.reduce((acc, memberCount) => acc + memberCount, 0));
+    Font.loadDefault();
     const leaderboard = new LeaderboardBuilder()
         .setHeader({
-        title: name,
-        image: client.user.displayAvatarURL({ extension: "png", forceStatic: true }),
-        subtitle: `${totalMembers} members`,
+            title: name,
+            image: client.user.displayAvatarURL({ extension: "png", forceStatic: true }),
+            subtitle: `${totalMembers} members`,
         })
         .setPlayers(leaderboardEntries);
-  const leaderboardBuffer = await leaderboard.build({ format: "png" });
-// Define the message to edit with a consistent structure for error handling
+    const leaderboardBuffer = await leaderboard.build({ format: "png" });
+    // Define the message to edit with a consistent structure for error handling
     const leaderboardMessage = {
         content: '',
         files: [new AttachmentBuilder(leaderboardBuffer, "leaderboard.png")],
         components: [
-        new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-            .setLabel("❌")
-            .setCustomId("cancel")
-            .setStyle(ButtonStyle.Secondary)
-        ),
+            new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setLabel("❌")
+                    .setCustomId("cancel")
+                    .setStyle(ButtonStyle.Secondary)
+            ),
         ],
     };
-// Try to edit the original message, and handle errors with fallback
+    // Try to edit the original message, and handle errors with fallback
     try {
         await messages.edit(leaderboardMessage);
     } catch (e) {

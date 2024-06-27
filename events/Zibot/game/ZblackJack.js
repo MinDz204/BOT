@@ -47,7 +47,7 @@ function calculateHandValue(hand) {
     return value;
 }
 
-module.exports = async (interaction , lang ) => {
+module.exports = async (interaction, lang) => {
     const { customId, user } = interaction;
 
     if (customId === 'ZblackjackStart') {

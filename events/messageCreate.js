@@ -4,40 +4,42 @@ const config = require("../config");
 const ziSearch = require("./ziplayer/ziSearch");
 const { animatedIcons } = require("./Zibot/ZiFunc");
 
-const playMusic = async ({lang, message, client, content}) => {
+const playMusic = async ({ lang, message, client, content }) => {
     const member = message.member;
     if (!member.voice.channelId) {
-        return message.reply({ content: lang?.NOvoice, ephemeral: true }).catch(() => {});
+        return message.reply({ content: lang?.NOvoice, ephemeral: true }).catch(() => { });
     }
 
     const botMember = message.guild.members.cache.get(client.user.id);
     if (botMember.voice.channelId && botMember.voice.channelId !== member.voice.channelId) {
-        return message.reply({ content: lang?.NOvoiceChannel, ephemeral: true }).catch(() => {});
+        return message.reply({ content: lang?.NOvoiceChannel, ephemeral: true }).catch(() => { });
     }
 
     return ziSearch(message, content);
 };
 
-const fetchMessageContent = async ({message, refMsgId, lang}) => {
+const fetchMessageContent = async ({ message, refMsgId, lang }) => {
     const mess = await message.channel.messages.fetch(refMsgId, { cache: false, force: true });
     let name = mess.content;
     if (!name) {
         const embedData = mess?.embeds[0]?.data;
-        if(embedData){
-          const firstFieldName = embedData?.fields?.[0]?.name;
-          const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
-          name = hasSpecialField ? embedData.author?.url :  embedData.description;
+        if (embedData) {
+            const firstFieldName = embedData?.fields?.[0]?.name;
+            const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
+            name = hasSpecialField ? embedData.author?.url : embedData.description;
         }
-      }
+    }
     if (name) return name;
-    message.reply({embeds:[
-        new EmbedBuilder()
-            .setColor("Red")
-            .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255682265837473822/context_menus_playing_music.gif")
-            .setDescription("❌ | **Tính năng này đã không còn hoạt động hãy sử dụng context menu thay thế**")
-            .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-            .setTimestamp()
-    ]})
+    message.reply({
+        embeds: [
+            new EmbedBuilder()
+                .setColor("Red")
+                .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255682265837473822/context_menus_playing_music.gif")
+                .setDescription("❌ | **Tính năng này đã không còn hoạt động hãy sử dụng context menu thay thế**")
+                .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+                .setTimestamp()
+        ]
+    })
     return null;
 };
 
@@ -76,9 +78,9 @@ module.exports = async (client, message) => {
 
     if (message.reference && message.guild) {
         const refMsgId = message.reference.messageId;
-        const msgContent = await fetchMessageContent({message, refMsgId, lang});
+        const msgContent = await fetchMessageContent({ message, refMsgId, lang });
         if (msgContent) {
-            return playMusic({lang, message, client, content: msgContent});
+            return playMusic({ lang, message, client, content: msgContent });
         }
     }
 
@@ -88,6 +90,6 @@ module.exports = async (client, message) => {
 
     if (message.guild) {
         const playContent = message.content.replace(`<@${client.user.id}>`, "").trim();
-        if(playContent) return playMusic({lang, message, client, content: playContent});
+        if (playContent) return playMusic({ lang, message, client, content: playContent });
     }
 };

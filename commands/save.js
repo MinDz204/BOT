@@ -51,8 +51,8 @@ module.exports = {
       const saveType = interaction.options?.getString("type");
       const isPrivate = interaction.options?.getBoolean("private") || false;
       const playlistName = interaction.options?.getString("name").replace("_", "") ||
-                           interaction.fields?.getTextInputValue("listname").replace("_", "") ||
-                           interaction.user.tag || "Unknown";
+        interaction.fields?.getTextInputValue("listname").replace("_", "") ||
+        interaction.user.tag || "Unknown";
 
       const queue = useQueue(interaction.guild.id);
       if (!queue || !queue.node.isPlaying() && queue.isEmpty()) {

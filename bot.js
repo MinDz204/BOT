@@ -31,7 +31,7 @@ const client = new Client({
     // GatewayIntentBits.DirectMessageTyping, // for dm message typinh
     // GatewayIntentBits.MessageContent, // enable if you need message content things
   ],
-  allowedMentions:{
+  allowedMentions: {
     parse: ['users'],
     repliedUser: false,
   },
@@ -85,7 +85,7 @@ fs.readdir("./commands", (err, files) => {
         name: props?.name,
         description: props?.description,
         options: props?.options,
-        dm_permission:props?.dm_permission,
+        dm_permission: props?.dm_permission,
         integration_types: props?.integration_types,
         contexts: props?.contexts,
         name_localizations: props?.name_localizations,

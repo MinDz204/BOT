@@ -31,19 +31,19 @@ function removeVietnameseTones(str) {
 
 const Zitrim = (str, max) => (str?.length > max ? `${str?.slice(0, max - 3)}...` : str);
 
-async function fetchR(interaction){
-  if(!interaction.guild) return interaction.deferReply({ ephemeral: true, fetchReply: true }).catch(e=> console.log );
+async function fetchR(interaction) {
+  if (!interaction.guild) return interaction.deferReply({ ephemeral: true, fetchReply: true }).catch(e => console.log);
   let messid;
   try {
     messid = await interaction?.reply({ content: `<a:loading:1151184304676819085> Loading...`, fetchReply: true, allowedMentions: { repliedUser: false } })
-  }catch(e){
+  } catch (e) {
     messid = await interaction?.channel?.send({ content: `<a:loading:1151184304676819085> Loading...`, fetchReply: true, allowedMentions: { repliedUser: false } })
   }
   await interaction.channel?.sendTyping();
-  try{
-    return await interaction.fetchReply().catch(e=>{ });
-  }catch(e){
-    return await interaction.channel?.messages.fetch({ message: messid , cache: false, force: true })
+  try {
+    return await interaction.fetchReply().catch(e => { });
+  } catch (e) {
+    return await interaction.channel?.messages.fetch({ message: messid, cache: false, force: true })
   }
 }
 
@@ -74,16 +74,16 @@ function extractId(tag) {
 }
 
 function shuffleArray(array) {
-  for (var i = array.length - 1; i > 0; i--) { 
- 
-      // Generate random number 
-      var j = Math.floor(Math.random() * (i + 1));
-                 
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
+  for (var i = array.length - 1; i > 0; i--) {
+
+    // Generate random number 
+    var j = Math.floor(Math.random() * (i + 1));
+
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
-     
+
   return array;
 }
 function Zilink(str) {
@@ -105,86 +105,86 @@ function processQuery(query) {
   return query;
 }
 
-function Zicrop(query){
-  if(query.includes('Zi=')){
+function Zicrop(query) {
+  if (query.includes('Zi=')) {
     const queryParts = query.split('Zi=');
     queryParts.shift();
-    return queryParts.join(''); 
+    return queryParts.join('');
   } else return query
 }
 
 const timeToSeconds = (time) => {
-  if(!time) return 0;
+  if (!time) return 0;
   const timeString = time.toLowerCase();
   let day = 0,
-      hours = 0,
-      minutes = 0,
-      seconds = 0,
-      soam = 1;
-     if( timeString.includes(`-`)){ soam = -1 }
+    hours = 0,
+    minutes = 0,
+    seconds = 0,
+    soam = 1;
+  if (timeString.includes(`-`)) { soam = -1 }
   // Check if the timeString consists only of digits
   if (/^\d+$/.test(timeString)) {
-      seconds = parseInt(timeString);
+    seconds = parseInt(timeString);
   }
 
   // Check if the timeString is in the format "m:s" or "h:m:s"
   else if (/^\d+:\d+(\:\d+)?$/.test(timeString)) {
-      const timeParts = timeString.split(":");
-      const numParts = timeParts.length;
+    const timeParts = timeString.split(":");
+    const numParts = timeParts.length;
 
-      if (numParts === 2) {
-          minutes = parseInt(timeParts[0]);
-          seconds = parseInt(timeParts[1]);
-      } else if (numParts === 3) {
-          hours = parseInt(timeParts[0]);
-          minutes = parseInt(timeParts[1]);
-          seconds = parseInt(timeParts[2]);
-      }else if (numParts == 4){
-        day = parseInt(timeParts[0]);
-        hours = parseInt(timeParts[1]);
-        minutes = parseInt(timeParts[2]);
-        seconds = parseInt(timeParts[3]);
-      }
+    if (numParts === 2) {
+      minutes = parseInt(timeParts[0]);
+      seconds = parseInt(timeParts[1]);
+    } else if (numParts === 3) {
+      hours = parseInt(timeParts[0]);
+      minutes = parseInt(timeParts[1]);
+      seconds = parseInt(timeParts[2]);
+    } else if (numParts == 4) {
+      day = parseInt(timeParts[0]);
+      hours = parseInt(timeParts[1]);
+      minutes = parseInt(timeParts[2]);
+      seconds = parseInt(timeParts[3]);
+    }
   }
 
   // Otherwise, parse the timeString into hours, minutes, and seconds
   else {
-      const regex = /(\d+)\s*(d|h|m|s)/g;
-      let match;
-      let valid = false; // Flag to track if any valid match is found
+    const regex = /(\d+)\s*(d|h|m|s)/g;
+    let match;
+    let valid = false; // Flag to track if any valid match is found
 
-      while ((match = regex.exec(timeString)) !== null) {
-          const value = parseInt(match[1]);
+    while ((match = regex.exec(timeString)) !== null) {
+      const value = parseInt(match[1]);
 
-          if (match[2] === 'd') {
-            day = value;
-            valid = true;
-          }
-          else if (match[2] === 'h') {
-              hours = value;
-              valid = true;
-          }
-          else if (match[2] === 'm') {
-              minutes = value;
-              valid = true;
-          }
-          else if (match[2] === 's') {
-              seconds = value;
-              valid = true;
-          }
+      if (match[2] === 'd') {
+        day = value;
+        valid = true;
       }
-
-      // If no valid match is found, return false
-      if (!valid) {
-          return false;
+      else if (match[2] === 'h') {
+        hours = value;
+        valid = true;
       }
+      else if (match[2] === 'm') {
+        minutes = value;
+        valid = true;
+      }
+      else if (match[2] === 's') {
+        seconds = value;
+        valid = true;
+      }
+    }
+
+    // If no valid match is found, return false
+    if (!valid) {
+      return false;
+    }
   }
 
-  const totalSeconds = day * 86400+ hours * 3600 + minutes * 60 + seconds;
+  const totalSeconds = day * 86400 + hours * 3600 + minutes * 60 + seconds;
   return totalSeconds * soam;
 }
 
-const tracsrowslecs = async(res, lang, nameS, interaction) => {
+const tracsrowslecs = async (res, lang, nameS, interaction) => {
   res = res?.tracks || res;
   const client = require("../../bot");
   const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
@@ -192,8 +192,8 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
   if (!maxTracks.length > 0) return console.error("search err");
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
-      .setLabel(`${index + 1} - ${ track?.queryType }: ${ track?.duration }`)
-      .setDescription(` ${Zitrim( track?.title , 90)}`)
+      .setLabel(`${index + 1} - ${track?.queryType}: ${track?.duration}`)
+      .setDescription(` ${Zitrim(track?.title, 90)}`)
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })
@@ -202,17 +202,17 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
     .setLabel("❌")
     .setDescription('cancel')
     .setValue(`cancelSEARCHTRACK`);
-  
+
   const embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client.color)
     .setTitle(`${lang?.PlayerSearch}`)
-    .setDescription(`** ${Zitrim( nameS , 200)} **`)
+    .setDescription(`** ${Zitrim(nameS, 200)} **`)
     .setTimestamp()
-    .addFields( maxTracks.map((track, i) => ({
+    .addFields(maxTracks.map((track, i) => ({
       name: `${i + 1}. ${Zitrim(track.title, 100)}`,
-      value: `${ track?.queryType }: \`${Zitrim(track.author, 150)}\``,
+      value: `${track?.queryType}: \`${Zitrim(track.author, 150)}\``,
     }))
-  )
+    )
     .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
 
   const select = new ActionRowBuilder()
@@ -222,33 +222,33 @@ const tracsrowslecs = async(res, lang, nameS, interaction) => {
         .setMinValues(1)
         .setMaxValues(1)
         .setPlaceholder('▶️ | Pick the track u want to add to queue.')
-        .addOptions( track_creator )
-      );
+        .addOptions(track_creator)
+    );
   const buttSearch = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
-    .setCustomId('cancel')
-    .setLabel('❌')
-    .setStyle(2),
+      .setCustomId('cancel')
+      .setLabel('❌')
+      .setStyle(2),
     new ButtonBuilder()
-    .setCustomId('Zsearchyoutube')
-    .setEmoji('<a:youtube:1243683781320380426>')
-    .setStyle(2),
+      .setCustomId('Zsearchyoutube')
+      .setEmoji('<a:youtube:1243683781320380426>')
+      .setStyle(2),
     new ButtonBuilder()
-    .setCustomId('Zsearchsoundcloud')
-    .setEmoji('<a:SOUNDCLOUD:1243684515646541936>')
-    .setStyle(2),
+      .setCustomId('Zsearchsoundcloud')
+      .setEmoji('<a:SOUNDCLOUD:1243684515646541936>')
+      .setStyle(2),
     new ButtonBuilder()
-    .setCustomId('ZsearchspotifySearch')
-    .setEmoji('<a:spotify:1243684999182422097>')
-    .setStyle(2),
+      .setCustomId('ZsearchspotifySearch')
+      .setEmoji('<a:spotify:1243684999182422097>')
+      .setStyle(2),
     // new ButtonBuilder()
     // .setCustomId('ZsearchRelated')
     // .setEmoji("<:gacha:1254121084010102794>")
     // .setStyle(2),
   )
-  return { content:``, embeds: [embed], components: [buttSearch, select ] }
+  return { content: ``, embeds: [embed], components: [buttSearch, select] }
 }
-function ZiplayerOption({ interaction, message, queue, user }){
+function ZiplayerOption({ interaction, message, queue, user }) {
   const queueMetadata = queue?.metadata || {};
   return {
     metadata: {
@@ -304,18 +304,18 @@ const animatedIcons = [
   "1238577095488176309"
 ];
 module.exports = {
-ZifetchInteraction: fetchR,
-removeVietnameseTones,
-msToTime,
-validURL,
-processQuery,
-Zilink,
-Zicrop,
-shuffleArray,
-Zitrim,
-timeToSeconds,
-tracsrowslecs,
-extractId,
-ZiplayerOption,
-animatedIcons
+  ZifetchInteraction: fetchR,
+  removeVietnameseTones,
+  msToTime,
+  validURL,
+  processQuery,
+  Zilink,
+  Zicrop,
+  shuffleArray,
+  Zitrim,
+  timeToSeconds,
+  tracsrowslecs,
+  extractId,
+  ZiplayerOption,
+  animatedIcons
 }

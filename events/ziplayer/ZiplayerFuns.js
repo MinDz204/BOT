@@ -1,6 +1,6 @@
 const { useQueue, QueueRepeatMode, useHistory, Util } = require("discord-player");
 const { zistart } = require("./ziStartTrack");
-const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder  } = require("discord.js");
+const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { SEEKfunc } = require("./ZiSeek");
 const { handleVolumeChange } = require("./Zivolume");
 const db = require("./../../mongoDB");
@@ -19,26 +19,26 @@ const sendTemporaryReply = async (interaction, content) => {
   deleteAfterTimeout(message);
 };
 
-const Ziseek = async(interaction, queue, lang, str)=> {
+const Ziseek = async (interaction, queue, lang, str) => {
   if (!queue) return;
   const timestamp = queue.node.getTimestamp();
   if (timestamp.progress == 'Forever') return sendTemporaryReply(interaction, `❌ | Can't seek in a live stream.`);
-  let targetTime  = 0;
-  if(str !== "BEGIN"){
-    targetTime  = timeToSeconds(str) + timeToSeconds(timestamp?.current.label);
+  let targetTime = 0;
+  if (str !== "BEGIN") {
+    targetTime = timeToSeconds(str) + timeToSeconds(timestamp?.current.label);
     targetTime = Math.max(targetTime, 0);
-    }else{
-      targetTime  = timeToSeconds(`0:01`)
-    } 
+  } else {
+    targetTime = timeToSeconds(`0:01`)
+  }
   const musicLength = timeToSeconds(timestamp?.total.label);
-  if(!targetTime ) return sendTemporaryReply( interaction,
+  if (!targetTime) return sendTemporaryReply(interaction,
     '❌ | Invalid format for the target time.\n(**`ex: 3m20s, 1m 50s, 1:20:55, 5:20`**)'
   );
-  if (targetTime  >= musicLength) return sendTemporaryReply(
+  if (targetTime >= musicLength) return sendTemporaryReply(
     interaction,
     `❌ | Target time exceeds music duration. (\`${total?.label}\`)`
   );
-  const success = queue.node.seek(targetTime  * 1000);
+  const success = queue.node.seek(targetTime * 1000);
   if (success) {
     try {
       interaction.deferUpdate().catch(e => { /* Handle error */ });
@@ -57,7 +57,7 @@ const Ziseek = async(interaction, queue, lang, str)=> {
 module.exports = async (interaction, lang) => {
   try {
     const queue = useQueue(interaction?.guildId);
-    switch(interaction.customId) {
+    switch (interaction.customId) {
       case "ZiplayerSeach":
         const modal = new ModalBuilder()
           .setCustomId("ZiCompSearch")
@@ -73,16 +73,16 @@ module.exports = async (interaction, lang) => {
           )
         return interaction.showModal(modal);
     }
-//#region Lock
+    //#region Lock
     let ZiUserLock = await db.ZiUserLock.findOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }).catch(e => { });
     let requestby = ZiUserLock?.userID || queue?.metadata.requestby?.id;
-    if (!!ZiUserLock?.status && requestby !== interaction.user?.id) return  interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
-//#endregion
+    if (!!ZiUserLock?.status && requestby !== interaction.user?.id) return interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
+    //#endregion
 
-//#region func
-      switch (interaction.customId) {
-      case 'ZiplayerControll':{
-        if (!!requestby && requestby !== interaction.user?.id) return  interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
+    //#region func
+    switch (interaction.customId) {
+      case 'ZiplayerControll': {
+        if (!!requestby && requestby !== interaction.user?.id) return interaction.reply({ content: `${lang?.StopFail.replace(`{uerrr}`, `<@${requestby}>`)}`, ephemeral: true }).catch(e => { })
         await db.ZiUserLock.updateOne({ guildID: queue?.guild?.id, channelID: queue?.metadata?.channel?.id }, {
           $set: {
             status: !(ZiUserLock?.status ?? true),
@@ -92,10 +92,10 @@ module.exports = async (interaction, lang) => {
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
       }
       case "ZiplayerLyrics": {
-        if( !queue ) return;
-        return require("./../../commands/lyrics").run( lang, interaction );
+        if (!queue) return;
+        return require("./../../commands/lyrics").run(lang, interaction);
       }
-      break;
+        break;
       case "Ziplayerf5":
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
@@ -120,7 +120,7 @@ module.exports = async (interaction, lang) => {
         queue?.tracks?.clear();
         await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
         return interaction?.message.edit({ content: `${lang?.queueclear} `, embeds: [], components: [] }).then(setTimeout(
-          function() {
+          function () {
             interaction?.message.delete().catch(e => { });
           }, 10000)).catch(e => { });
       case "ZiplayerQueueF5":
@@ -131,8 +131,8 @@ module.exports = async (interaction, lang) => {
         await interaction?.reply(await ZiPlayerFillter(interaction?.user, queue, lang))
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
     }
-//#region PLAYER
-    if( !queue ) return;
+    //#region PLAYER
+    if (!queue) return;
     let ZiisPlaying = !!queue?.node?.isPlaying() || !queue?.isEmpty();
     if (!ZiisPlaying) return interaction?.reply({ content: `${lang?.NoPlaying}`, ephemeral: true })
 
@@ -145,7 +145,7 @@ module.exports = async (interaction, lang) => {
       case "ZiplayerSeek":
         return interaction.reply(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue))
       case "ZiplayerVol":
-        return handleVolumeChange(interaction,queue,lang);
+        return handleVolumeChange(interaction, queue, lang);
       case "ZiplayerAutoPlay":
         queue.repeatMode === 3 ? queue.setRepeatMode(QueueRepeatMode.OFF) : queue.setRepeatMode(QueueRepeatMode.AUTOPLAY);
         await interaction?.deferUpdate().catch(e => { });
@@ -160,8 +160,8 @@ module.exports = async (interaction, lang) => {
         queue.tracks.shuffle();
         await interaction?.deferUpdate().catch(e => { });
         return interaction?.message.edit(await zistart(queue, lang)).catch(e => { });
-//#endregion
-//#region QUEUE
+      //#endregion
+      //#region QUEUE
       case "ZiplayerQueuE":
         const messss = await ZifetchInteraction(interaction)
         messss.user = interaction.user;
@@ -176,8 +176,8 @@ module.exports = async (interaction, lang) => {
       case "ZiplayerQueueNext":
         await interaction?.deferUpdate().catch(e => { });
         return require("./Ziqueue")(interaction, queue, lang, false, true);
-//#endregion
-//#region SEEK
+      //#endregion
+      //#region SEEK
       case "ZiplayerSEEK0":
         return Ziseek(interaction, queue, lang, "BEGIN");
       case "ZiplayerSEEKP30":
@@ -194,12 +194,12 @@ module.exports = async (interaction, lang) => {
           const messagesd = await interaction.reply({ content: `❌ | Can't seek in a live stream.`, fetchReply: true });
           deleteAfterTimeout(messagesd);
         }
-    
+
         interaction.reply({ content: 'time (ex: 3m20s, 1:20:55):', fetchReply: true });
-    
+
         const collectorFilter = (i) => i.author.id === interaction.user.id;
         const collector = interaction.channel.createMessageCollector({ filter: collectorFilter, time: 60000 });
-    
+
         collector.on('collect', async (i) => {
           const str = i.content;
           let targetTime = timeToSeconds(str);
@@ -209,7 +209,7 @@ module.exports = async (interaction, lang) => {
           if (targetTime >= musicLength) {
             return sendTemporaryReply(i, `❌ | Target time exceeds music duration. (\`${total?.label}\`)`);
           }
-    
+
           const success = queue.node.seek(targetTime * 1000);
           if (success) {
             try {
@@ -227,8 +227,8 @@ module.exports = async (interaction, lang) => {
             sendTemporaryReply(i, '❌ | Something went wrong.');
           }
         });
-    
-        collector.on('end',async () => {
+
+        collector.on('end', async () => {
           const messagesd = await interaction.editReply({ content: '❌ | End seek 1m.', fetchReply: true }).catch(e => { });
           deleteAfterTimeout(messagesd);
 
@@ -236,10 +236,10 @@ module.exports = async (interaction, lang) => {
         return;
       }
       //#endregion
-      case "ZiplayersaVetrack":{
+      case "ZiplayersaVetrack": {
         const modal = new ModalBuilder()
           .setCustomId('saVetrackmodal')
-          .setTitle(`Save track ${Zitrim(queue?.currentTrack?.title,29)} to:`)
+          .setTitle(`Save track ${Zitrim(queue?.currentTrack?.title, 29)} to:`)
           .addComponents(
             new ActionRowBuilder().addComponents(
               new TextInputBuilder()
@@ -249,7 +249,7 @@ module.exports = async (interaction, lang) => {
                 .setRequired(true)
             )
           )
-      return interaction?.showModal(modal);
+        return interaction?.showModal(modal);
       }
       default:
         return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${interaction?.customId}`)

@@ -6,11 +6,11 @@ class Generator extends Builder {
     // set the size of the image
     super(300, 300);
     this.bootstrap({
-        author: "",
-        image: "",
-        title: "",
-        coin: "",
-      });
+      author: "",
+      image: "",
+      title: "",
+      coin: "",
+    });
     // if no fonts are loaded, load the default font
     if (!FontFactory.size) Font.loadDefault();
   }
@@ -38,80 +38,80 @@ class Generator extends Builder {
     const art = await loadImage(image);
     const coinig = await loadImage(coin)
     return JSX.createElement(
+      "div",
+      {
+        style: {
+          background: "linear-gradient(to top, #120C17, #010424, #201C5B)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+          borderRadius: "0.5rem",
+          height: "100%",
+          width: "100%",
+        },
+      },
+      JSX.createElement("img", {
+        src: coinig.toDataURL(),
+        alt: "img",
+        display: "flex",
+        style: {
+          borderRadius: "50%",
+          height: "10rem",
+          width: "10rem",
+        },
+      }),
+      JSX.createElement(
         "div",
         {
           style: {
-            background: "linear-gradient(to top, #120C17, #010424, #201C5B)",
+            color: "white",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            borderRadius: "0.5rem",
-            height: "100%",
-            width: "100%",
           },
         },
-        JSX.createElement("img", {
-            src: coinig.toDataURL(),
-            alt: "img",
-            display: "flex",
-            style: {
-              borderRadius: "50%",
-              height: "10rem",
-              width: "10rem",
-            },
-          }),
         JSX.createElement(
-          "div",
+          "h1",
           {
             style: {
-              color: "white",
+              fontSize: "1.5rem",
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              lineHeight: 2,
+              marginBottom: 0,
+              marginTop: 0,
             },
           },
-          JSX.createElement(
-            "h1",
-            {
-              style: {
-                fontSize: "1.5rem",
-                display: "flex",
-                lineHeight: 2,
-                marginBottom: 0,
-                marginTop: 0,
-              },
-            },
-            title
-          ),
-          JSX.createElement("img", {
-            src: art.toDataURL(),
-            alt: "img",
-            display: "flex",
-            style: {
-              borderRadius: "50%",
-              height: "2rem",
-              width: "2rem",
-            },
-          }),
-          JSX.createElement(
-            "h4",
-            {
-              style: {
-                fontSize: "1.125rem",
-                display: "flex",
-                lineHeight: 1,
-                marginTop: "0.25rem",
-                color: "#FFFFFFAA",
-                fontWeight: 500,
-              },
-            },
-            author
-          )
+          title
         ),
-      );
-    }
+        JSX.createElement("img", {
+          src: art.toDataURL(),
+          alt: "img",
+          display: "flex",
+          style: {
+            borderRadius: "50%",
+            height: "2rem",
+            width: "2rem",
+          },
+        }),
+        JSX.createElement(
+          "h4",
+          {
+            style: {
+              fontSize: "1.125rem",
+              display: "flex",
+              lineHeight: 1,
+              marginTop: "0.25rem",
+              color: "#FFFFFFAA",
+              fontWeight: 500,
+            },
+          },
+          author
+        )
+      ),
+    );
+  }
 }
 module.exports = { ZCoinFlip: Generator };
 

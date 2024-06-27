@@ -5,30 +5,30 @@ const { ZiPlayerlinkAvt } = require('./ziStartTrack');
 const SEEKfunc = async (trackk, user, lang, queue) => {
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
-    .setLabel('↼')
-    .setCustomId('ZiplayerSEEK0')
-    .setStyle(ButtonStyle.Secondary),
+      .setLabel('↼')
+      .setCustomId('ZiplayerSEEK0')
+      .setStyle(ButtonStyle.Secondary),
     new ButtonBuilder()
-    .setLabel('↼30')
-    .setCustomId('ZiplayerSEEKP30')
-    .setStyle(ButtonStyle.Secondary),
+      .setLabel('↼30')
+      .setCustomId('ZiplayerSEEKP30')
+      .setStyle(ButtonStyle.Secondary),
     new ButtonBuilder()
-    .setLabel('↼10')
-    .setCustomId('ZiplayerSEEKP10')
-    .setStyle(ButtonStyle.Secondary),
+      .setLabel('↼10')
+      .setCustomId('ZiplayerSEEKP10')
+      .setStyle(ButtonStyle.Secondary),
     new ButtonBuilder()
-    .setLabel('10⇀')
-    .setCustomId('ZiplayerSEEK10')
-    .setStyle(ButtonStyle.Secondary),
+      .setLabel('10⇀')
+      .setCustomId('ZiplayerSEEK10')
+      .setStyle(ButtonStyle.Secondary),
     new ButtonBuilder()
-    .setLabel('30⇀')
-    .setCustomId('ZiplayerSEEK30')
-    .setStyle(ButtonStyle.Secondary));
+      .setLabel('30⇀')
+      .setCustomId('ZiplayerSEEK30')
+      .setStyle(ButtonStyle.Secondary));
   const row2 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
-    .setLabel('Custom Seek ↭')
-    .setCustomId('ZiplayerSEEKINP')
-    .setStyle(ButtonStyle.Success),
+      .setLabel('Custom Seek ↭')
+      .setCustomId('ZiplayerSEEKINP')
+      .setStyle(ButtonStyle.Success),
     new ButtonBuilder()
       .setLabel('❌')
       .setCustomId('cancel')
@@ -52,7 +52,7 @@ const SEEKfunc = async (trackk, user, lang, queue) => {
     .addFields({ name: `${proress}`, value: ` ` })
     .setImage(lang?.banner)
 
-  return { embeds: [info], components: [row,row2] }
+  return { embeds: [info], components: [row, row2] }
 };
 
 

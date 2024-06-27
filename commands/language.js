@@ -19,7 +19,7 @@ module.exports = {
     "ja": "ボットの言語を変更する",  // Change bot language in Japanese
     "ko": "봇 언어 변경"   // Change bot language in Korean
   },
-  integration_types: [0 ,1],
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [{
     name: "name",
@@ -61,21 +61,21 @@ module.exports = {
       .setDescription(`${lang?.ChangeLanguage}`)
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-    if(!interaction.guild) return interaction.editReply({content: "", embeds: [embed] });
+    if (!interaction.guild) return interaction.editReply({ content: "", embeds: [embed] });
     return interaction.editReply({ embeds: [embed], components: [row] })
-    .then(async Message => {
-      setTimeout(function () {
-        Message?.edit({ content: "",components: [] }).catch(console.error);
-      }, 10000);
-    })
-    .catch(async () => {
-      await interaction?.user?.send({ embeds: [embed] })
-        .then(async Message => {
-          setTimeout(function () {
-            Message?.edit({ components: [] }).catch(console.error);
-          }, 10000);
-        })
-        .catch(console.error);
-    });
+      .then(async Message => {
+        setTimeout(function () {
+          Message?.edit({ content: "", components: [] }).catch(console.error);
+        }, 10000);
+      })
+      .catch(async () => {
+        await interaction?.user?.send({ embeds: [embed] })
+          .then(async Message => {
+            setTimeout(function () {
+              Message?.edit({ components: [] }).catch(console.error);
+            }, 10000);
+          })
+          .catch(console.error);
+      });
   },
 };

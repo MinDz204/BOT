@@ -37,7 +37,7 @@ module.exports = {
       const messages = await ZifetchInteraction(interaction);
       const queue = useQueue(interaction.guild.id);
 
-      if (!queue || !queue?.metadata ) {
+      if (!queue || !queue?.metadata) {
         await interaction.channel.send(lang?.NoPlaying);
         return;
       }

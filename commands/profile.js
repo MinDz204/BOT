@@ -19,7 +19,7 @@ module.exports = {
     "ja": "プロフィールを見る",
     "ko": "프로필 보기",
   },
-  integration_types: [0 ,1],
+  integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [
     {
@@ -55,9 +55,9 @@ module.exports = {
 
       const usersort = UserI.sort((a, b) => {
         if (b.lvl !== a.lvl) {
-          return b.lvl - a.lvl; 
+          return b.lvl - a.lvl;
         }
-        return b.Xp - a.Xp; 
+        return b.Xp - a.Xp;
       });
 
       const sss = usersort.findIndex((user) => user.userID === userr.id);
@@ -92,7 +92,7 @@ module.exports = {
       const attachment = new AttachmentBuilder(rankCardBuffer, { name: "RankCard.png" });
 
       const response = { content: "", files: [attachment], components: [editProf] };
-      if(!interaction.guild) response.components = []
+      if (!interaction.guild) response.components = []
       if (!Zi) {
         interaction.editReply(response).catch(() => {
           interaction?.channel?.send(response);
@@ -103,7 +103,7 @@ module.exports = {
       }
     } catch (error) {
       console.error("Error in profile command:", error);
-      throw error; 
+      throw error;
     }
   },
 };

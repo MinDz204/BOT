@@ -35,60 +35,61 @@ module.exports = async (client, interaction) => {
         const queue = useQueue(interaction?.guildId);
         if (!queue) return;
         const timestamp = queue.node.getTimestamp();
-        if (timestamp.progress == 'Forever') return interaction.editReply({ content: `❌ | Can't seek in a live stream.`});
+        if (timestamp.progress == 'Forever') return interaction.editReply({ content: `❌ | Can't seek in a live stream.` });
         const str = interaction.fields.getTextInputValue("Time");
         const tragetTime = timeToSeconds(str);
         const musicLength = timeToSeconds(timestamp.total.label);
-        if(!tragetTime) return interaction.editReply({ content: `❌ | Invalid format for the target time.\n(**\`ex: 3m20s, 1m 50s, 1:20:55, 5:20\`**)`});
-        if (tragetTime >= musicLength) return interaction.reply({ content: `❌ | Target time exceeds music duration. (\`${timestamp.total.label}\`)`});
+        if (!tragetTime) return interaction.editReply({ content: `❌ | Invalid format for the target time.\n(**\`ex: 3m20s, 1m 50s, 1:20:55, 5:20\`**)` });
+        if (tragetTime >= musicLength) return interaction.reply({ content: `❌ | Target time exceeds music duration. (\`${timestamp.total.label}\`)` });
         const success = queue.node.seek(tragetTime * 1000);
-        if (success){
+        if (success) {
           await interaction?.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue)).catch(e => { });
           return interaction.deleteReply().catch(e => { });
-        }else{
-          return interaction.reply({ content: `❌ | Something went wrong.`});
+        } else {
+          return interaction.reply({ content: `❌ | Something went wrong.` });
         }
       }
-      break;
+        break;
       case "DelTrackmodal": {
         const input = interaction.fields.getTextInputValue("number");
         const queue = useQueue(interaction?.guildId);
-        
-        const trackIndices = removeDuplicates( input.split(/[\s,;.+-]+/)); // phân cách bằng khoảng trắng, dấu phẩy, hoặc dấu chấm phẩy
+
+        const trackIndices = removeDuplicates(input.split(/[\s,;.+-]+/)); // phân cách bằng khoảng trắng, dấu phẩy, hoặc dấu chấm phẩy
         if (!trackIndices?.length > 0 || !queue || queue?.isEmpty()) {
-            return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
+          return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
         }
-        let tracldel =  [];
+        let tracldel = [];
         // Chuyển đổi các giá trị thành số và loại bỏ các bài hát trong hàng chờ
         const validIndices = trackIndices
-            .map(index => Math.abs(Number(index)) - 1)
-            .filter(index => index >= 0);
-        
+          .map(index => Math.abs(Number(index)) - 1)
+          .filter(index => index >= 0);
+
         validIndices
-            .sort((a, b) => b - a) // xóa từ cuối về đầu để tránh lỗi khi xóa liên tiếp
-            .forEach(index =>{
-              tracldel.push(queue?.tracks.toArray()[index].title);
-              queue.removeTrack(index)
-            });
-        await interaction.reply({ 
+          .sort((a, b) => b - a) // xóa từ cuối về đầu để tránh lỗi khi xóa liên tiếp
+          .forEach(index => {
+            tracldel.push(queue?.tracks.toArray()[index].title);
+            queue.removeTrack(index)
+          });
+        await interaction.reply({
           embeds: [
             new EmbedBuilder()
               .setColor(lang?.COLOR || client.color)
-              .setAuthor({ name: "Deleted track:" , iconURL: client.user.displayAvatarURL({ size: 1024 }) })
-              .setDescription(` ${Zitrim(tracldel.map(t =>`\n* ${Zitrim(t,50)}`),2000)}`)
+              .setAuthor({ name: "Deleted track:", iconURL: client.user.displayAvatarURL({ size: 1024 }) })
+              .setDescription(` ${Zitrim(tracldel.map(t => `\n* ${Zitrim(t, 50)}`), 2000)}`)
               .setTimestamp()
               .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
               .setImage(lang?.banner)
-          ], 
-          components:[
+          ],
+          components: [
             new ActionRowBuilder().addComponents(
               new ButtonBuilder()
                 .setCustomId("cancel")
                 .setLabel("❌")
                 .setStyle(ButtonStyle.Secondary)
             )
-          ]})
-        return require("./../ziplayer/Ziqueue")(interaction, queue, lang, true);        
+          ]
+        })
+        return require("./../ziplayer/Ziqueue")(interaction, queue, lang, true);
       }
       case "editProfilemodal": {
         let hexcolo = interaction.fields.getTextInputValue("Probcolor");
@@ -96,24 +97,24 @@ module.exports = async (client, interaction) => {
         let imgs = !!imga && !!validURL(imga) ? imga : "";
         let hexxs = !!hexcolo && !!hextest.test(hexcolo) ? hexcolo : "";
         await db.ZiUser.updateOne({ userID: interaction.user.id }, {
-          $set: { 
+          $set: {
             color: hexxs,
-            image: imgs 
+            image: imgs
           }
         }, { upsert: true });
         return interaction.reply({ content: `${lang?.profilesuss}`, ephemeral: true }).catch(e => { });
       }
-      case "DelPlaylistmodal":{
+      case "DelPlaylistmodal": {
         const listname = interaction.fields.getTextInputValue("listname");
-        const playlist = await db.playlist.findOne({ userID: interaction.user.id, listname}).catch(e=> console.error);
-        if (!playlist) return interaction.reply({ content: `${lang.NoPlaylist.replace("{USER}",`${interaction.user.id}`)}`, ephemeral: true }).catch(e => { });
+        const playlist = await db.playlist.findOne({ userID: interaction.user.id, listname }).catch(e => console.error);
+        if (!playlist) return interaction.reply({ content: `${lang.NoPlaylist.replace("{USER}", `${interaction.user.id}`)}`, ephemeral: true }).catch(e => { });
         const message = await ZifetchInteraction(interaction);
         await message.edit({
-          content:"",
-          embeds:[
+          content: "",
+          embeds: [
             new EmbedBuilder()
               .setColor(lang?.COLOR || client.color)
-              .setDescription(`**Playlist:**${Zitrim(playlist?.Song?.map((song, index)=>{ return `\n${index}.${Zitrim(song?.title,30)}`},4000))}`)
+              .setDescription(`**Playlist:**${Zitrim(playlist?.Song?.map((song, index) => { return `\n${index}.${Zitrim(song?.title, 30)}` }, 4000))}`)
               .setTimestamp()
               .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
               .setImage(lang?.banner)

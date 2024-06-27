@@ -16,12 +16,12 @@ function renderBoard(board) {
 function parseRenderedBoard(renderedBoard) {
     // Tách chuỗi thành các dòng
     const lines = renderedBoard.split('\n');
-  
+
     // Chuyển mỗi dòng thành một mảng các ký tự (sử dụng khoảng trắng để tách)
     const board = lines.map(line => line.trim().split(' '));
-  
+
     return board;
-  }
+}
 function checkWin(board, symbol) {
     const checkDirection = (r, c, dr, dc) => {
         let count = 0;
@@ -75,16 +75,16 @@ function dropPiece(board, col, symbol) {
 
 function createButtonRows() {
     function createActionRow(i) {
-      const actionRow = new ActionRowBuilder();
-      for (let col = 0; col < 4; col++) {
-        actionRow.addComponents(
-          new ButtonBuilder()
-              .setCustomId(`Z8ball_col_${i+col}`)
-              .setLabel((i + col + 1).toString())
-              .setStyle(ButtonStyle.Secondary)
-        );
-      }
-      return actionRow;
+        const actionRow = new ActionRowBuilder();
+        for (let col = 0; col < 4; col++) {
+            actionRow.addComponents(
+                new ButtonBuilder()
+                    .setCustomId(`Z8ball_col_${i + col}`)
+                    .setLabel((i + col + 1).toString())
+                    .setStyle(ButtonStyle.Secondary)
+            );
+        }
+        return actionRow;
     }
     return [createActionRow(0), createActionRow(4)];
 }
@@ -151,15 +151,15 @@ function getStrategicMove(board, currentSymbol, opponentSymbol) {
     // If no winning or blocking move, choose randomly
     return getRandomValidColumn(board);
 }
-function embes (title,lang, board){
+function embes(title, lang, board) {
     return new EmbedBuilder()
-    .setTitle(`${title}`)
-    .setDescription(`${renderBoard(board)}\n1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣`)
-    .setColor(lang?.COLOR || client.color)
+        .setTitle(`${title}`)
+        .setDescription(`${renderBoard(board)}\n1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣`)
+        .setColor(lang?.COLOR || client.color)
 }
 //
 module.exports = async (interaction, lang) => {
-    const board = parseRenderedBoard (interaction?.message?.embeds[0]?.description.replace("\n1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣","").trim()) || createBoard();
+    const board = parseRenderedBoard(interaction?.message?.embeds[0]?.description.replace("\n1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣", "").trim()) || createBoard();
     const col = parseInt(interaction.customId.split('_')[2], 10);
     const row = dropPiece(board, col, '🔴');
     if (row === -1) {
@@ -176,7 +176,7 @@ module.exports = async (interaction, lang) => {
     if (checkWin(board, '🔴')) {
 
         await interaction.message.edit({
-            embeds: [embes(`${interaction?.user?.tag} 🔴 wins!`,lang,board)],
+            embeds: [embes(`${interaction?.user?.tag} 🔴 wins!`, lang, board)],
             components: [resetroe],
         });
         return;
@@ -184,8 +184,8 @@ module.exports = async (interaction, lang) => {
 
     if (isBoardFull(board)) {
 
-         await interaction.message.edit({
-            embeds: [embes("It's a tie!",lang,board)],
+        await interaction.message.edit({
+            embeds: [embes("It's a tie!", lang, board)],
             components: [resetroe],
         });
         return;
@@ -193,21 +193,21 @@ module.exports = async (interaction, lang) => {
 
     // If it's the bot's turn, make a move
 
-        const aiCol = getStrategicMove(board,'🔵', '🔴');
-        dropPiece(board, aiCol,  '🔵');
+    const aiCol = getStrategicMove(board, '🔵', '🔴');
+    dropPiece(board, aiCol, '🔵');
 
-        if (checkWin(board,  '🔵')) {
+    if (checkWin(board, '🔵')) {
 
-             await interaction.message.edit({
-                embeds: [embes("Ziji Bot 🔵 wins!",lang,board)],
-                components: [resetroe],
+        await interaction.message.edit({
+            embeds: [embes("Ziji Bot 🔵 wins!", lang, board)],
+            components: [resetroe],
         });
         return;
 
     }
 
-     await interaction.message.edit({
-        embeds: [embes("Current Player: 🔴",lang,board)],
+    await interaction.message.edit({
+        embeds: [embes("Current Player: 🔴", lang, board)],
         components: createButtonRows(),
     });
 

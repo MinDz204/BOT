@@ -51,11 +51,11 @@ const zistartButton = async (queue) => {
 
 const RelatedTracks = async (queue) => {
   const track = queue?.currentTrack || queue?.history.previousTrack;
-  const tracks = (await track?.extractor?.getRelatedTracks(track, queue?.history))?.tracks || 
-                 (await queue?.player?.extractors.run(async (ext) => {
-                   const res = await ext.getRelatedTracks(track, queue?.history);
-                   return res?.tracks.length ? res.tracks : false;
-                 }))?.result || [];
+  const tracks = (await track?.extractor?.getRelatedTracks(track, queue?.history))?.tracks ||
+    (await queue?.player?.extractors.run(async (ext) => {
+      const res = await ext.getRelatedTracks(track, queue?.history);
+      return res?.tracks.length ? res.tracks : false;
+    }))?.result || [];
   return tracks;
 };
 
@@ -75,7 +75,7 @@ const RelatedTracksRow = async (queue) => {
     );
   }
 
-  const options = maxTracks.map((track, index) => 
+  const options = maxTracks.map((track, index) =>
     new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${track?.duration}`)
       .setDescription(`. ${Zitrim(track?.title, 90) || "no name"}`)
@@ -156,7 +156,7 @@ const zistartEmber = async (queue, lang) => {
   const imgggg = track?.thumbnail || defaultImage;
   const isYouTube = ['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType);
   const imageQualities = ["maxresdefault", "hqdefault"];
-  
+
   if (isYouTube && imageQualities.some(quality => imgggg.includes(quality))) {
     embed.setImage(youtubeMaxImage(track));
   } else {

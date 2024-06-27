@@ -37,7 +37,7 @@ module.exports = {
       "ja": "曲名", // Song title in Japanese
       "ko": "노래 제목" // Song title in Korean
     },
-    
+
     type: 3,
     required: true,
     autocomplete: true,
@@ -64,7 +64,7 @@ module.exports = {
         { deaf: true })
     } catch (e) {
       return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
-        setTimeout(function() {
+        setTimeout(function () {
           Message?.delete().catch(e => { });
         }, 10000)
       }).catch(e => { console.log(e) });
@@ -77,7 +77,7 @@ module.exports = {
     } finally {
       queue.tasksQueue.release();
     }
-    if(queues?.metadata)  return message?.delete().catch(e => {});
+    if (queues?.metadata) return message?.delete().catch(e => { });
     return;
   },
 };

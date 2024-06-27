@@ -1,4 +1,4 @@
-const { useMainPlayer, useQueue, useMetadata, Util  } = require('discord-player');
+const { useMainPlayer, useQueue, useMetadata, Util } = require('discord-player');
 const db = require("./../mongoDB");
 const { ZifetchInteraction, Zitrim } = require('../events/Zibot/ZiFunc');
 const player = useMainPlayer();
@@ -20,10 +20,10 @@ async function setSyncedLyrics(queue, messages, syncedLyrics, status = true) {
   });
 }
 // Displays lyrics or stops synced lyrics based on NOstop parameter
-async function displayLyrics({messages, trackName, NOstop, interaction, synced = true}) {
-  const queue = useQueue(messages?.guild?.id || "1150638980803592262" );
+async function displayLyrics({ messages, trackName, NOstop, interaction, synced = true }) {
+  const queue = useQueue(messages?.guild?.id || "1150638980803592262");
 
-  if (!NOstop && queue?.metadata?.ZsyncedLyrics?.Status && messages?.guild && !trackName ) {
+  if (!NOstop && queue?.metadata?.ZsyncedLyrics?.Status && messages?.guild && !trackName) {
     const ZsyncedLyrics = queue.metadata.ZsyncedLyrics;
     ZsyncedLyrics?.syncedLyrics?.unsubscribe();
 
@@ -32,26 +32,26 @@ async function displayLyrics({messages, trackName, NOstop, interaction, synced =
     await messages.delete().catch(console.log);
     return;
   }
-  const songtile = trackName ?? queue?.currentTrack?.title ?? queue?.currentTrack?.title.toString()  ?? "11506389808035922621150638980803592262";
+  const songtile = trackName ?? queue?.currentTrack?.title ?? queue?.currentTrack?.title.toString() ?? "11506389808035922621150638980803592262";
   let results = await player.lyrics.search({ q: songtile }).catch(console.log);
   let lyrics = results[0];
 
   // If no lyrics are found, try again with a modified song title
   if (!lyrics?.plainLyrics) {
-    const songtiles = trackName ?? queue?.currentTrack?.cleanTitle ?? queue?.currentTrack?.title.toString()  ?? "11506389808035922621150638980803592262";
+    const songtiles = trackName ?? queue?.currentTrack?.cleanTitle ?? queue?.currentTrack?.title.toString() ?? "11506389808035922621150638980803592262";
     results = await player.lyrics.search({ q: songtiles, artistName: queue?.currentTrack?.author.toString() }).catch(console.log);
     lyrics = results[0];
     // If still no lyrics, inform the user and delete the message after a timeout
     if (!lyrics?.plainLyrics) {
       if (!interaction.guild) return interaction.editReply({
-          content: '❌| There are **no** lyrics for this track',
-          ephemeral: true
-        }).catch(console.log);
-        await messages.edit({
-            content: '❌| There are **no** lyrics for this track',
-            ephemeral: true,
-        }).then((msg) => setTimeout(() => msg.delete(), 10000)).catch(console.log);
-        return;
+        content: '❌| There are **no** lyrics for this track',
+        ephemeral: true
+      }).catch(console.log);
+      await messages.edit({
+        content: '❌| There are **no** lyrics for this track',
+        ephemeral: true,
+      }).then((msg) => setTimeout(() => msg.delete(), 10000)).catch(console.log);
+      return;
     }
   }
   const currentMessages = queue?.metadata?.ZsyncedLyrics?.Status ? queue.metadata.ZsyncedLyrics.messages ?? messages : messages;
@@ -60,7 +60,7 @@ async function displayLyrics({messages, trackName, NOstop, interaction, synced =
     .setAuthor({ name: lyrics.artistName })
     .setColor('Random');
 
-  if (!lyrics.syncedLyrics || !synced) { 
+  if (!lyrics.syncedLyrics || !synced) {
     if (queue) await setSyncedLyrics(queue, currentMessages, syncedLyrics);
     embed.setDescription(Zitrim(lyrics.plainLyrics, 1997));
     if (!interaction.guild) return interaction.editReply({ content: ' ', embeds: [embed] }).catch(console.log);
@@ -113,11 +113,11 @@ module.exports = {
   integration_types: [0, 1],
   contexts: [0, 1, 2],
   options: [{
-      name: 'name',
-      description: 'Song name',
-      type: 3,
-      autocomplete: true
-  },{
+    name: 'name',
+    description: 'Song name',
+    type: 3,
+    autocomplete: true
+  }, {
     name: 'synced',
     description: 'Synced Lyrics',
     type: 5,
@@ -128,6 +128,6 @@ module.exports = {
     const messages = await ZifetchInteraction(interaction);
     const trackName = interaction?.options?.getString('name');
     const synced = interaction?.options?.getBoolean('synced');
-    return displayLyrics({messages, trackName, NOstop, interaction, synced});
+    return displayLyrics({ messages, trackName, NOstop, interaction, synced });
   },
 };

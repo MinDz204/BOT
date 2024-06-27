@@ -37,13 +37,13 @@ const createButton = (index, label, description, customId) => {
     .setLabel(`${index + 1} - ${label}`)
     .setDescription(`${description}`)
     .setEmoji('<a:noo:1254117362085658634>')
-    .setValue(`${ customId }`)
+    .setValue(`${customId}`)
 };
 
 const FillterRow = async (queue) => {
-  const buttons = buttonConfigs.map((config, index ) => {
+  const buttons = buttonConfigs.map((config, index) => {
     const button = createButton(index, config.label, config.description, config.id);
-    if (config.id == 'OFF' )  return button.setEmoji('❌');
+    if (config.id == 'OFF') return button.setEmoji('❌');
     if (queue.filters.ffmpeg?.isEnabled(config.id)) {
       button.setEmoji('<a:yess:1254117363532562515>');
     }
@@ -57,8 +57,8 @@ const FillterRow = async (queue) => {
         .setMinValues(1)
         .setMaxValues(1)
         .setPlaceholder('▶️ | Pick the audio effect.')
-        .addOptions( buttons )
-      );
+        .addOptions(buttons)
+    );
 };
 
 const Fillter = async (user, queue, lang) => {
@@ -67,8 +67,7 @@ const Fillter = async (user, queue, lang) => {
     .setColor(lang?.COLOR || client?.color)
     .setTimestamp()
     .setTitle(`Audio Effect Control Panel`)
-    .setDescription(`**${
-      queue?.filters?.ffmpeg?.getFiltersEnabled().map(item => `* ${item.trim()}`).join('\n') 
+    .setDescription(`**${queue?.filters?.ffmpeg?.getFiltersEnabled().map(item => `* ${item.trim()}`).join('\n')
       }**
       \`\`\`${queue?.filters?.ffmpeg?.toString()}\`\`\`
       * ${lang?.fillter}`
@@ -77,20 +76,20 @@ const Fillter = async (user, queue, lang) => {
     .setImage(lang?.banner)
   return { embeds: [embed], components: [row] }
 }
-const ZiFillter = async (interaction, fillterr ,lang) => {
+const ZiFillter = async (interaction, fillterr, lang) => {
   const queue = useQueue(interaction.guild.id);
-  if(fillterr == 'OFF'){
-      await queue?.filters?.ffmpeg?.setFilters(false);
-      await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
-      return interaction?.message?.delete().catch(e => { })
+  if (fillterr == 'OFF') {
+    await queue?.filters?.ffmpeg?.setFilters(false);
+    await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
+    return interaction?.message?.delete().catch(e => { })
   }
 
   await interaction?.deferUpdate().catch(e => { })
   await queue?.filters.ffmpeg.toggle(`${fillterr}`);
   await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
-  return interaction?.message.edit( await Fillter(interaction?.user, queue, lang)).catch(e => { });
+  return interaction?.message.edit(await Fillter(interaction?.user, queue, lang)).catch(e => { });
 }
-module.exports = { 
+module.exports = {
   ZiPlayerFillter: Fillter,
   ZiFillter
- }
+}

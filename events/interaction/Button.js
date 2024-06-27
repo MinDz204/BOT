@@ -6,8 +6,8 @@ const config = require("../../config");
 
 module.exports = async (client, interaction) => {
   try {
-//#region SEARCH MUSIC
-  //------------------------------------------------//
+    //#region SEARCH MUSIC
+    //------------------------------------------------//
     if (validURL(interaction.customId)) {
       return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
     }
@@ -17,50 +17,50 @@ module.exports = async (client, interaction) => {
     if (interaction?.customId.includes("Zsearch")) {
       return require("./../ziplayer/ziSearch")(interaction, interaction.message.embeds[0].description.replaceAll("*", "").replace(/ + /g, " "), interaction?.customId.replace(`Zsearch`, ""));
     }
-//:::::::::::::::::::::::::::rank sys:::::::::::::::::::::::::::::::::::://
+    //:::::::::::::::::::::::::::rank sys:::::::::::::::::::::::::::::::::::://
     const lang = await rank({ user: interaction?.user });
     //Zi module------------------------------------------------//
-    if (interaction?.customId.includes("Ziplayer")){
+    if (interaction?.customId.includes("Ziplayer")) {
       return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
     }
     //ZiFillter ------------------------------------------------//
-    if (interaction?.customId.includes("ZiFillter")){
-      return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
+    if (interaction?.customId.includes("ZiFillter")) {
+      return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0], lang)
     }
-    if (interaction?.customId.includes("ZiPlaylistDel")){
+    if (interaction?.customId.includes("ZiPlaylistDel")) {
       return require("./../ziplayer/ZiPlaylistDel")(interaction, lang)
-    } 
-//#endregion
-//#region Game
+    }
+    //#endregion
+    //#region Game
     //game--------------------------------------------------------------//
-    if (interaction?.customId.includes("ZtttR")){
+    if (interaction?.customId.includes("ZtttR")) {
       return require("../Zibot/game/ZitttR")(interaction, lang)
-    } 
-    if (interaction?.customId.includes("Zttt")){
+    }
+    if (interaction?.customId.includes("Zttt")) {
       return require("../Zibot/game/Zittt")(interaction, lang)
-    } 
-    if (interaction?.customId.includes("Zrps")){
+    }
+    if (interaction?.customId.includes("Zrps")) {
       return require("../Zibot/game/Zrps")(interaction, lang)
     }
-    if (interaction?.customId.includes("Z8ball")){
+    if (interaction?.customId.includes("Z8ball")) {
       return require("../Zibot/game/Z8Ball")(interaction, lang)
     }
-    if (interaction?.customId.includes("Zblackjack")){
+    if (interaction?.customId.includes("Zblackjack")) {
       return require("../Zibot/game/ZblackJack")(interaction, lang)
     }
-//#endregion
+    //#endregion
     //cooldows-------------------------------------------------//
     const expirationTime = lang?.cooldowns + 3 * 1000;
     if (Date.now() < expirationTime) {
       const expiredTimestamp = Math.round(expirationTime / 1000);
       return interaction.reply({ content: `${lang?.cooldownsMESS.replace(`{expiredTimestamp}`, expiredTimestamp).replace(`{interaction.commandName}`, `'.'`)}`, ephemeral: true });
     }
-//#region Button Func
+    //#region Button Func
     switch (interaction.customId) {
       case "cancel":
         return interaction?.message?.delete();
       case "cancelXcancel":
-        return interaction?.message.edit({components: [ ]})
+        return interaction?.message.edit({ components: [] })
       case "DelTrack": {
         const modal = new ModalBuilder()
           .setCustomId('DelTrackmodal')
@@ -77,25 +77,27 @@ module.exports = async (client, interaction) => {
           )
         return interaction?.showModal(modal);
       }
-      case"SupportDeveloper":{
-        return interaction?.reply({content: ` `, embeds:[ 
-          new EmbedBuilder()
-            .setColor(lang?.COLOR || client.color)
-            .setTitle(`Support Developer ❤`)
-            .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255671360378765353/Vietcombank_Vietcombank_2616688d-f92e-4b5d-93da-1921090f6194.jpg")
-          ], ephemeral: true})
+      case "SupportDeveloper": {
+        return interaction?.reply({
+          content: ` `, embeds: [
+            new EmbedBuilder()
+              .setColor(lang?.COLOR || client.color)
+              .setTitle(`Support Developer ❤`)
+              .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255671360378765353/Vietcombank_Vietcombank_2616688d-f92e-4b5d-93da-1921090f6194.jpg")
+          ], ephemeral: true
+        })
       }
-      case "TicTacToeRReroll":{
-        return require("./../../commands/game").run(lang ,interaction,"ZtttR");
+      case "TicTacToeRReroll": {
+        return require("./../../commands/game").run(lang, interaction, "ZtttR");
       }
-      case "TicTacToeReroll":{
-        return require("./../../commands/game").run(lang ,interaction,"Zttt");
+      case "TicTacToeReroll": {
+        return require("./../../commands/game").run(lang, interaction, "Zttt");
       }
-      case "ZcoinflipReroll":{
-        return require("./../../commands/game").run(lang ,interaction,"Zcoinflip");
+      case "ZcoinflipReroll": {
+        return require("./../../commands/game").run(lang, interaction, "Zcoinflip");
       }
       case "8ballReroll": {
-        return require("./../../commands/game").run(lang ,interaction,"Z8ball");
+        return require("./../../commands/game").run(lang, interaction, "Z8ball");
       }
       case "Guills": {
         const rowC = new ActionRowBuilder().addComponents(
@@ -114,11 +116,11 @@ module.exports = async (client, interaction) => {
           .setImage(lang?.banner);
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
-      case "MesPiNJG":{
+      case "MesPiNJG": {
         const contenst = "https://cdn.discordapp.com/attachments/1064851388221358153/1255690539211423804/image.png"
         return interaction.reply({
           content: contenst,
-          components:[
+          components: [
             new ActionRowBuilder().addComponents(
               new ButtonBuilder()
                 .setCustomId("cancel")
@@ -128,7 +130,7 @@ module.exports = async (client, interaction) => {
           ]
         })
       }
-      case "ContextMenu":{
+      case "ContextMenu": {
         const rowC = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId("cancel")
@@ -136,12 +138,12 @@ module.exports = async (client, interaction) => {
             .setStyle(ButtonStyle.Secondary)
         )
         let linkvis = "https://cdn.discordapp.com/attachments/1064851388221358153/1255682265837473822/context_menus_playing_music.gif"
-      return interaction.reply({content: linkvis, components: [rowC] })//.catch(e => { })
+        return interaction.reply({ content: linkvis, components: [rowC] })//.catch(e => { })
       }
-      case "buttHelp":{
+      case "buttHelp": {
         return require("./../../commands/help").run(lang, interaction);
       }
-      case "Statistics":{
+      case "Statistics": {
         const rowC = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId("cancel")
@@ -160,16 +162,16 @@ module.exports = async (client, interaction) => {
           client.shard.broadcastEval(c => c.voice?.adapters?.size || 0)
         ];
         await Promise.all(promises)
-        .then(results => {
-           totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-           totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
-           totalChannels = results[2].reduce((acc, channelCount) => acc + channelCount, 0);
-           shardSize = client.shard.count;
+          .then(results => {
+            totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+            totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+            totalChannels = results[2].reduce((acc, channelCount) => acc + channelCount, 0);
+            shardSize = client.shard.count;
             voiceConnections = results[3].reduce((acc, voiceCount) => acc + voiceCount, 0);
-        })
+          })
         const embed = new EmbedBuilder()
-        .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
-        .setDescription(`**${client.user.username} + Statistics:
+          .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 1024 }))
+          .setDescription(`**${client.user.username} + Statistics:
           • Owner/Developer: <@891275176409460746>
           • User Count: \`${totalMembers || 0}\`
           • Server Count: \`${totalGuilds || 0}\`
@@ -182,10 +184,10 @@ module.exports = async (client, interaction) => {
           • Memory Usage: \`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\`
           [Invite Bot](${client.InviteBot}) /  [Support Server](https://discord.gg/zaskhD7PTW)
           **`)
-        .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-        .setColor(lang.COLOR || client.color)
-        .setTimestamp()
-        .setImage(lang?.banner);
+          .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+          .setColor(lang.COLOR || client.color)
+          .setTimestamp()
+          .setImage(lang?.banner);
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
       case "editProfile": {
@@ -225,25 +227,25 @@ module.exports = async (client, interaction) => {
       case "refLeaderboard": {
         return require("./../Zibot/Zileaderboard")({ interaction: interaction, lang: lang });
       }
-      case "DelPlaylist":{
+      case "DelPlaylist": {
         const modal = new ModalBuilder()
-        .setCustomId('DelPlaylistmodal')
-        .setTitle(`Delete playlist ${interaction.user.tag} `)
-        .addComponents(
-          new ActionRowBuilder().addComponents(
-            new TextInputBuilder()
-              .setCustomId('listname')
-              .setLabel(`Playlist name:`)
-              .setStyle(TextInputStyle.Short)
-              .setRequired(true)
+          .setCustomId('DelPlaylistmodal')
+          .setTitle(`Delete playlist ${interaction.user.tag} `)
+          .addComponents(
+            new ActionRowBuilder().addComponents(
+              new TextInputBuilder()
+                .setCustomId('listname')
+                .setLabel(`Playlist name:`)
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+            )
           )
-        )
-      return interaction?.showModal(modal);
+        return interaction?.showModal(modal);
       }
       default:
         return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${interaction?.customId}`)
     }
-//#endregion
+    //#endregion
   } catch (e) {
     return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nButton:${e?.stack}`)
   }
