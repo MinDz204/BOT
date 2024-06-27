@@ -18,33 +18,30 @@ const playMusic = async ({lang, message, client, content}) => {
     return ziSearch(message, content);
 };
 
-// const fetchMessageContent = async ({message, refMsgId, lang}) => {
-//     const mess = await message.channel.messages.fetch(refMsgId, { cache: false, force: true });
-//     let name = mess.content;
-//     if (!name) {
-//         const embedData = mess?.embeds[0]?.data;
-//         if(embedData){
-//           const firstFieldName = embedData?.fields?.[0]?.name;
-//           const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
-//           name = hasSpecialField ? embedData.author?.url :  embedData.description;
-//         }else{
-//             const attachments = mess?.attachments;
-//             if(attachments)
-//               for (let attachment of attachments.values()) {
-//                 name = attachment.url;
-//                 break;
-//               }
-//         }
-//       }
-//     if (name) return name;
-//     const reply = await message.reply(lang?.PlayerSearchErr);
-//     setTimeout(() => {
-//         reply.delete().catch(() => {});
-//     }, 10000);
-//     return null;
-// };
+const fetchMessageContent = async ({message, refMsgId, lang}) => {
+    const mess = await message.channel.messages.fetch(refMsgId, { cache: false, force: true });
+    let name = mess.content;
+    if (!name) {
+        const embedData = mess?.embeds[0]?.data;
+        if(embedData){
+          const firstFieldName = embedData?.fields?.[0]?.name;
+          const hasSpecialField = firstFieldName?.includes("▒") || firstFieldName?.includes("█");
+          name = hasSpecialField ? embedData.author?.url :  embedData.description;
+        }
+      }
+    if (name) return name;
+    message.reply({embeds:[
+        new EmbedBuilder()
+            .setColor("Red")
+            .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255682265837473822/context_menus_playing_music.gif")
+            .setDescription("❌ | **Tính năng này đã không còn hoạt động hãy sử dụng context menu thay thế**")
+            .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+            .setTimestamp()
+    ]})
+    return null;
+};
 
-const handleBotMention = async (message, client, lang, content) => {
+const handleBotMention = async (message, client, lang) => {
     const embed = new EmbedBuilder()
         .setColor(lang?.COLOR || client.color)
         .setTitle("Yo... Ziji desu :3")
@@ -78,29 +75,19 @@ module.exports = async (client, message) => {
     message.react("<a:likee:1210193685501706260>");
 
     if (message.reference && message.guild) {
-        // const refMsgId = message.reference.messageId;
-        // const msgContent = await fetchMessageContent({message, refMsgId, lang});
-        // if (msgContent) {
-        //     return playMusic({lang, message, client, content: msgContent});
-        // }
-        // return;
-        message.reply({embeds:[
-            new EmbedBuilder()
-                .setColor("Red")
-                .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255682265837473822/context_menus_playing_music.gif")
-                .setDescription("❌ | **Tính năng này đã không còn hoạt động hãy sử dụng context menu thay thế**")
-                .setFooter({ text: `${lang?.RequestBY} ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-                .setTimestamp()
-        ]})
-        return;
+        const refMsgId = message.reference.messageId;
+        const msgContent = await fetchMessageContent({message, refMsgId, lang});
+        if (msgContent) {
+            return playMusic({lang, message, client, content: msgContent});
+        }
     }
 
     if (botMentionRegex.test(content) && !message.reference) {
-        return handleBotMention(message, client, lang, content);
+        return handleBotMention(message, client, lang);
     }
 
     if (message.guild) {
         const playContent = message.content.replace(`<@${client.user.id}>`, "").trim();
-        return playMusic({lang, message, client, content: playContent});
+        if(playContent) return playMusic({lang, message, client, content: playContent});
     }
 };

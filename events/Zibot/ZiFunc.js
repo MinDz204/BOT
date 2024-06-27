@@ -114,8 +114,10 @@ function Zicrop(query){
 }
 
 const timeToSeconds = (time) => {
+  if(!time) return 0;
   const timeString = time.toLowerCase();
-  let hours = 0,
+  let day = 0,
+      hours = 0,
       minutes = 0,
       seconds = 0,
       soam = 1;
@@ -137,19 +139,28 @@ const timeToSeconds = (time) => {
           hours = parseInt(timeParts[0]);
           minutes = parseInt(timeParts[1]);
           seconds = parseInt(timeParts[2]);
+      }else if (numParts == 4){
+        day = parseInt(timeParts[0]);
+        hours = parseInt(timeParts[1]);
+        minutes = parseInt(timeParts[2]);
+        seconds = parseInt(timeParts[3]);
       }
   }
 
   // Otherwise, parse the timeString into hours, minutes, and seconds
   else {
-      const regex = /(\d+)\s*(h|m|s)/g;
+      const regex = /(\d+)\s*(d|h|m|s)/g;
       let match;
       let valid = false; // Flag to track if any valid match is found
 
       while ((match = regex.exec(timeString)) !== null) {
           const value = parseInt(match[1]);
 
-          if (match[2] === 'h') {
+          if (match[2] === 'd') {
+            day = value;
+            valid = true;
+          }
+          else if (match[2] === 'h') {
               hours = value;
               valid = true;
           }
@@ -169,9 +180,8 @@ const timeToSeconds = (time) => {
       }
   }
 
-
-  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  return totalSeconds*soam;
+  const totalSeconds = day * 86400+ hours * 3600 + minutes * 60 + seconds;
+  return totalSeconds * soam;
 }
 
 const tracsrowslecs = async(res, lang, nameS, interaction) => {
