@@ -55,7 +55,6 @@ const Ziseek = async(interaction, queue, lang, str)=> {
 }
 //#endregion
 module.exports = async (interaction, lang) => {
-if(!config.ZiFuncs.PlayMusic) return;
   try {
     const queue = useQueue(interaction?.guildId);
     switch(interaction.customId) {

@@ -3,11 +3,9 @@ const client = require('../../bot');
 const { useMainPlayer, useQueue } = require("discord-player");
 const { rank } = require("../Zibot/ZilvlSys");
 const {tracsrowslecs, validURL, processQuery, Zilink, ZifetchInteraction, extractId, ZiplayerOption} = require("../Zibot/ZiFunc");
-const config = require("./../../config")
 const player = useMainPlayer();
 
 module.exports = async (interaction, nameS, SearchEngine = 'youtube' ) => {
-  if(!config.ZiFuncs.PlayMusic) return;
   let message;
   if( interaction.type == 3 ){
     interaction.deferUpdate().catch(e => { });

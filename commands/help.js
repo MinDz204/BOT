@@ -26,18 +26,27 @@ module.exports.run = async (lang, interaction) => {
     const commands = client.Zicomand;
     const embed = new EmbedBuilder()
       .setColor(lang.COLOR || client.color)
-      .setTitle("Zi bot helps:")
-      .setURL(`${client.InviteBot}`)
-      .setDescription(`${commands.map(x => `</${x?.name}:${x?.id}> | ${x?.description} `).join('\n')}\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n**Music Player:**`)
+      .setAuthor({ name: "Zi bot helps:", url: client.InviteBot, iconURL: client.user.displayAvatarURL({ size: 1024 }) })
+      .setDescription(`
+* **User install**
+  * Translate language
+  * Get Avartar
+* **Server install**
+  * Translate language
+  * Multi-language support
+  * ++ Music Player
+* **Commands**
+${commands.map(x => { if (x?.description) return `</${x?.name}:${x?.id}> | ${x?.description}\n`}).join("")}
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n* **Music Player help**`)
       .addFields([
         { name: "◁", value: `Previous Track`, inline: true },
-        { name: "❚❚ | ▶", value: `Pause / Play Track`, inline: true },
+        { name: "❚❚ | ▶", value: `Pause / Play`, inline: true },
         { name: "▷", value: `Next Track`, inline: true },
-        { name: "F5", value: `Refresh/Update Messenger`, inline: true },
+        { name: "F5", value: `Refresh/Update player`, inline: true },
         { name: "<:sound:1150769215255625759>", value: `Control Volume`, inline: true },
-        { name: "Seek", value: `Seek <[hhmm]ss/[hh:mm]:ss>`, inline: true },
-        { name: "↻", value: `Loop mode (track | queue)`, inline: true },
-        { name: "⤮", value: `Shuffle Queue`, inline: true },
+        { name: "Seek", value: `Seek <[hh:mm]:ss>`, inline: true },
+        { name: "↻", value: `Loop mode`, inline: true },
+        { name: "⇩", value: `Save track to playlist`, inline: true },
         { name: "<:LOck:1167543711283019776>", value: `Lock/Unlock player control`, inline: true },
         { name: "Fx", value: `Fillter Nightcore, Lofi...`, inline: true },
         { name: "<:search:1150766173332443189>", value: `Search`, inline: true },
@@ -45,14 +54,17 @@ module.exports.run = async (lang, interaction) => {
         { name: "<:queue:1150639849901133894>", value: `Show Queue`, inline: true },
         { name: '\u200b', value: '\u200b', inline: true },
         { name: ":white_large_square:", value: `Stop Music`, inline: true },
-        { name:"▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",value: '\u200b', inline: false, }
+        { name:"▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",value: '* **QUEUE help**', inline: false, },
+        { name: "Clear All", value: `Clear all queue`, inline: true },
+        { name: '\u200b', value: '\u200b', inline: true },
+        { name: "<:trash:1151572367961764000>", value: `Delete track(s)`, inline: true },
       ])
       .setTimestamp()
       .setFooter({ text: `${lang?.RequestBY} ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
       .setImage(lang?.banner);
     //
-    if(!interaction.guild) return interaction.reply({ embeds: [embed], ephemeral: true  });
-    return interaction.reply({ embeds: [embed], components: [
+    if(!interaction.guild) return interaction.reply({content: "", embeds: [embed], ephemeral: true  });
+    return interaction.reply({content: "", embeds: [embed], components: [
       new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId("MesPiNJG")
@@ -64,6 +76,11 @@ module.exports.run = async (lang, interaction) => {
           .setEmoji(`<a:ddev:850081111241785425>`)
           .setLabel("Help Context Menu")
           .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setURL(client.InviteBot)
+          .setEmoji(`<:verified:710970919736311942>`)
+          .setLabel("Invite me!")
+          .setStyle(ButtonStyle.Link),
       ),
       new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -72,14 +89,19 @@ module.exports.run = async (lang, interaction) => {
           .setCustomId("Statistics")
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-          .setLabel("DEV Discord")
+          .setLabel("Support Sever")
           .setEmoji(`<:verified:710970919736311942>`)
           .setURL(`https://discord.gg/zaskhD7PTW`)
           .setStyle(ButtonStyle.Link),
         new ButtonBuilder()
+          .setCustomId("SupportDeveloper")
+          .setEmoji(`❤`)
+          .setLabel("Support developer")
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
           .setCustomId("cancel")
           .setLabel("❌")
-          .setStyle(ButtonStyle.Secondary)
+          .setStyle(ButtonStyle.Secondary),
       )
     ] })
   }

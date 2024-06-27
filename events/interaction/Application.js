@@ -22,10 +22,10 @@ module.exports = async (client, interaction) => {
   try {
     switch (interaction.commandType) {
       case 1:
-        return await processFiles(client, interaction, commandFiles, "./../../commands", config.Discommands);
+        return await processFiles(client, interaction, commandFiles, "./../../commands");
       case 2:
       case 3:
-        return await processFiles(client, interaction, contextFiles, "./../../context", config.DisContext);
+        return await processFiles(client, interaction, contextFiles, "./../../context");
 
       default:
         return;
@@ -36,13 +36,13 @@ module.exports = async (client, interaction) => {
   }
 };
 
-async function processFiles(client, interaction, files, dir, disallowList) {
+async function processFiles(client, interaction, files, dir) {
   const commandName = interaction.commandName.toLowerCase();
 
   for (const file of files) {
     const props = require(`${dir}/${file}`);
 
-    if (commandName !== props.name.toLowerCase() || disallowList.includes(interaction.commandName)) {
+    if (commandName !== props.name.toLowerCase()) {
       continue;
     }
 

@@ -13,7 +13,8 @@ module.exports = {
   voiceC: true,
   NODMPer: true,
   dm_permission: false,
-  cooldown: 3,};
+  cooldown: 3,
+};
 
 module.exports.run = async (lang, interaction) => {
 let name = interaction.targetMessage?.content;
@@ -32,5 +33,6 @@ if (!name) {
         }
   }
 }
+if (!name) return;
 return require("../events/ziplayer/ziSearch")(interaction, name);
 }

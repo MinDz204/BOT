@@ -2,36 +2,37 @@ const { Client, GatewayIntentBits, Partials, Collection, Events } = require("dis
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
+const { default: mongoose } = require("mongoose");
 
 const client = new Client({
   partials: [
     Partials.Message, // for message
     Partials.Channel, // for text channel
     Partials.GuildMember, // for guild member
-    Partials.Reaction, // for message reaction
-    Partials.GuildScheduledEvent, // for guild events
+    // Partials.Reaction, // for message reaction
+    // Partials.GuildScheduledEvent, // for guild events
     Partials.User, // for discord user
-    Partials.ThreadMember, // for thread member
+    // Partials.ThreadMember, // for thread member
   ],
   intents: [
     GatewayIntentBits.Guilds, // for guild related things
-    GatewayIntentBits.GuildMembers, // for guild members related things
-    GatewayIntentBits.GuildEmojisAndStickers, // for manage emojis and stickers
-    GatewayIntentBits.GuildIntegrations, // for discord Integrations
-    GatewayIntentBits.GuildWebhooks, // for discord webhooks
+    // GatewayIntentBits.GuildMembers, // for guild members related things
+    // GatewayIntentBits.GuildEmojisAndStickers, // for manage emojis and stickers
+    // GatewayIntentBits.GuildIntegrations, // for discord Integrations
+    // GatewayIntentBits.GuildWebhooks, // for discord webhooks
     GatewayIntentBits.GuildInvites, // for guild invite managing
     GatewayIntentBits.GuildVoiceStates, // for voice related things
-    GatewayIntentBits.GuildPresences, // for user presence things
+    // GatewayIntentBits.GuildPresences, // for user presence things
     GatewayIntentBits.GuildMessages, // for guild messages things
     GatewayIntentBits.GuildMessageReactions, // for message reactions things
-    GatewayIntentBits.GuildMessageTyping, // for message typing things
+    // GatewayIntentBits.GuildMessageTyping, // for message typing things
     GatewayIntentBits.DirectMessages, // for dm messages
     GatewayIntentBits.DirectMessageReactions, // for dm message reaction
-    GatewayIntentBits.DirectMessageTyping, // for dm message typinh
-    GatewayIntentBits.MessageContent, // enable if you need message content things
+    // GatewayIntentBits.DirectMessageTyping, // for dm message typinh
+    // GatewayIntentBits.MessageContent, // enable if you need message content things
   ],
   allowedMentions:{
-    parse: ['users', 'roles'],
+    parse: ['users'],
     repliedUser: false,
   },
 
@@ -45,24 +46,24 @@ module.exports = client;
 //        discord player          //
 //-------------------------------------------------------------//
 
-  const player = new Player(client, {
-    SkipFFmpeg: false
+const player = new Player(client, {
+  SkipFFmpeg: false
+});
+
+player.setMaxListeners(200);
+player.extractors.loadDefault()
+// player.on("debug",console.log)
+fs.readdir("./events/player", (_err, files) => {
+  files.forEach((file) => {
+    if (!file.endsWith(".js")) return;
+    const Playerevent = require(`./events/player/${file}`);
+    let playerName = file.split(".")[0];
+    console.log(`👌 Loadded player Event: ${playerName}`);
+    player.events.on(playerName, Playerevent.bind(null, client));
+    delete require.cache[require.resolve(`./events/player/${file}`)];
   });
-if(config.ZiFuncs.PlayMusic){
-  player.setMaxListeners(200);
-  player.extractors.loadDefault()
-  // player.on("debug",console.log)
-  fs.readdir("./events/player", (_err, files) => {
-    files.forEach((file) => {
-      if (!file.endsWith(".js")) return;
-      const Playerevent = require(`./events/player/${file}`);
-      let playerName = file.split(".")[0];
-      console.log(`👌 Loadded player Event: ${playerName}`);
-      player.events.on(playerName, Playerevent.bind(null, client));
-      delete require.cache[require.resolve(`./events/player/${file}`)];
-    });
-  });
-}
+});
+
 fs.readdir("./events", (_err, files) => {
   files.forEach((file) => {
     if (!file.endsWith(".js")) return;
@@ -116,7 +117,12 @@ fs.readdir("./context", (err, files) => {
   });
 });
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+mongoose.connect(config.MOGOURL || process.env.MONGO).then(() => console.log(`Connected MongoDB`)).catch((err) => {
+  return console.log("\nMongoDB Error: \n" + err)
+})
 client.login(config.TOKEN || process.env.TOKEN).catch(e => {
+  console.log(e)
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
 })
 //---------------------------------------------------------------------------------------------------------------------------------------

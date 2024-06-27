@@ -103,12 +103,6 @@ module.exports = async (client, interaction) => {
         }, { upsert: true });
         return interaction.reply({ content: `${lang?.profilesuss}`, ephemeral: true }).catch(e => { });
       }
-      case"ZiVCMODALrename":{
-        interaction.member.voice.channel.edit({
-          name: interaction.fields.getTextInputValue("resu")
-        })
-       	return interaction.deferUpdate().catch(e => { });
-      }
       case "DelPlaylistmodal":{
         const listname = interaction.fields.getTextInputValue("listname");
         const playlist = await db.playlist.findOne({ userID: interaction.user.id, listname}).catch(e=> console.error);

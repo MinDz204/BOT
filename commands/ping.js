@@ -28,7 +28,7 @@ module.exports = {
         ])
         .setTimestamp()
         .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
-      return interaction.editReply({ embeds: [ embed ] }).catch(e => interaction?.user?.send({ embeds: [ embed ] }))
+      return interaction.editReply({content: "", embeds: [ embed ] }).catch(e => interaction?.user?.send({content: "", embeds: [ embed ] }))
 
   },
 };

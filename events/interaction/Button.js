@@ -6,44 +6,31 @@ const config = require("../../config");
 
 module.exports = async (client, interaction) => {
   try {
-    let lang;
 //#region SEARCH MUSIC
-    //------------------------------------------------//
-    if(config.ZiFuncs.PlayMusic){
-      if (validURL(interaction.customId)) {
-        return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
-      }
-      if (interaction?.customId.includes("Ziselectmusix")) {
-        return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
-      }
-      if (interaction?.customId.includes("Zsearch")) {
-        return require("./../ziplayer/ziSearch")(interaction, interaction.message.embeds[0].description.replaceAll("*", "").replace(/ + /g, " "), interaction?.customId.replace(`Zsearch`, ""));
-      }
-      //Zi module------------------------------------------------//
-      if (interaction?.customId.includes("Ziplayer")){
-        lang = await rank({ user: interaction?.user });
-        return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
-      }
-      //ZiFillter ------------------------------------------------//
-      if (interaction?.customId.includes("ZiFillter")){
-        lang = await rank({ user: interaction?.user });
-        return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
-      }
-      if (interaction?.customId.includes("ZiPlaylistDel")){
-        lang = await rank({ user: interaction?.user });
-        return require("./../ziplayer/ZiPlaylistDel")(interaction, lang)
-      } 
-   }
-//#endregion
-    //ZiVc---------------------------------------------------------//
-    if (interaction?.customId.includes("ZiVC")){
-      if(!config.EnableJOINTOCREATE) return;
-      lang = await rank({ user: interaction?.user });
-      return require("./../Zibot/Zivc")(interaction, lang)
+  //------------------------------------------------//
+    if (validURL(interaction.customId)) {
+      return require("./../ziplayer/ziSearch")(interaction, interaction.customId);
+    }
+    if (interaction?.customId.includes("Ziselectmusix")) {
+      return require("./../ziplayer/ziSearch")(interaction, interaction?.values[0]);
+    }
+    if (interaction?.customId.includes("Zsearch")) {
+      return require("./../ziplayer/ziSearch")(interaction, interaction.message.embeds[0].description.replaceAll("*", "").replace(/ + /g, " "), interaction?.customId.replace(`Zsearch`, ""));
+    }
+//:::::::::::::::::::::::::::rank sys:::::::::::::::::::::::::::::::::::://
+    const lang = await rank({ user: interaction?.user });
+    //Zi module------------------------------------------------//
+    if (interaction?.customId.includes("Ziplayer")){
+      return require("./../ziplayer/ZiplayerFuns")(interaction, lang)
+    }
+    //ZiFillter ------------------------------------------------//
+    if (interaction?.customId.includes("ZiFillter")){
+      return require("./../ziplayer/Zifillter").ZiFillter(interaction, interaction?.values[0] ,lang)
+    }
+    if (interaction?.customId.includes("ZiPlaylistDel")){
+      return require("./../ziplayer/ZiPlaylistDel")(interaction, lang)
     } 
-    if ( !config.interactionCreate.MessageComponentInside ) return;
-    //rank sys----------------------------------------------------------//
-        lang = await rank({ user: interaction?.user });
+//#endregion
 //#region Game
     //game--------------------------------------------------------------//
     if (interaction?.customId.includes("ZtttR")){
@@ -90,6 +77,14 @@ module.exports = async (client, interaction) => {
           )
         return interaction?.showModal(modal);
       }
+      case"SupportDeveloper":{
+        return interaction?.reply({content: ` `, embeds:[ 
+          new EmbedBuilder()
+            .setColor(lang?.COLOR || client.color)
+            .setTitle(`Support Developer ❤`)
+            .setImage("https://cdn.discordapp.com/attachments/1064851388221358153/1255671360378765353/Vietcombank_Vietcombank_2616688d-f92e-4b5d-93da-1921090f6194.jpg")
+          ], ephemeral: true})
+      }
       case "TicTacToeRReroll":{
         return require("./../../commands/game").run(lang ,interaction,"ZtttR");
       }
@@ -120,7 +115,18 @@ module.exports = async (client, interaction) => {
         return interaction.reply({ embeds: [embed], components: [rowC] }).catch(e => { })
       }
       case "MesPiNJG":{
-        return interaction.reply("https://cdn.discordapp.com/attachments/1162041451895599154/1162047498572009493/image.png")
+        const contenst = "https://cdn.discordapp.com/attachments/1064851388221358153/1255690539211423804/image.png"
+        return interaction.reply({
+          content: contenst,
+          components:[
+            new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setCustomId("cancel")
+                .setLabel("❌")
+                .setStyle(ButtonStyle.Secondary)
+            )
+          ]
+        })
       }
       case "ContextMenu":{
         const rowC = new ActionRowBuilder().addComponents(
@@ -129,7 +135,7 @@ module.exports = async (client, interaction) => {
             .setLabel("❌")
             .setStyle(ButtonStyle.Secondary)
         )
-        let linkvis = "https://cdn.discordapp.com/attachments/1162041451895599154/1216835730630774814/context.mp4?ex=6601d595&is=65ef6095&hm=595a96cfbca9e10f76522f98589f70d60000ef3c246317819f3e584edda03618&"
+        let linkvis = "https://cdn.discordapp.com/attachments/1064851388221358153/1255682265837473822/context_menus_playing_music.gif"
       return interaction.reply({content: linkvis, components: [rowC] })//.catch(e => { })
       }
       case "buttHelp":{

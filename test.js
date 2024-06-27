@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Partials, Collection, Events } = require("discord.js");
+const { getLinkPreview } = require("link-preview-js");
 
 const client = new Client({
     partials: [
