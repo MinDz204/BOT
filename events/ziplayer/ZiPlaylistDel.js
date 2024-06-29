@@ -27,7 +27,7 @@ module.exports = async (interaction, lang) => {
       embeds: [
         new EmbedBuilder()
           .setColor(lang?.COLOR || client.color)
-          .setDescription(`Success delete ${listname}`)
+          .setDescription(`✅ | Success delete ${listname}`)
           .setTimestamp()
           .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
           .setImage(lang?.banner)

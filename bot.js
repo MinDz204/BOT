@@ -3,6 +3,7 @@ const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
 const { default: mongoose } = require("mongoose");
+const { YoutubeiExtractor } = require("discord-player-youtubei")
 
 const client = new Client({
   partials: [
@@ -51,6 +52,7 @@ const player = new Player(client, {
 });
 
 player.setMaxListeners(200);
+player.extractors.register(YoutubeiExtractor, {})
 player.extractors.loadDefault()
 // player.on("debug",console.log)
 fs.readdir("./events/player", (_err, files) => {
