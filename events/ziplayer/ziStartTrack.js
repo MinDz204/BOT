@@ -51,12 +51,21 @@ const zistartButton = async (queue) => {
 
 const RelatedTracks = async (queue) => {
   const track = queue?.currentTrack || queue?.history.previousTrack;
-  const tracks = (await track?.extractor?.getRelatedTracks(track, queue?.history))?.tracks ||
-    (await queue?.player?.extractors.run(async (ext) => {
+  try {
+    const tracks = (await track?.extractor?.getRelatedTracks(track, queue?.history))?.tracks ||
+      (await queue?.player?.extractors.run(async (ext) => {
+        const res = await ext.getRelatedTracks(track, queue?.history);
+        return res?.tracks.length ? res.tracks : false;
+      }))?.result || [];
+    return tracks;
+  } catch (e) {
+    console.log(e)
+    const tracks = (await queue?.player?.extractors.run(async (ext) => {
       const res = await ext.getRelatedTracks(track, queue?.history);
       return res?.tracks.length ? res.tracks : false;
     }))?.result || [];
-  return tracks;
+    return tracks;
+  }
 };
 
 const RelatedTracksRow = async (queue) => {
@@ -106,11 +115,6 @@ const ZiPlayerlinkAvt = (query) => {
   return iconMappings[key] || iconMappings.default;
 };
 
-const youtubeMaxImage = (track) => {
-  const id = track?.raw?.id || track?.thumbnail?.id || track?.raw?.thumbnail?.id || track?.__metadata?.id || track?.__metadata?.thumbnail?.id || track?.metadata?.id;
-  return `https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`;
-};
-
 const zistartEmber = async (queue, lang) => {
   const track = queue?.currentTrack;
   const requestby = track?.requestby || queue?.metadata?.requestby;
@@ -124,7 +128,7 @@ const zistartEmber = async (queue, lang) => {
     rightChar: `▒`,
     length: 20,
   });
-
+  // console.log(track)
   const timestamps = queue?.node.getTimestamp();
   const trackDurationSymbol = timestamps?.progress === "Infinity" ? "" : "%";
   const trackDuration = timestamps?.progress === "Infinity" ? "∞" : timestamps?.progress;
@@ -158,7 +162,7 @@ const zistartEmber = async (queue, lang) => {
   const imageQualities = ["maxresdefault", "hqdefault"];
 
   if (isYouTube && imageQualities.some(quality => imgggg.includes(quality))) {
-    embed.setImage(youtubeMaxImage(track));
+    embed.setImage(imgggg.replace("hqdefault", "maxresdefault").trim());
   } else {
     embed.setThumbnail(imgggg ?? defaultImage);
   }
