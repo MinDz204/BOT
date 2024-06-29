@@ -86,8 +86,61 @@ module.exports = {
         .setDisplayName(userr?.tag || userr?.nickname || userr?.user?.tag, userDB?.color || client.color)
         .setBackground(userDB?.image || strimg)
         .setRank(sss + 1)
-        .setOverlay(15.5);
-
+        .setOverlay(15.5)
+        .setStyles({
+          progressbar: {
+            thumb: {
+              style: {
+                backgroundColor: userDB?.color
+              },
+            },
+          },
+          username: {
+            name: {
+              style: {
+                color: userDB?.color,
+              },
+            },
+          },
+          statistics: {
+            level: {
+              text: {
+                style: {
+                  color: userDB?.color,
+                },
+              },
+              value: {
+                style: {
+                  color: userDB?.color,
+                },
+              },
+            },
+            xp: {
+              text: {
+                style: {
+                  color: userDB?.color,
+                },
+              },
+              value: {
+                style: {
+                  color: userDB?.color,
+                },
+              },
+            },
+            rank: {
+              text: {
+                style: {
+                  color: userDB?.color,
+                },
+              },
+              value: {
+                style: {
+                  color: userDB?.color,
+                },
+              },
+            },
+          },
+        });
       const rankCardBuffer = await rankCard.build({ format: "png" });
       const attachment = new AttachmentBuilder(rankCardBuffer, { name: "RankCard.png" });
 
