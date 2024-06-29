@@ -2,22 +2,12 @@ const { useQueue, QueueRepeatMode, useHistory, Util } = require("discord-player"
 const { zistart } = require("./ziStartTrack");
 const { ModalBuilder, TextInputStyle, ActionRowBuilder, TextInputBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { SEEKfunc } = require("./ZiSeek");
-const { handleVolumeChange } = require("./Zivolume");
 const db = require("./../../mongoDB");
 const { ZiPlayerFillter } = require("./Zifillter");
 const config = require("../../config");
-const { timeToSeconds, Zitrim, ZifetchInteraction } = require("../Zibot/ZiFunc");
+const { timeToSeconds, Zitrim, ZifetchInteraction, sendTemporaryReply } = require("../Zibot/ZiFunc");
 const client = require("../../bot");
 //#region Funcs
-const deleteAfterTimeout = (message, timeout = 10000) => {
-  setTimeout(() => {
-    message?.delete().catch(e => { /* Handle error if needed */ });
-  }, timeout);
-};
-const sendTemporaryReply = async (interaction, content) => {
-  const message = await interaction?.reply({ content, fetchReply: true });
-  deleteAfterTimeout(message);
-};
 
 const Ziseek = async (interaction, queue, lang, str) => {
   if (!queue) return;
@@ -144,8 +134,6 @@ module.exports = async (interaction, lang) => {
         return interaction?.deferUpdate().catch(e => { });
       case "ZiplayerSeek":
         return interaction.reply(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue))
-      case "ZiplayerVol":
-        return handleVolumeChange(interaction, queue, lang);
       case "ZiplayerAutoPlay":
         queue.repeatMode === 3 ? queue.setRepeatMode(QueueRepeatMode.OFF) : queue.setRepeatMode(QueueRepeatMode.AUTOPLAY);
         await interaction?.deferUpdate().catch(e => { });
@@ -189,53 +177,38 @@ module.exports = async (interaction, lang) => {
       case "ZiplayerSEEK30":
         return Ziseek(interaction, queue, lang, "30s");
       case "ZiplayerSEEKINP": {
-        const { progress, current, total } = queue.node.getTimestamp();
-        if (progress === 'Forever') {
-          const messagesd = await interaction.reply({ content: `❌ | Can't seek in a live stream.`, fetchReply: true });
-          deleteAfterTimeout(messagesd);
-        }
-
-        interaction.reply({ content: 'time (ex: 3m20s, 1:20:55):', fetchReply: true });
-
-        const collectorFilter = (i) => i.author.id === interaction.user.id;
-        const collector = interaction.channel.createMessageCollector({ filter: collectorFilter, time: 60000 });
-
-        collector.on('collect', async (i) => {
-          const str = i.content;
-          let targetTime = timeToSeconds(str);
-          targetTime = Math.max(targetTime, 0);
-          const musicLength = timeToSeconds(total.label);
-
-          if (targetTime >= musicLength) {
-            return sendTemporaryReply(i, `❌ | Target time exceeds music duration. (\`${total?.label}\`)`);
-          }
-
-          const success = queue.node.seek(targetTime * 1000);
-          if (success) {
-            try {
-              await i.react("<a:likee:1210193685501706260>");
-              await collector.stop(); // stop collector explicitly
-              await interaction.deleteReply().catch(e => { console.error('Error deleting reply:', e); });
-              await Util.wait(1000);
-              await queue?.metadata?.Zimess.edit(await zistart(queue, lang)).catch(e => { });
-              await interaction.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue));
-              return;
-            } catch (e) {
-              sendTemporaryReply(i, '❌ | Something went wrong.');
-            }
-          } else {
-            sendTemporaryReply(i, '❌ | Something went wrong.');
-          }
-        });
-
-        collector.on('end', async () => {
-          const messagesd = await interaction.editReply({ content: '❌ | End seek 1m.', fetchReply: true }).catch(e => { });
-          deleteAfterTimeout(messagesd);
-
-        });
-        return;
+        const modal = new ModalBuilder()
+          .setCustomId('ZiplayerSEEKINPmodal')
+          .setTitle(`Seek Panel:`)
+          .addComponents(
+            new ActionRowBuilder().addComponents(
+              new TextInputBuilder()
+                .setCustomId('Time')
+                .setLabel(`time (ex: 3m20s, 1:20:55):`)
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+            )
+          )
+        return interaction?.showModal(modal);
       }
       //#endregion
+      case "ZiplayerVol": {
+        const modal = new ModalBuilder()
+          .setCustomId("ZiVolchangeModal")
+          .setTitle(`${lang?.volume}`)
+          .addComponents(
+            new ActionRowBuilder()
+              .addComponents(
+                new TextInputBuilder()
+                  .setCustomId("vol")
+                  .setLabel(`${lang?.volumedes}`)
+                  .setValue(`${queue?.node.volume}`)
+                  .setStyle(TextInputStyle.Short)
+                  .setRequired(true)
+              )
+          )
+        return interaction?.showModal(modal)
+      }
       case "ZiplayersaVetrack": {
         const modal = new ModalBuilder()
           .setCustomId('saVetrackmodal')

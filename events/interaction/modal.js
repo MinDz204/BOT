@@ -1,13 +1,15 @@
-const { useQueue } = require("discord-player");
+const { useQueue, Util } = require("discord-player");
 const db = require("./../../mongoDB");
 const { zistart } = require("./../ziplayer/ziStartTrack");
 const { rank } = require("../Zibot/ZilvlSys");
 const { validURL, timeToSeconds, Zitrim, ZifetchInteraction } = require("../Zibot/ZiFunc");
 const { SEEKfunc } = require("../ziplayer/ZiSeek");
 const config = require("../../config");
-const { EmbedBuilder, ActionRowBuilder, ButtonStyle, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
-//test func
-var hextest = /^#[0-9A-F]{6}$/i;
+const { EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require("discord.js");
+
+const HEX_COLOR_REGEX = /^#[0-9A-F]{6}$/i;
+const MAX_VOLUME = 100;
+const DELETE_REPLY_DELAY = 1000;
 
 function isNumber(str) {
   return /^[0-9]+$/.test(str);
@@ -16,69 +18,103 @@ function isNumber(str) {
 function removeDuplicates(array) {
   const seen = new Set();
   return array.filter(item => {
-    const erritem = seen.has(item) || !isNumber(item);
+    if (!isNumber(item) || seen.has(item)) return false;
     seen.add(item);
-    return !erritem;
+    return true;
   });
 }
 
 module.exports = async (client, interaction) => {
   try {
     let lang = await rank({ user: interaction?.user });
+
     switch (interaction.customId) {
       case "ZiCompSearch": {
         const nameS = interaction.fields.getTextInputValue("resu");
-        return require("./../ziplayer/ziSearch")(interaction, nameS)
+        return require("./../ziplayer/ziSearch")(interaction, nameS);
       }
-      case "ZiSEEKK": {
-        await interaction.deferReply({ ephemeral: true }).catch(e => { });
+
+      case "ZiplayerSEEKINPmodal": {
+        const message = await ZifetchInteraction(interaction);
         const queue = useQueue(interaction?.guildId);
-        if (!queue) return;
-        const timestamp = queue.node.getTimestamp();
-        if (timestamp.progress == 'Forever') return interaction.editReply({ content: `❌ | Can't seek in a live stream.` });
-        const str = interaction.fields.getTextInputValue("Time");
-        const tragetTime = timeToSeconds(str);
-        const musicLength = timeToSeconds(timestamp.total.label);
-        if (!tragetTime) return interaction.editReply({ content: `❌ | Invalid format for the target time.\n(**\`ex: 3m20s, 1m 50s, 1:20:55, 5:20\`**)` });
-        if (tragetTime >= musicLength) return interaction.reply({ content: `❌ | Target time exceeds music duration. (\`${timestamp.total.label}\`)` });
-        const success = queue.node.seek(tragetTime * 1000);
-        if (success) {
-          await interaction?.message.edit(await SEEKfunc(queue?.currentTrack, interaction?.user, lang, queue)).catch(e => { });
-          return interaction.deleteReply().catch(e => { });
-        } else {
-          return interaction.reply({ content: `❌ | Something went wrong.` });
+        if (!queue || !queue.isPlaying()) return;
+
+        const { progress, total } = queue.node.getTimestamp();
+        if (progress === 'Forever') {
+          return message.edit({ content: `❌ | Can't seek in a live stream.` });
         }
-      }
+
+        let targetTime = Math.max(timeToSeconds(interaction.fields.getTextInputValue("Time")), 0);
+        const musicLength = timeToSeconds(total.label);
+
+        if (targetTime >= musicLength) {
+          return message.edit(`❌ | Target time exceeds music duration. (${total.label})`);
+        }
+
+        const success = queue.node.seek(targetTime * 1000);
+        if (success) {
+          await message.delete();
+          await Util.wait(DELETE_REPLY_DELAY);
+          await queue.metadata.Zimess.edit(await zistart(queue, lang));
+          await interaction.message.edit(await SEEKfunc(queue.currentTrack, interaction.user, lang, queue));
+        } else {
+          message.edit('❌ | Something went wrong.');
+        }
         break;
+      }
+
+      case "ZiVolchangeModal": {
+        const message = await ZifetchInteraction(interaction);
+        const queue = useQueue(interaction?.guildId);
+        const volInput = interaction.fields.getTextInputValue("vol");
+        const volMatch = volInput.match(/\d+/);
+        const vol = volMatch?.[0];
+
+        if (!isNumber(vol)) {
+          return message.edit({ content: lang.volumeErr, ephemeral: true });
+        }
+
+        const newVolume = Math.min(Math.abs(vol), MAX_VOLUME);
+        queue.node.setVolume(newVolume);
+        await db.ZiUser.updateOne(
+          { userID: interaction.user.id },
+          { $set: { vol: newVolume } },
+          { upsert: true }
+        );
+
+        message.delete();
+        return queue.metadata.Zimess.edit(await zistart(queue, lang));
+      }
+
       case "DelTrackmodal": {
+        const message = await ZifetchInteraction(interaction);
         const input = interaction.fields.getTextInputValue("number");
         const queue = useQueue(interaction?.guildId);
+        const trackIndices = removeDuplicates(input.split(/[\s,;.+-]+/));
 
-        const trackIndices = removeDuplicates(input.split(/[\s,;.+-]+/)); // phân cách bằng khoảng trắng, dấu phẩy, hoặc dấu chấm phẩy
-        if (!trackIndices?.length > 0 || !queue || queue?.isEmpty()) {
-          return interaction.reply({ content: `${lang?.DeltrackErr}`, ephemeral: true }).catch(e => { });
+        if (!trackIndices.length || !queue || queue.isEmpty()) {
+          return message.edit({ content: lang.DeltrackErr, ephemeral: true });
         }
-        let tracldel = [];
-        // Chuyển đổi các giá trị thành số và loại bỏ các bài hát trong hàng chờ
-        const validIndices = trackIndices
-          .map(index => Math.abs(Number(index)) - 1)
-          .filter(index => index >= 0);
 
-        validIndices
-          .sort((a, b) => b - a) // xóa từ cuối về đầu để tránh lỗi khi xóa liên tiếp
-          .forEach(index => {
-            tracldel.push(queue?.tracks.toArray()[index].title);
-            queue.removeTrack(index)
-          });
-        await interaction.reply({
+        let tracldel = [];
+        const validIndices = trackIndices.map(index => Math.abs(Number(index)) - 1).filter(index => index >= 0);
+
+        validIndices.sort((a, b) => b - a).forEach(index => {
+          tracldel.push(queue.tracks.toArray()[index].title);
+          queue.removeTrack(index);
+        });
+
+        await message.edit({
+          content: "",
           embeds: [
             new EmbedBuilder()
-              .setColor(lang?.COLOR || client.color)
+              .setColor(lang.COLOR || client.color)
               .setAuthor({ name: "Deleted track:", iconURL: client.user.displayAvatarURL({ size: 1024 }) })
-              .setDescription(` ${Zitrim(tracldel.map(t => `\n* ${Zitrim(t, 50)}`), 2000)}`)
+              .setDescription(`${Zitrim(tracldel.map(t => `\n* ${Zitrim(t, 50)}`), 2000)
+                } `)
               .setTimestamp()
-              .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
-              .setImage(lang?.banner)
+              .setFooter({ text: `${lang.RequestBY} ${interaction.user.tag} `, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+              .setImage(lang.banner)
           ],
           components: [
             new ActionRowBuilder().addComponents(
@@ -88,36 +124,48 @@ module.exports = async (client, interaction) => {
                 .setStyle(ButtonStyle.Secondary)
             )
           ]
-        })
+        });
+
         return require("./../ziplayer/Ziqueue")(interaction, queue, lang, true);
       }
+
       case "editProfilemodal": {
-        let hexcolo = interaction.fields.getTextInputValue("Probcolor");
-        let imga = interaction.fields.getTextInputValue("Probimage");
-        let imgs = !!imga && !!validURL(imga) ? imga : "";
-        let hexxs = !!hexcolo && !!hextest.test(hexcolo) ? hexcolo : "";
-        await db.ZiUser.updateOne({ userID: interaction.user.id }, {
-          $set: {
-            color: hexxs,
-            image: imgs
-          }
-        }, { upsert: true });
-        return interaction.reply({ content: `${lang?.profilesuss}`, ephemeral: true }).catch(e => { });
+        const message = await ZifetchInteraction(interaction);
+        let hexColor = interaction.fields.getTextInputValue("Probcolor");
+        let img = interaction.fields.getTextInputValue("Probimage");
+
+        await db.ZiUser.updateOne(
+          { userID: interaction.user.id },
+          {
+            $set: {
+              color: HEX_COLOR_REGEX.test(hexColor) ? hexColor : "",
+              image: validURL(img) ? img : ""
+            }
+          },
+          { upsert: true }
+        );
+
+        return message.edit({ content: lang.profilesuss, ephemeral: true });
       }
+
       case "DelPlaylistmodal": {
         const listname = interaction.fields.getTextInputValue("listname");
-        const playlist = await db.playlist.findOne({ userID: interaction.user.id, listname }).catch(e => console.error);
-        if (!playlist) return interaction.reply({ content: `${lang.NoPlaylist.replace("{USER}", `${interaction.user.id}`)}`, ephemeral: true }).catch(e => { });
+        const playlist = await db.playlist.findOne({ userID: interaction.user.id, listname });
+
+        if (!playlist) {
+          return interaction.reply({ content: lang.NoPlaylist.replace("{USER}", `${interaction.user.id}`), ephemeral: true });
+        }
+
         const message = await ZifetchInteraction(interaction);
         await message.edit({
           content: "",
           embeds: [
             new EmbedBuilder()
-              .setColor(lang?.COLOR || client.color)
-              .setDescription(`**Playlist:**${Zitrim(playlist?.Song?.map((song, index) => { return `\n${index}.${Zitrim(song?.title, 30)}` }, 4000))}`)
+              .setColor(lang.COLOR || client.color)
+              .setDescription(`** Playlist:** ${Zitrim(playlist.Song?.map((song, index) => `\n${index}.${Zitrim(song.title, 30)}`), 4000)} `)
               .setTimestamp()
-              .setFooter({ text: `${lang?.RequestBY} ${interaction.user?.tag}`, iconURL: interaction.user?.displayAvatarURL({ dynamic: true }) })
-              .setImage(lang?.banner)
+              .setFooter({ text: `${lang.RequestBY} ${interaction.user.tag} `, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+              .setImage(lang.banner)
           ],
           components: [
             new ActionRowBuilder().addComponents(
@@ -128,20 +176,23 @@ module.exports = async (client, interaction) => {
               new ButtonBuilder()
                 .setCustomId("cancel")
                 .setLabel("❌")
-                .setStyle(ButtonStyle.Secondary),
+                .setStyle(ButtonStyle.Secondary)
             )
           ]
-        })
+        });
+
         return;
       }
+
       case "saVetrackmodal": {
-        return require("./../../commands/save").run(lang, interaction)
+        return require("./../../commands/save").run(lang, interaction);
       }
+
       default:
-        console.log(interaction.customId)
+        console.log(interaction.customId);
     }
   } catch (e) {
-    console.log(e)
-    return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nmodal:${e?.stack}`)
+    console.error(e);
+    return client.errorLog.send(`** ${config.Zmodule}** <t:${Math.floor(Date.now() / 1000)}: R>\nmodal:${e.stack}`);
   }
-}
+};
