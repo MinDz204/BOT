@@ -159,10 +159,10 @@ const zistartEmber = async (queue, lang) => {
 
   const imgggg = track?.thumbnail || defaultImage;
   const isYouTube = ['youtube', 'youtubePlaylist', 'youtubeSearch', 'youtubeVideo'].includes(track?.queryType);
-  const imageQualities = ["maxresdefault", "hqdefault"];
+  const imageQualities = ["maxresdefault", "hqdefault", "hq720"];
 
   if (isYouTube && imageQualities.some(quality => imgggg.includes(quality))) {
-    embed.setImage(imgggg.replace("hqdefault", "maxresdefault").trim());
+    embed.setImage(imgggg.replace("hqdefault", "maxresdefault").replace("hq720", "maxresdefault").trim());
   } else {
     embed.setThumbnail(imgggg ?? defaultImage);
   }

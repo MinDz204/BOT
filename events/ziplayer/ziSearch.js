@@ -36,12 +36,12 @@ module.exports = async (interaction, nameS, SearchEngine = 'youtube') => {
     }
   }
   let lang = await rank({ user: interaction?.user || interaction?.author });
-  if (extractId(nameS?.replace(`<@${client.user.id}>`, "").trim())) return require("./ZiPlaylist")({ interaction, message, nameS, player, queue, lang });
-  let res = await player.search(nameS, {
-    // fallbackSearchEngine: "youtube",// SearchEngine,
+  const songname = nameS.replace(`<@${client.user.id}>`, "").trim();
+  if (extractId(songname)) return require("./ZiPlaylist")({ interaction, message, nameS, player, queue, lang });
+  let res = await player.search(songname, {
     searchEngine: SearchEngine,
     requestedBy: interaction?.user || interaction?.author,
   });
-  let embed = await tracsrowslecs(res, lang, nameS, interaction);
+  let embed = await tracsrowslecs(res, lang, songname, interaction);
   return message?.edit(embed).catch(e => interaction?.user?.send(e?.message));
 }

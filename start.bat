@@ -1,4 +1,4 @@
 @echo off
 :a
-node index.js
+node .
 goto a

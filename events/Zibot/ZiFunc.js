@@ -189,7 +189,25 @@ const tracsrowslecs = async (res, lang, nameS, interaction) => {
   const client = require("../../bot");
   const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder } = require("discord.js");
   const maxTracks = res.filter(t => t?.url.length < 100).slice(0, 20);
-  if (!maxTracks.length > 0) return console.error("search err");
+  if (!maxTracks.length) return {
+    content: ``,
+    embeds: [
+      new EmbedBuilder()
+        .setColor("Red")
+        .setTitle(`❌ | ${lang?.PlayerSearchErr}:`)
+        .setDescription(`${nameS}`)
+        .setTimestamp()
+        .setFooter({ text: `${lang?.RequestBY} ${interaction?.user?.tag || interaction?.author?.tag}`, iconURL: interaction?.user?.displayAvatarURL({ dynamic: true }) || interaction?.author?.displayAvatarURL({ dynamic: true }) })
+    ],
+    components: [
+      new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+          .setCustomId('cancel')
+          .setLabel('❌')
+          .setStyle(2),
+      )
+    ]
+  };
   let track_creator = maxTracks.map((track, index) => {
     return new StringSelectMenuOptionBuilder()
       .setLabel(`${index + 1} - ${track?.queryType}: ${track?.duration}`)
@@ -197,11 +215,6 @@ const tracsrowslecs = async (res, lang, nameS, interaction) => {
       .setValue(`${maxTracks[Number(index)].url}`)
       .setEmoji('<:Playbutton:1230129096160182322>')
   })
-
-  let cancel = new StringSelectMenuOptionBuilder()
-    .setLabel("❌")
-    .setDescription('cancel')
-    .setValue(`cancelSEARCHTRACK`);
 
   const embed = new EmbedBuilder()
     .setColor(lang?.COLOR || client.color)
