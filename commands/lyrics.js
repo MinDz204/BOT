@@ -61,7 +61,7 @@ async function displayLyrics({ messages, trackName, NOstop, interaction, synced 
     .setColor('Random');
 
   if (!lyrics.syncedLyrics || !synced) {
-    if (queue) await setSyncedLyrics(queue, currentMessages, syncedLyrics);
+    if (queue) await setSyncedLyrics(queue, currentMessages, null);
     embed.setDescription(Zitrim(lyrics.plainLyrics, 1997));
     if (!interaction.guild) return interaction.editReply({ content: ' ', embeds: [embed] }).catch(console.log);
 
