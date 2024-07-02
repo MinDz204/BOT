@@ -8,9 +8,10 @@ module.exports = async (client) => {
   try {
     const rest = new REST({ version: "10" }).setToken(config.TOKEN || process.env.TOKEN);
     // Đăng ký lệnh
-    client.Zicomand = await rest.put(Routes.applicationCommands(client.user.id), {
+    const Zicomand = await rest.put(Routes.applicationCommands(client.user.id), {
       body: await client.commands,
     });
+    client.commands = Zicomand
     console.log("Successfully loaded application [/] commands.");
 
     client.errorLog = client.channels.cache.get(config.ZiErrChannel);

@@ -23,7 +23,7 @@ module.exports = {
 }
 
 module.exports.run = async (lang, interaction) => {
-  const commands = client.Zicomand;
+  const commands = client.commands;
   const embed = new EmbedBuilder()
     .setColor(lang.COLOR || client.color)
     .setAuthor({ name: "Zi bot helps:", url: client.InviteBot, iconURL: client.user.displayAvatarURL({ size: 1024 }) })
