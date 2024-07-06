@@ -1,4 +1,4 @@
-const { client } = require("../bot");
+const client = require("../bot");
 const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const db = require("../mongoDB");
