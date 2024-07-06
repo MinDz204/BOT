@@ -1,8 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const translate = require('@iamtraction/google-translate');
-const ISO6391 = require('iso-639-1');
 const client = require('../bot');
-const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 
 module.exports = {
   name: "Translate",

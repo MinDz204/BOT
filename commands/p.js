@@ -13,12 +13,6 @@ module.exports = {
   options: [{
     name: "name",
     description: "Name Song",
-    name_localizations: {
-      "en-US": "name",
-      "vi": "tên",
-      "ja": "名前",
-      "ko": "이름"
-    },
     description_localizations: {
       "en-US": "Name Song",
       "vi": "Tựa đề bài hát",

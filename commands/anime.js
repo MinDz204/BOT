@@ -9,12 +9,6 @@ module.exports = {
     type: 3,
     required: true,
     autocomplete: true,
-    name_localizations: {
-      "en-US": "name",
-      "vi": "tên",
-      "ja": "名前",
-      "ko": "이름"
-    },
     description_localizations: {
       "en-US": "Name anime",
       "vi": "Tên anime",

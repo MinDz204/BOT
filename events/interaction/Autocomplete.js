@@ -1,7 +1,10 @@
 const { useMainPlayer, QueryType } = require("discord-player");
 const Kitsu = require("kitsu");
+const translate = require('@iamtraction/google-translate');
 const { removeVietnameseTones, Zitrim } = require("../Zibot/ZiFunc");
-const config = require("./../../config")
+const config = require("./../../config");
+const db = require("./../../mongoDB");
+
 module.exports = async (client, interaction) => {
   try {
     switch (interaction.commandName) {
@@ -39,7 +42,22 @@ module.exports = async (client, interaction) => {
         } catch (e) {
           return interaction?.respond().catch(e => { });
         }
-
+      case "translate": {
+        try {
+          const userDoc = await db.ZiUser.findOne({ userID: interaction.userID }, "userID lang Xp lvl coin cooldowns color");
+          const lang = require(`./../../lang/${userDoc?.lang || "vi"}.js`)
+          const args = interaction.options.getString('transtext', true);
+          const translated = await translate(args, { to: lang?.langdef || "vi" });
+          const val = translated.from.text.value;
+          if (val) return interaction?.respond([{
+            name: val,
+            value: val.replace(/[\[\]]/g, "")
+          }]).catch(e => console.log);
+          return interaction?.respond().catch(e => { });
+        } catch (e) {
+          return interaction?.respond().catch(e => { });
+        }
+      }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
       default: {
         return client?.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\nAutpcomp:${interaction?.customId}`);
