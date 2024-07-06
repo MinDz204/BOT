@@ -7,12 +7,6 @@ const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 module.exports = {
   name: "profile",
   description: "View profile.",
-  name_localizations: {
-    "en-US": "profile",
-    "vi": "thông-tin",
-    "ja": "プロフィール",
-    "ko": "프로필",
-  },
   description_localizations: {
     "en-US": "View profile.",
     "vi": "Xem thông tin hồ sơ của bạn.",
@@ -25,12 +19,6 @@ module.exports = {
     {
       name: "user",
       description: "Chọn user",
-      name_localizations: {
-        "en-US": "user",
-        "vi": "người-dùng",
-        "ja": "ユーザー",
-        "ko": "사용자"
-      },
       description_localizations: {
         "en-US": "Select user",
         "vi": "Chọn người dùng",

@@ -7,12 +7,6 @@ const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 module.exports = {
   name: "language",
   description: "Change bot language.",
-  name_localizations: {
-    "en-US": "language",
-    "vi": "ngôn-ngữ",
-    "ja": "言語",  // Language in Japanese
-    "ko": "언어"   // Language in Korean
-  },
   description_localizations: {
     "en-US": "Change bot language.",
     "vi": "Thay đổi ngôn ngữ bot.",

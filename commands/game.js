@@ -74,12 +74,6 @@ function sendOrEditMessage(zi, interaction, messages, content) {
 module.exports = {
   name: "game",
   description: "Game function.",
-  name_localizations: {
-    "en-US": "game",
-    "vi": "trò-chơi",  // Game in Vietnamese
-    "ja": "ゲーム", // Game in Japanese
-    "ko": "게임" // Game in Korean
-  },
   description_localization: {
     "en-US": "Game function.",
     "vi": "Chức năng trò chơi", // Game function in Vietnamese
@@ -92,12 +86,6 @@ module.exports = {
     {
       name: "name",
       description: "Game Name.",
-      name_localizations: {
-        "en-US": "name",
-        "vi": "tên",
-        "ja": "名前",
-        "ko": "이름"
-      },
       description_localizations: {
         "en-US": "Game Name.",
         "vi": "Tên trò chơi ", // Name Game in Vietnamese

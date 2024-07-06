@@ -98,12 +98,6 @@ async function displayLyrics({ messages, trackName, NOstop, interaction, synced 
 module.exports = {
   name: 'lyrics',
   description: 'Display synced lyrics or stop them.',
-  name_localizations: {
-    "en-US": "lyrics",
-    "vi": "lời-bài-hát",
-    "ja": "歌詞",
-    "ko": "가사"
-  },
   description_localizations: {
     "en-US": "Display synced lyrics or stop them.",
     "vi": "Hiển thị lời bài hát đồng bộ hoặc dừng hiển thị.",

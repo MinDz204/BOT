@@ -1,9 +1,9 @@
 const client = require("../bot");
 const { ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 const { EmbedBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const { generateOauthTokens, YoutubeiExtractor } = require("discord-player-youtubei");
-const { useMainPlayer } = require("discord-player");
-const player = useMainPlayer();
+// const { generateOauthTokens, YoutubeiExtractor } = require("discord-player-youtubei");
+// const { useMainPlayer } = require("discord-player");
+// const player = useMainPlayer();
 
 module.exports = {
   name: "tests",
@@ -15,8 +15,8 @@ module.exports = {
   dm_permission: true,
 
   run: async (lang, interaction) => {
-    const key = await generateOauthTokens()
-    console.log(key)
+    // const key = await generateOauthTokens()
+    // console.log(key)
 
   },
 };

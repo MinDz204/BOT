@@ -7,12 +7,6 @@ module.exports = {
     name: "user",
     description: "Select user",
     type: 6,
-    name_localizations: {
-      "en-US": "user",
-      "vi": "tên",
-      "ja": "ユーザー",
-      "ko": "사용자",
-    },
     description_localizations: {
       "en-US": "Select user",
       "vi": "Chọn người dùng",

@@ -7,12 +7,6 @@ const { msToTime, ZifetchInteraction } = require("../events/Zibot/ZiFunc");
 module.exports = {
   name: "daily",
   description: "View profile.",
-  name_localizations: {
-    "en-US": "daily",
-    "vi": "điểm-danh",
-    "ja": "デイリー",
-    "ko": "일일"
-  },
   description_localizations: {
     "en-US": "View profile.",
     "vi": "Xem hồ sơ.",
