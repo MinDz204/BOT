@@ -1,6 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const translate = require('@iamtraction/google-translate');
-const ISO6391 = require('iso-639-1');
 const client = require('../bot');
 const { ZifetchInteraction, languages } = require('../events/Zibot/ZiFunc');
 
