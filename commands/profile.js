@@ -62,7 +62,7 @@ module.exports = {
 
       Font.loadDefault();
       const status = userr.presence?.status || "none";
-
+      const colorr = userDB?.color || "#ffffff"
       const rankCard = new RankCardBuilder()
         .setAvatar(userr.displayAvatarURL({ extension: "png", forceStatic: true }))
         .setUsername(`${userDB?.coin || 0} xu`)
@@ -71,7 +71,7 @@ module.exports = {
         .setRequiredXP((userDB?.lvl || 1) * 50 + 1)
         .setProgressCalculator(() => Math.floor(((userDB?.Xp || 0) / ((userDB?.lvl || 1) * 50 + 1)) * 100))
         .setStatus(status)
-        .setDisplayName(userr?.tag || userr?.nickname || userr?.user?.tag, userDB?.color || client.color)
+        .setDisplayName(userr?.tag || userr?.nickname || userr?.user?.tag, colorr || client.color)
         .setBackground(userDB?.image || strimg)
         .setRank(sss + 1)
         .setOverlay(15.5)
@@ -79,14 +79,14 @@ module.exports = {
           progressbar: {
             thumb: {
               style: {
-                backgroundColor: userDB?.color
+                backgroundColor: colorr
               },
             },
           },
           username: {
             name: {
               style: {
-                color: userDB?.color,
+                color: colorr,
               },
             },
           },
@@ -94,36 +94,36 @@ module.exports = {
             level: {
               text: {
                 style: {
-                  color: userDB?.color,
+                  color: colorr,
                 },
               },
               value: {
                 style: {
-                  color: userDB?.color,
+                  color: colorr,
                 },
               },
             },
             xp: {
               text: {
                 style: {
-                  color: userDB?.color,
+                  color: colorr,
                 },
               },
               value: {
                 style: {
-                  color: userDB?.color,
+                  color: colorr,
                 },
               },
             },
             rank: {
               text: {
                 style: {
-                  color: userDB?.color,
+                  color: colorr,
                 },
               },
               value: {
                 style: {
-                  color: userDB?.color,
+                  color: colorr,
                 },
               },
             },
