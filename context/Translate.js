@@ -1,5 +1,4 @@
 const client = require('../bot');
-
 module.exports = {
   name: "Translate",
   name_localizations: {
