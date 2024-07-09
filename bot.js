@@ -3,7 +3,7 @@ const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
 const { default: mongoose } = require("mongoose");
-// const { YoutubeiExtractor } = require("discord-player-youtubei")
+const { ZijiExt } = require("./ZijiExt.js");
 
 const client = new Client({
   partials: [
@@ -48,13 +48,21 @@ module.exports = client;
 //-------------------------------------------------------------//
 
 const player = new Player(client, {
-  SkipFFmpeg: false
+  SkipFFmpeg: false,
+  ytdlOptions: {
+    quality: 'highestaudio',
+    filter: 'audioonly',
+    highWaterMark: 1 << 25,
+    dlChunkSize: 0
+  },
 });
 
 player.setMaxListeners(200);
-// player.extractors.register(YoutubeiExtractor, {})  
+player.extractors.register(ZijiExt, {})
 player.extractors.loadDefault()
+
 // player.on("debug", console.log)
+
 fs.readdir("./events/player", (_err, files) => {
   files.forEach((file) => {
     if (!file.endsWith(".js")) return;
