@@ -5,7 +5,7 @@
 
 # [<img src="https://raw.githubusercontent.com/zijipia/zijipia/main/Assets/ZijiAvt.gif" width="15"/>](./) Zibot 
 Zibot is a Discord bot developed by [zijipia](https://github.com/zijipia) to enhance your Discord server with various functionalities, using [discord.js](https://discord.js.org/) and [discord-player](https://discord-player.js.org/) 
-
+# Join [Zi bot Playground:](https://discord.gg/32GkbyXtbA) to get icon of bot.
 ## Features
 - **Event Handling**: Respond to various Discord events.
 - **Language Support**: Multi-language support for better user experience.
