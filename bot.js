@@ -3,7 +3,6 @@ const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
 const { default: mongoose } = require("mongoose");
-const { ZijiExt } = require("./ZijiExt.js");
 
 const client = new Client({
   partials: [
@@ -58,7 +57,6 @@ const player = new Player(client, {
 });
 
 player.setMaxListeners(200);
-player.extractors.register(ZijiExt, {})
 player.extractors.loadDefault()
 
 // player.on("debug", console.log)
