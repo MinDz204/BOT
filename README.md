@@ -7,10 +7,10 @@
 Zibot is a Discord bot developed by [zijipia](https://github.com/zijipia) to enhance your Discord server with various functionalities, using [discord.js](https://discord.js.org/) and [discord-player](https://discord-player.js.org/) 
 
 ## Features
-- **Custom Commands**: Create and manage custom commands.
 - **Event Handling**: Respond to various Discord events.
 - **Language Support**: Multi-language support for better user experience.
 - **MongoDB Integration**: Connect and interact with MongoDB for data storage.
+
 ## Installation
 1. Clone the repository:
 
