@@ -27,70 +27,89 @@ module.exports = {
 };
 
 module.exports.run = async (lang, interaction) => {
-  let mess = await ZifetchInteraction(interaction);
+  const mess = await ZifetchInteraction(interaction);
   const args = interaction?.options?.getString('transtext') || interaction?.targetMessage?.content;
   const embed = [];
-  const langdef = languages[`${lang?.langdef}`];
-  if (args) {
-    const translated = await translate(args, { to: lang?.langdef || "vi" });
-    embed.push(
-      new EmbedBuilder()
-        .setColor(lang?.COLOR || client.color)
-        .setTitle(`Translate:`)
-        .setDescription(` ${translated.text}`)
-        .setTimestamp()
-        .setFooter({ text: `${languages[`${translated.from.language.iso}`]} -> ${langdef}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-    )
-  }
-  if (interaction?.targetMessage && interaction?.targetMessage?.embeds?.[0]) {
-    const taget_embed = interaction.targetMessage.embeds[0].data;
-    let language_name;
-    const temoEmbed = new EmbedBuilder()
-      .setColor(taget_embed?.color || lang?.COLOR || client.color)
+  const langdef = lang?.langdef || "vi";
+  const color = lang?.COLOR || client.color;
+
+  const createEmbed = (text, fromLang) => {
+    return new EmbedBuilder()
+      .setColor(color)
+      .setTitle('Translate:')
+      .setDescription(text)
       .setTimestamp()
-      .setImage(taget_embed?.image?.url || null)
-      .setThumbnail(taget_embed?.thumbnail?.url || null)
-    //translate 
-    if (taget_embed?.description) {
-      const description = await translate(taget_embed?.description, { to: lang?.langdef || "vi" });
-      language_name = languages[`${description.from.language.iso}`];
-      temoEmbed.setDescription(description?.text || null)
-    }
-    if (taget_embed?.title) {
-      const title = await translate(taget_embed?.title, { to: lang?.langdef || "vi" });
-      language_name = languages[`${title.from.language.iso}`];
-      temoEmbed.setTitle(title?.text || null)
-    }
-    if (taget_embed?.author) {
-      const author = await translate(taget_embed?.author?.name, { to: lang?.langdef || "vi" });
-      language_name = languages[`${author.from.language.iso}`];
-      temoEmbed.setAuthor({
-        name: author?.text || null,
-        iconURL: taget_embed?.author?.icon_url || null,
-        url: taget_embed?.author?.url || null
-      })
-    }
-    if (taget_embed?.fields && taget_embed?.fields.length) {
-      const translatedFields = taget_embed?.fields.map(async (field) => {
-        const field_name = await translate(field?.name, { to: lang?.langdef || "vi" });
-        const field_value = await translate(field?.value, { to: lang?.langdef || "vi" });
-        return { name: field_name?.text || null, value: field_value?.text || null, inline: field?.inline || false }
+      .setFooter({
+        text: `${languages[fromLang]} -> ${languages[langdef]}`,
+        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
       });
-      const _filds = await Promise.all(translatedFields)
-      temoEmbed.addFields(..._filds)
+  };
 
-    }
-    temoEmbed.setFooter({ text: `${language_name} -> ${langdef}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-
-    embed.push(temoEmbed)
+  if (args) {
+    const translated = await translate(args, { to: langdef });
+    embed.push(createEmbed(translated.text, translated.from.language.iso));
   }
+
+  if (interaction?.targetMessage && interaction?.targetMessage?.embeds?.length) {
+    let fromLang = "unknown";
+    const targetEmbed = interaction.targetMessage.embeds[0].data;
+    const translatedEmbed = new EmbedBuilder()
+      .setColor(targetEmbed.color || color)
+      .setTimestamp()
+      .setImage(targetEmbed.image?.url || null)
+      .setThumbnail(targetEmbed.thumbnail?.url || null);
+
+    const translateField = async (field, targetLang) => {
+      const name = await translate(field.name, { to: targetLang });
+      const value = await translate(field.value, { to: targetLang });
+      return { name: name.text, value: value.text, inline: field.inline || false };
+    };
+
+    if (targetEmbed.description) {
+      const description = await translate(targetEmbed.description, { to: langdef });
+      fromLang = languages[description.from.language.iso];
+      translatedEmbed.setDescription(description.text);
+    }
+
+    if (targetEmbed.title) {
+      const title = await translate(targetEmbed.title, { to: langdef });
+      fromLang = languages[title.from.language.iso];
+      translatedEmbed.setTitle(title.text);
+    }
+
+    if (targetEmbed.author) {
+      const author = await translate(targetEmbed.author.name, { to: langdef });
+      fromLang = languages[author.from.language.iso];
+      translatedEmbed.setAuthor({
+        name: author.text,
+        iconURL: targetEmbed.author.icon_url,
+        url: targetEmbed.author.url,
+      });
+    }
+
+    if (targetEmbed.fields?.length) {
+      const translatedFields = await Promise.all(targetEmbed.fields.map(field => translateField(field, langdef)));
+      translatedEmbed.addFields(translatedFields);
+    }
+
+    translatedEmbed.setFooter({
+      text: `${fromLang} -> ${languages[langdef]}`,
+      iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+    });
+
+    embed.push(translatedEmbed);
+  }
+
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setLabel('❌')
       .setCustomId('cancel')
-      .setStyle(ButtonStyle.Secondary));
-  if (!interaction.guild) return interaction.editReply({ content: ``, embeds: embed });
-  return interaction.editReply({ content: ``, embeds: embed, components: [row] }).then(setTimeout(async () => {
-    return mess.edit({ content: ``, embeds: embed, components: [] }).catch(e => { })
-  }, 30000)).catch(e => { });
-}
+      .setStyle(ButtonStyle.Secondary)
+  );
+
+  if (!interaction.guild) return interaction.editReply({ content: '', embeds: embed });
+
+  return interaction.editReply({ content: '', embeds: embed, components: [row] })
+    .then(() => setTimeout(() => mess.edit({ content: '', embeds: embed, components: [] }).catch(() => { }), 30000))
+    .catch(() => { });
+};
