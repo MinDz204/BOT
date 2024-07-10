@@ -3,6 +3,8 @@ const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
 const { default: mongoose } = require("mongoose");
+const { YoutubeExtractor } = require("@discord-player/extractor");
+const { createYoutubeiStream } = require("discord-player-youtubei")
 
 const client = new Client({
   partials: [
@@ -57,6 +59,9 @@ const player = new Player(client, {
 });
 
 player.setMaxListeners(200);
+player.extractors.register(YoutubeExtractor, {
+  createStream: createYoutubeiStream
+})
 player.extractors.loadDefault()
 
 // player.on("debug", console.log)
