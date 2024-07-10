@@ -5,7 +5,7 @@ const { ZifetchInteraction } = require('../events/Zibot/ZiFunc');
 
 module.exports = {
     name: "disconnect",
-    description: "Disconnects from the music channel and clears the server queue.",
+    description: "Disconnects and clear the server queue.",
     integration_types: [0],
     contexts: [0, 1, 2],
     options: [],
