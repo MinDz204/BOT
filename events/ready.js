@@ -3,9 +3,14 @@ const {
   REST,
   Routes,
 } = require("discord.js");
+const { default: mongoose } = require("mongoose");
 
 module.exports = async (client) => {
   try {
+    await mongoose.connect(config.MOGOURL || process.env.MONGO)
+      .then(() => console.log(`Connected MongoDB`))
+      .catch((err) => console.log("\nMongoDB Error: \n" + err))
+
     const rest = new REST({ version: "10" }).setToken(config.TOKEN || process.env.TOKEN);
     // Đăng ký lệnh
     const Zicomand = await rest.put(Routes.applicationCommands(client.user.id), {
