@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Partials, Collection, Events } = require("dis
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
-const { default: mongoose } = require("mongoose");
+const { YoutubeiExtractor } = require("discord-player-youtubei")
 
 const client = new Client({
   partials: [
@@ -57,6 +57,10 @@ const player = new Player(client, {
 });
 
 player.setMaxListeners(200);
+// player.extractors.register(YoutubeExtractor, {
+//   createStream: createYoutubeiStream
+// })
+player.extractors.register(YoutubeiExtractor, {})
 player.extractors.loadDefault()
 
 // player.on("debug", console.log)
@@ -126,9 +130,6 @@ fs.readdir("./context", (err, files) => {
 });
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-mongoose.connect(config.MOGOURL || process.env.MONGO).then(() => console.log(`Connected MongoDB`)).catch((err) => {
-  return console.log("\nMongoDB Error: \n" + err)
-})
 client.login(config.TOKEN || process.env.TOKEN).catch(e => {
   console.log(e)
   console.log("The Bot Token You Entered Into Your Project Is Incorrect Or Your Bot's INTENTS Are OFF!")
