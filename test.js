@@ -3,5 +3,5 @@ const { Innertube } = require("youtubei.js");
 (async () => {
     const tube = await Innertube.create()
 
-    console.log(await tube.search("Diamond heart"))
+    console.log(await tube.search("hôm nay tôi buồn"))
 })()

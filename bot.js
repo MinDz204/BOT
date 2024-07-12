@@ -2,7 +2,6 @@ const { Client, GatewayIntentBits, Partials, Collection, Events } = require("dis
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
-const { YoutubeiExtractor } = require("discord-player-youtubei")
 
 const client = new Client({
   partials: [
@@ -57,10 +56,6 @@ const player = new Player(client, {
 });
 
 player.setMaxListeners(200);
-// player.extractors.register(YoutubeExtractor, {
-//   createStream: createYoutubeiStream
-// })
-player.extractors.register(YoutubeiExtractor, {})
 player.extractors.loadDefault()
 
 // player.on("debug", console.log)
