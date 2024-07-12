@@ -276,7 +276,7 @@ function ZiplayerOption({ interaction, message, queue, user }) {
     },
     requestedBy: interaction?.user || interaction?.author,
     selfDeaf: true,
-    volume: user?.vol || 50,
+    volume: user?.vol || 100,
     maxSize: 200,
     maxHistorySize: 20,
     leaveOnEmpty: true,

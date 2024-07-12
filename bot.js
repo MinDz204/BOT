@@ -140,4 +140,3 @@ process.on('uncaughtException', (error) => {
   client.errorLog?.send(`**${config?.Zmodule}** <t:${Math.floor(Date.now() / 1000)}:R>\n${error?.stack}`)
   console.error('Uncaught exception:', error);
 });
-

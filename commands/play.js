@@ -1,9 +1,9 @@
-const { useMainPlayer, useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const db = require("./../mongoDB");
-const { processQuery, ZifetchInteraction, ZiplayerOption } = require('../events/Zibot/ZiFunc');
-const player = useMainPlayer();
-const client = require('../bot');
+// const { useMainPlayer, useQueue } = require('discord-player');
+// const { EmbedBuilder } = require('discord.js');
+// const db = require("./../mongoDB");
+// const { processQuery, ZifetchInteraction, ZiplayerOption } = require('../events/Zibot/ZiFunc');
+// const player = useMainPlayer();
+// const client = require('../bot');
 
 module.exports = {
   name: "play",
@@ -35,36 +35,40 @@ module.exports = {
   dm_permission: false,
   run: async (lang, interaction) => {
 
-    let message = await ZifetchInteraction(interaction);
-    const queues = useQueue(interaction.guild.id);
-    const nameS = interaction.options.getString("name");
-    let res;
-    const user = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { });
-    let queue = player?.nodes?.create(interaction.guild, ZiplayerOption({ interaction, message, queues, user }));
+    //p.js
+    const name = interaction.options.getString("name");
+    return require("../events/ziplayer/ziSearch")(interaction, name);
 
-    try {
-      res = await player.search(await processQuery(nameS), {
-        requestedBy: interaction.user,
-      });
-      if (!queue.connection) await queue.connect(
-        interaction?.member.voice.channelId,
-        { deaf: true })
-    } catch (e) {
-      return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
-        setTimeout(function () {
-          Message?.delete().catch(e => { });
-        }, 10000)
-      }).catch(e => { console.log(e) });
-    }
-    const entry = queue.tasksQueue.acquire();
-    await entry.getTask()
-    res.playlist ? queue.addTrack(res?.tracks) : queue.insertTrack(res?.tracks[0], 0);
-    try {
-      if (!queue.isPlaying()) await queue.node.play()
-    } finally {
-      queue.tasksQueue.release();
-    }
-    if (queues?.metadata) return message?.delete().catch(e => { });
-    return;
+    // let message = await ZifetchInteraction(interaction);
+    // const queues = useQueue(interaction.guild.id);
+    // const nameS = interaction.options.getString("name");
+    // let res;
+    // const user = await db.ZiUser.findOne({ userID: interaction?.user?.id || interaction?.author?.id }).catch(e => { });
+    // let queue = player?.nodes?.create(interaction.guild, ZiplayerOption({ interaction, message, queues, lang }));
+
+    // try {
+    //   res = await player.search(await processQuery(nameS), {
+    //     requestedBy: interaction.user,
+    //   });
+    //   if (!queue.connection) await queue.connect(
+    //     interaction?.member.voice.channelId,
+    //     { deaf: true })
+    // } catch (e) {
+    //   return interaction?.channel.send(`${lang?.PlayerSearchErr}`).then(async Message => {
+    //     setTimeout(function () {
+    //       Message?.delete().catch(e => { });
+    //     }, 10000)
+    //   }).catch(e => { console.log(e) });
+    // }
+    // const entry = queue.tasksQueue.acquire();
+    // await entry.getTask()
+    // res.playlist ? queue.addTrack(res?.tracks) : queue.insertTrack(res?.tracks[0], 0);
+    // try {
+    //   if (!queue.isPlaying()) await queue.node.play()
+    // } finally {
+    //   queue.tasksQueue.release();
+    // }
+    // if (queues?.metadata) return message?.delete().catch(e => { });
+    // return;
   },
 };
