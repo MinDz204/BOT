@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Partials, Collection, Events } = require("dis
 const config = require("./config.js");
 const fs = require("fs");
 const { Player } = require('discord-player');
-const { ZiExtractor } = require("./extractors.js");
+const { ZiExtractor } = require("ziextractor");
 
 const client = new Client({
   partials: [
